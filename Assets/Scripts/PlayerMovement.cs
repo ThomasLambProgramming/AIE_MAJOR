@@ -1,16 +1,26 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] private CinemachineVirtualCamera mainCam = null;
+    //the game object used will change (when the player moves to be an object for a short period)
+    private GameObject truePlayerObject = null;
+    [SerializeField] private GameObject playerCamFollow = null;
+    
+    private GameObject currentPlayer = null;
+    
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
     public float spinSpeed = 5f;
     public float animationSwapSpeed = 3f;
     public Transform groundCheck = null;
+
+    private bool canJump = true;
     
     private MasterInput playerInput = null;
     private Rigidbody playerRigidbody = new Rigidbody();
@@ -22,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
     
     private readonly int xPos = Animator.StringToHash("XPos");
     private readonly int yPos = Animator.StringToHash("YPos");
-    private readonly int Jumping = Animator.StringToHash("Jumping");
+    private readonly int jumping = Animator.StringToHash("Jumping");
 
     private HackableObject currentInteractable = null;
     
@@ -31,15 +41,12 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        truePlayerObject = gameObject;
+        currentPlayer = truePlayerObject;
         playerInput = new MasterInput();
-        playerInput.Enable();
-        playerInput.Player.Movement.performed += MovePlayer;
-        playerInput.Player.Movement.canceled += MoveOver;
-        playerInput.Player.Jump.performed += PlayerJump;
-        playerInput.Player.Camera.performed += PlayerSpin;
-        playerInput.Player.Camera.canceled += PlayerSpinOver;
-        playerInput.Player.Interaction.performed += Interact;
+        
     }
+    private Vector3 cameraOffset = Vector3.zero;
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -48,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //FIX THE ANIMATOR FOR WHEN EXITED HACKED OBJECT (fine for proof of concept)
         currentAnimationVector = new Vector2(
             Mathf.Lerp(currentAnimationVector.x, playerMoveInput.x, animationSwapSpeed * Time.deltaTime),
             Mathf.Lerp(currentAnimationVector.y, playerMoveInput.y, animationSwapSpeed * Time.deltaTime));
@@ -57,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (playerMoveInput != Vector2.zero)
         {
-            transform.Translate(new Vector3(
+            currentPlayer.transform.Translate(new Vector3(
                 playerMoveInput.x * moveSpeed * Time.deltaTime,
                 0,
                 playerMoveInput.y * moveSpeed * Time.deltaTime));
@@ -65,26 +73,46 @@ public class PlayerMovement : MonoBehaviour
 
         if (playerSpinInput != Vector2.zero)
         {
-            transform.Rotate(new Vector3(0, playerSpinInput.x * spinSpeed * Time.deltaTime, 0));
+            currentPlayer.transform.Rotate(new Vector3(0, playerSpinInput.x * spinSpeed * Time.deltaTime, 0));
         }
 
         if (isJumping)
         {
             //for now if we are jumping it will set the jumping to false if it hits anything
-            Collider[] colliders = Physics.OverlapSphere(groundCheck.position, 0.2f, ~(1 << 9));
+            Collider[] colliders = Physics.OverlapSphere(groundCheck.position, 0.1f, ~(1 << 10));
             if (colliders.Length > 0)
             {
                 isJumping = false;
-                animator.SetBool(Jumping, false);   
+                canJump = true;
+                animator.SetBool(jumping, false);   
             }
         }
     }
 
+    
     void Interact(InputAction.CallbackContext a_context)
     {
+        
         if (currentInteractable != null)
         {
-            currentInteractable.BeingHacked();
+            currentInteractable.BeingHacked(out HackedType objectType, out Transform a_cameraFollow);
+            if (objectType == HackedType.ENEMY || objectType == HackedType.MOVEABLEOBJECT)
+            {
+                
+                currentPlayer = currentInteractable.gameObject;
+                currentInteractable = null;
+                currentPlayer.transform.rotation = truePlayerObject.transform.rotation;
+                truePlayerObject.transform.position = new Vector3(0, -900, 0);
+                mainCam.Follow = a_cameraFollow;
+            }
+            //run functions for the object type or etc
+        }
+        else if (currentPlayer != truePlayerObject)
+        {
+            truePlayerObject.transform.position = currentPlayer.transform.position;
+            truePlayerObject.transform.rotation = currentPlayer.transform.rotation;
+            currentPlayer = truePlayerObject;
+            mainCam.Follow = playerCamFollow.transform;
         }
     }
     void MovePlayer(InputAction.CallbackContext a_context)
@@ -99,9 +127,13 @@ public class PlayerMovement : MonoBehaviour
 
     void PlayerJump(InputAction.CallbackContext a_context)
     {
-        playerRigidbody.AddForce(Vector3.up * jumpForce);
-        animator.SetBool(Jumping, true);
-        isJumping = true;
+        if (canJump)
+        {
+            playerRigidbody.AddForce(Vector3.up * jumpForce);
+            animator.SetBool(jumping, true);
+            isJumping = true;
+            canJump = false;
+        }
     }
 
     void PlayerSpin(InputAction.CallbackContext a_context)

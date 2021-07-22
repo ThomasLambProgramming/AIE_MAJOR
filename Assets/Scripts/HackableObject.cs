@@ -3,20 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HackableObject : MonoBehaviour, Hackable
+public enum HackedType
 {
-    public void Hacked()
-    {
-        
-    }
+    ENEMY = 1,
+    MOVEABLEOBJECT = 2,
+    CONTROLPANEL = 3
+}
+public class HackableObject : MonoBehaviour
+{
     public float dotAllowance = 0.9f;
     public float indicatorDistance = 1f;
     public float indicatorSpinSpeed = 10f;
+    
     public GameObject indiciator = null;
     private PlayerMovement playerScript = null;
     private BoxCollider[] colliders = null;
+
+    [SerializeField] private GameObject cameraFollow = null;
+    
+    [SerializeField] private bool isEnemy = false;
+    [SerializeField] private bool isMoveable = false;
+    [SerializeField] private bool isControlPanel = false;
     private void OnTriggerStay(Collider a_other)
     {
+        //This is universal for all hackable objects to have the indicator
+        //later expand this to have rotation and position allowances
         if (a_other.transform.CompareTag("Player"))
         {
             Vector3 playerToObject = (transform.position - a_other.transform.position).normalized;
@@ -43,18 +54,37 @@ public class HackableObject : MonoBehaviour, Hackable
         colliders = GetComponents<BoxCollider>();
     }
 
-    public void BeingHacked()
+
+    public void BeingHacked(out HackedType a_hackedType, out Transform a_cameraFollow)
     {
-        //move it up as an indicator of working
-        transform.Translate(0, 2, 0);
-        
-        playerScript.RemoveInteractable();
-        indiciator.SetActive(false);
-        //stops the player from interacting with it again
-        foreach (var boxCollider in colliders)
+        if (isEnemy)
         {
-            if (boxCollider.isTrigger)
-                boxCollider.enabled = false;
+            a_hackedType = HackedType.ENEMY;
+            a_cameraFollow = cameraFollow.transform;
+        }
+        else if (isMoveable)
+        {
+            //moveable object
+            a_hackedType = HackedType.MOVEABLEOBJECT;
+            a_cameraFollow = cameraFollow.transform;
+
+        }
+        else
+        {
+            a_cameraFollow = null;
+            a_hackedType = HackedType.CONTROLPANEL;
+            //control panel
+            //move it up as an indicator of working
+            transform.Translate(0, 2, 0);
+
+            playerScript.RemoveInteractable();
+            indiciator.SetActive(false);
+            //stops the player from interacting with it again
+            foreach (var boxCollider in colliders)
+            {
+                if (boxCollider.isTrigger)
+                    boxCollider.enabled = false;
+            }
         }
     }
 
