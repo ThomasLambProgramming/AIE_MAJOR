@@ -763,7 +763,7 @@ GameObject:
   - component: {fileID: 1276607764}
   - component: {fileID: 1276607765}
   m_Layer: 0
-  m_Name: HackableObject
+  m_Name: TEstingObject
   m_TagString: Hackable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -877,7 +877,7 @@ MonoBehaviour:
   indicatorSpinSpeed: 40
   indiciator: {fileID: 1600215546}
   cameraFollow: {fileID: 668282532}
-  objectType: 3
+  objectType: 1
   onHackedEvent:
     m_PersistentCalls:
       m_Calls:
@@ -907,7 +907,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!1 &1600215546
 GameObject:
@@ -2413,7 +2413,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &3569066871663427322
 CapsuleCollider:
@@ -2443,7 +2443,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCam: {fileID: 416194031}
   playerCamFollow: {fileID: 1274523757}
-  moveSpeed: 5
+  moveSpeed: 200
   jumpForce: 300
   spinSpeed: 30
   animationSwapSpeed: 3

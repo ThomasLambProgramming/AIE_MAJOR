@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject playerCamFollow = null;
     
     private GameObject currentPlayer = null;
+    private Rigidbody currentPlayerRigidbody = null;
     
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
@@ -23,7 +24,6 @@ public class PlayerMovement : MonoBehaviour
     private bool canJump = true;
     
     private MasterInput playerInput = null;
-    private Rigidbody playerRigidbody = new Rigidbody();
     
     private Animator animator = null;
     private Vector2 playerMoveInput = Vector2.zero;
@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
-        playerRigidbody = GetComponent<Rigidbody>();
+        currentPlayerRigidbody = GetComponent<Rigidbody>();
     }
     
 
@@ -66,10 +66,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (playerMoveInput != Vector2.zero)
         {
-            currentPlayer.transform.Translate(new Vector3(
-                playerMoveInput.x * moveSpeed * Time.deltaTime,
-                0,
-                playerMoveInput.y * moveSpeed * Time.deltaTime));
+            float currentYAmount = currentPlayerRigidbody.velocity.y;
+            Vector3 newVel = 
+                currentPlayer.transform.forward * (playerMoveInput.y * moveSpeed * Time.deltaTime) +
+                currentPlayer.transform.right *  (playerMoveInput.x * moveSpeed * Time.deltaTime);
+            newVel.y = currentYAmount;
+            currentPlayerRigidbody.velocity = newVel;
         }
 
         if (playerSpinInput != Vector2.zero)
@@ -102,19 +104,27 @@ public class PlayerMovement : MonoBehaviour
             {
                 
                 currentPlayer = currentInteractable.gameObject;
+                currentPlayerRigidbody = currentPlayer.GetComponent<Rigidbody>();
+                if (currentPlayerRigidbody.isKinematic)
+                    currentPlayerRigidbody.isKinematic = false;
                 currentInteractable = null;
                 currentPlayer.transform.rotation = truePlayerObject.transform.rotation;
                 truePlayerObject.transform.position = new Vector3(0, -900, 0);
                 mainCam.Follow = a_cameraFollow;
+                canJump = false;
             }
             //run functions for the object type or etc
         }
         else if (currentPlayer != truePlayerObject)
         {
+            //set it to be kinematic for now so no weird bugs can occur
+            currentPlayerRigidbody.isKinematic = true;
             truePlayerObject.transform.position = currentPlayer.transform.position;
             truePlayerObject.transform.rotation = currentPlayer.transform.rotation;
             currentPlayer = truePlayerObject;
             mainCam.Follow = playerCamFollow.transform;
+            currentPlayerRigidbody = currentPlayer.GetComponent<Rigidbody>();
+            canJump = true;
         }
     }
     void MovePlayer(InputAction.CallbackContext a_context)
@@ -131,7 +141,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (canJump)
         {
-            playerRigidbody.AddForce(Vector3.up * jumpForce);
+            currentPlayerRigidbody.AddForce(Vector3.up * jumpForce);
             //animator.SetBool(jumping, true);
             isJumping = true;
             canJump = false;
