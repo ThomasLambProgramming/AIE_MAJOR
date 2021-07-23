@@ -9,8 +9,11 @@ public enum HackedType
     Enemy = 1,
     MoveableObject = 2,
     ControlPanel = 3,
-    INVALID = 4
+    Lever = 4,
+    INVALID = 5
+    
 }
+[SelectionBase]
 public class HackableObject : MonoBehaviour
 {
     public float dotAllowance = 0.9f;
@@ -79,12 +82,44 @@ public class HackableObject : MonoBehaviour
             a_hackedType = HackedType.ControlPanel;
             a_cameraFollow = null;
         }
+        else if (objectType == HackedType.Lever)
+        {
+            onHackedEvent?.Invoke();
+            a_hackedType = HackedType.Lever;
+            a_cameraFollow = null;
+            if (alreadyRotated == false)
+            {
+                tempRotateForLever = true;
+                alreadyRotated = true;
+            }
+        }
         else
         {
             a_hackedType = HackedType.INVALID;
             a_cameraFollow = null;
         }
 
+    }
+
+    [SerializeField] private GameObject rotateAnchor = null;
+    [SerializeField] private float rotateAmount = 70;
+    private bool tempRotateForLever = false;
+    private float timer = 0;
+    [SerializeField] private float timeForRotate = 2f;
+    private bool alreadyRotated = false;
+    private void Update()
+    {
+        if (objectType == HackedType.Lever && tempRotateForLever)
+        {
+            timer += Time.deltaTime;
+            if (timer > timeForRotate)
+            {
+                tempRotateForLever = false;
+                return;
+            }
+            rotateAnchor.transform.Rotate(new Vector3((rotateAmount * Time.deltaTime) / timeForRotate,0,0));
+            
+        }
     }
 
     private void OnTriggerEnter(Collider a_other)

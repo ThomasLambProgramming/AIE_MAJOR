@@ -52,7 +52,11 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         currentPlayerRigidbody = GetComponent<Rigidbody>();
     }
-    
+
+    private void Update()
+    {
+        
+    }
 
     private void FixedUpdate()
     {
@@ -63,7 +67,12 @@ public class PlayerMovement : MonoBehaviour
         
         animator.SetFloat(xPos, currentAnimationVector.x);
         animator.SetFloat(yPos, currentAnimationVector.y);
+        
 
+        if (playerSpinInput != Vector2.zero)
+        {
+            currentPlayer.transform.Rotate(new Vector3(0, playerSpinInput.x * spinSpeed * Time.deltaTime, 0));
+        }
         if (playerMoveInput != Vector2.zero)
         {
             float currentYAmount = currentPlayerRigidbody.velocity.y;
@@ -73,12 +82,6 @@ public class PlayerMovement : MonoBehaviour
             newVel.y = currentYAmount;
             currentPlayerRigidbody.velocity = newVel;
         }
-
-        if (playerSpinInput != Vector2.zero)
-        {
-            currentPlayer.transform.Rotate(new Vector3(0, playerSpinInput.x * spinSpeed * Time.deltaTime, 0));
-        }
-
         if (isJumping)
         {
             //for now if we are jumping it will set the jumping to false if it hits anything
@@ -130,6 +133,7 @@ public class PlayerMovement : MonoBehaviour
     void MovePlayer(InputAction.CallbackContext a_context)
     {
         playerMoveInput = a_context.ReadValue<Vector2>();
+        
     }
 
     void MoveOver(InputAction.CallbackContext a_context)
