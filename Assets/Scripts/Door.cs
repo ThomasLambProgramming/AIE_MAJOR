@@ -6,35 +6,48 @@ using UnityEngine;
 public class Door : MonoBehaviour
 {
     [SerializeField] private float openSpeed = 3f;
-    [SerializeField] private Vector3 targetPosition = Vector3.zero;
+    [SerializeField] private Vector3 offsetPosition = Vector3.zero;
     private Vector3 startingPosition = Vector3.zero;
+    private Vector3 moveDirection = Vector3.zero;
+    
     private bool openDoor = false;
     private bool closeDoor = true;
     private bool doneMoving = true;
     private void Start()
     {
         startingPosition = transform.position;
-        targetPosition = startingPosition + targetPosition;
+        offsetPosition = startingPosition + offsetPosition;
     }
 
     void FixedUpdate()
     {
-        if (doneMoving)
-            return;
-        
-        if (openDoor)
+        if (!doneMoving)
         {
-            Vector3 direction = targetPosition - startingPosition;
-            transform.position = transform.position + direction * (Time.deltaTime * openSpeed);
-            if (Vector3.SqrMagnitude(direction) < 0.1f)
-                doneMoving = true;
-        }
-        else
-        {
-            Vector3 direction = startingPosition - targetPosition;
-            transform.position = transform.position + direction * (Time.deltaTime * openSpeed);
-            if (Vector3.SqrMagnitude(direction) < 0.1f)
-                doneMoving = true;
+
+            if (openDoor)
+            {
+                if (Vector3.SqrMagnitude(offsetPosition - transform.position) < 0.001f)
+                {
+                    transform.position = offsetPosition;
+                    doneMoving = true;
+                    return;
+                }
+                moveDirection = offsetPosition - startingPosition;
+                moveDirection = moveDirection.normalized;
+                transform.position = transform.position + moveDirection * (Time.deltaTime * openSpeed);
+            }
+            else
+            {
+                if (Vector3.SqrMagnitude(transform.position - startingPosition) < 0.001f)
+                {
+                    transform.position = startingPosition;
+                    doneMoving = true;
+                    return;   
+                }
+                moveDirection = startingPosition - offsetPosition;
+                moveDirection = moveDirection.normalized;
+                transform.position = transform.position + moveDirection * (Time.deltaTime * openSpeed);
+            }
         }
     }
     [ContextMenu("Open Door")]

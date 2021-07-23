@@ -52,6 +52,7 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         playerRigidbody = GetComponent<Rigidbody>();
     }
+    
 
     private void FixedUpdate()
     {
@@ -82,9 +83,10 @@ public class PlayerMovement : MonoBehaviour
             Collider[] colliders = Physics.OverlapSphere(groundCheck.position, 0.1f, ~(1 << 10));
             if (colliders.Length > 0)
             {
+                Debug.Log("found");
                 isJumping = false;
                 canJump = true;
-                animator.SetBool(jumping, false);   
+                //animator.SetBool(jumping, false);   
             }
         }
     }
@@ -96,7 +98,7 @@ public class PlayerMovement : MonoBehaviour
         if (currentInteractable != null)
         {
             currentInteractable.BeingHacked(out HackedType objectType, out Transform a_cameraFollow);
-            if (objectType == HackedType.ENEMY || objectType == HackedType.MOVEABLEOBJECT)
+            if (objectType == HackedType.Enemy || objectType == HackedType.MoveableObject)
             {
                 
                 currentPlayer = currentInteractable.gameObject;
@@ -130,7 +132,7 @@ public class PlayerMovement : MonoBehaviour
         if (canJump)
         {
             playerRigidbody.AddForce(Vector3.up * jumpForce);
-            animator.SetBool(jumping, true);
+            //animator.SetBool(jumping, true);
             isJumping = true;
             canJump = false;
         }

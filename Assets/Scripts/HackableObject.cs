@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum HackedType
 {
-    ENEMY = 1,
-    MOVEABLEOBJECT = 2,
-    CONTROLPANEL = 3
+    Enemy = 1,
+    MoveableObject = 2,
+    ControlPanel = 3,
+    INVALID = 4
 }
 public class HackableObject : MonoBehaviour
 {
@@ -21,9 +23,11 @@ public class HackableObject : MonoBehaviour
 
     [SerializeField] private GameObject cameraFollow = null;
     
-    [SerializeField] private bool isEnemy = false;
-    [SerializeField] private bool isMoveable = false;
-    [SerializeField] private bool isControlPanel = false;
+    [SerializeField] private HackedType objectType = HackedType.Enemy;
+
+    [Header("These events will only run when it is of control panel type")]
+    [SerializeField] private UnityEvent onHackedEvent;
+    
     private void OnTriggerStay(Collider a_other)
     {
         //This is universal for all hackable objects to have the indicator
@@ -57,35 +61,30 @@ public class HackableObject : MonoBehaviour
 
     public void BeingHacked(out HackedType a_hackedType, out Transform a_cameraFollow)
     {
-        if (isEnemy)
+        if (objectType == HackedType.Enemy)
         {
-            a_hackedType = HackedType.ENEMY;
+            a_hackedType = HackedType.Enemy;
             a_cameraFollow = cameraFollow.transform;
         }
-        else if (isMoveable)
+        else if (objectType == HackedType.MoveableObject)
         {
             //moveable object
-            a_hackedType = HackedType.MOVEABLEOBJECT;
+            a_hackedType = HackedType.MoveableObject;
             a_cameraFollow = cameraFollow.transform;
 
+        }
+        else if (objectType == HackedType.ControlPanel)
+        {
+            onHackedEvent?.Invoke();
+            a_hackedType = HackedType.ControlPanel;
+            a_cameraFollow = null;
         }
         else
         {
+            a_hackedType = HackedType.INVALID;
             a_cameraFollow = null;
-            a_hackedType = HackedType.CONTROLPANEL;
-            //control panel
-            //move it up as an indicator of working
-            transform.Translate(0, 2, 0);
-
-            playerScript.RemoveInteractable();
-            indiciator.SetActive(false);
-            //stops the player from interacting with it again
-            foreach (var boxCollider in colliders)
-            {
-                if (boxCollider.isTrigger)
-                    boxCollider.enabled = false;
-            }
         }
+
     }
 
     private void OnTriggerEnter(Collider a_other)
