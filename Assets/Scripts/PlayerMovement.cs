@@ -5,6 +5,7 @@ using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[SelectionBase]
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera mainCam = null;
