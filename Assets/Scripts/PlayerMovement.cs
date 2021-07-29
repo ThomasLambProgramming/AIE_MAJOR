@@ -49,7 +49,11 @@ public class PlayerMovement : MonoBehaviour
     private bool inWire = false;
     private int pathIndex = 0;
     private bool isJumping = false;
-    
+
+    private float jumpTimer = 0.3f;
+    private float jumpStopTimer = 0;
+
+    private bool holdingJump = false;
     // Start is called before the first frame update
     void Awake()
     {
@@ -141,14 +145,31 @@ public class PlayerMovement : MonoBehaviour
 
         if (isJumping)
         {
-            //for now if we are jumping it will set the jumping to false if it hits anything
-            Collider[] colliders = Physics.OverlapSphere(groundCheck.position, 0.1f, ~(1 << 10));
-            if (colliders.Length > 0)
+            Debug.Log(holdingJump);
+            if (currentPlayerRigidbody.velocity.y < 0 && holdingJump == false)
+            {
+                Vector3 grav = new Vector3(0, -9.8f, 0);
+                currentPlayerRigidbody.velocity += grav * Time.deltaTime;
+            }
+            else if (holdingJump == false)
+            {
+                Vector3 grav = new Vector3(0, -9.8f, 0);
+                currentPlayerRigidbody.velocity += grav * Time.deltaTime;
+            }
+
+            jumpStopTimer += Time.deltaTime;
+            if (jumpStopTimer >= jumpTimer)
             {
                 
-                isJumping = false;
-                canJump = true;
-                //animator.SetBool(jumping, false);   
+                //for now if we are jumping it will set the jumping to false if it hits anything
+                Collider[] colliders = Physics.OverlapSphere(groundCheck.position, 0.1f, ~(1 << 10));
+                if (colliders.Length > 0)
+                {
+
+                    isJumping = false;
+                    canJump = true;
+                    //animator.SetBool(jumping, false);   
+                }
             }
         }
     }
@@ -222,7 +243,15 @@ public class PlayerMovement : MonoBehaviour
             //animator.SetBool(jumping, true);
             isJumping = true;
             canJump = false;
+            jumpStopTimer = 0;
         }
+
+        holdingJump = true;
+    }
+
+    void PlayerJumpOver(InputAction.CallbackContext a_context)
+    {
+        holdingJump = false;
     }
 
     void PlayerSpin(InputAction.CallbackContext a_context)
@@ -259,6 +288,7 @@ public class PlayerMovement : MonoBehaviour
         playerInput.Player.Movement.performed -= MovePlayer;
         playerInput.Player.Movement.canceled -= MoveOver;
         playerInput.Player.Jump.performed -= PlayerJump;
+        playerInput.Player.Jump.canceled -= PlayerJumpOver;
         playerInput.Player.Camera.performed -= PlayerSpin;
         playerInput.Player.Camera.canceled -= PlayerSpinOver;
         playerInput.Player.Interaction.performed -= Interact;
@@ -270,6 +300,7 @@ public class PlayerMovement : MonoBehaviour
         playerInput.Player.Movement.performed += MovePlayer;
         playerInput.Player.Movement.canceled += MoveOver;
         playerInput.Player.Jump.performed += PlayerJump;
+        playerInput.Player.Jump.canceled += PlayerJumpOver;
         playerInput.Player.Camera.performed += PlayerSpin;
         playerInput.Player.Camera.canceled += PlayerSpinOver;
         playerInput.Player.Interaction.performed += Interact;
