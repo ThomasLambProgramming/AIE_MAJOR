@@ -10,7 +10,8 @@ public enum HackedType
     MoveableObject = 2,
     ControlPanel = 3,
     Lever = 4,
-    INVALID = 5
+    Wire = 5,
+    INVALID = 6
     
 }
 [SelectionBase]
@@ -104,6 +105,11 @@ public class HackableObject : MonoBehaviour
                 tempRotateForLever = true;
                 alreadyRotated = true;
             }
+        }
+        else if (objectType == HackedType.Wire)
+        {
+            a_hackedType = HackedType.Wire;
+            a_cameraFollow = cameraFollow.transform;
         }
         else
         {

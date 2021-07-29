@@ -22,6 +22,10 @@ public class PlayerMovement : MonoBehaviour
     public float animationSwapSpeed = 3f;
     public Transform groundCheck = null;
 
+    private bool rotateWireCam = false;
+    private Quaternion rotationGoalWire = Quaternion.identity;
+    [SerializeField] private float rotationSpeed = 10f;
+    
     private bool canJump = true;
     
     private MasterInput playerInput = null;
@@ -36,7 +40,14 @@ public class PlayerMovement : MonoBehaviour
     private readonly int jumping = Animator.StringToHash("Jumping");
 
     private HackableObject currentInteractable = null;
-    
+
+    [SerializeField] private float wireSpeed = 20f;
+    [SerializeField] private GameObject wireDummy = null;
+    [SerializeField] private GameObject wireCameraOffset = null;
+    private List<Vector3> wirePath = null;
+    private float goNextDistance = 1f;
+    private bool inWire = false;
+    private int pathIndex = 0;
     private bool isJumping = false;
     
     // Start is called before the first frame update
@@ -62,11 +73,55 @@ public class PlayerMovement : MonoBehaviour
         
         animator.SetFloat(xPos, currentAnimationVector.x);
         animator.SetFloat(yPos, currentAnimationVector.y);
-
+        
     }
 
     private void FixedUpdate()
     {
+        if (inWire)
+        {
+            if (Vector3.Distance(wireDummy.transform.position, wirePath[pathIndex]) > goNextDistance)
+            {
+                Vector3 currentWirePos = wireDummy.transform.position;
+                currentWirePos = currentWirePos + (wirePath[pathIndex] - wireDummy.transform.position).normalized *
+                    (Time.deltaTime * (wireSpeed));
+                wireDummy.transform.position = currentWirePos;
+                if (rotateWireCam)
+                {
+                    wireDummy.transform.rotation = Quaternion.RotateTowards(
+                        wireDummy.transform.rotation, 
+                        rotationGoalWire, 
+                        rotationSpeed);
+                    if (wireDummy.transform.rotation == rotationGoalWire)
+                        rotateWireCam = false;
+                }
+            }
+            else
+            {
+                if (pathIndex < wirePath.Count - 1)
+                {
+                    pathIndex++;
+                    rotationGoalWire = Quaternion.LookRotation(
+                        (wirePath[pathIndex] - wireDummy.transform.position).normalized, Vector3.up);
+                    rotateWireCam = true;
+                }
+                else
+                {
+                    //end of path
+                    pathIndex = 0;
+                    wirePath = null;
+                    inWire = false;
+                    wireDummy.SetActive(false);
+                    mainCam.Follow = playerCamFollow.transform;
+                    truePlayerObject.transform.position = wireDummy.transform.position;
+                }
+                
+            }
+            //we dont want anything to run while in the wire except for the input to leave or if the
+            //player gets to the end
+            return;
+            
+        }
         //FIX THE ANIMATOR FOR WHEN EXITED HACKED OBJECT (fine for proof of concept)
         if (playerSpinInput != Vector2.zero)
         {
@@ -117,6 +172,19 @@ public class PlayerMovement : MonoBehaviour
                 truePlayerObject.transform.position = new Vector3(0, -900, 0);
                 mainCam.Follow = a_cameraFollow;
                 canJump = false;
+            }
+            else if (objectType == HackedType.Wire)
+            {
+                wirePath = currentInteractable.GetComponent<Wire>().GivePath();
+                mainCam.Follow = wireCameraOffset.transform;
+                truePlayerObject.transform.position = new Vector3(0, -900, 0);
+                wireDummy.transform.position = wirePath[0];
+                wireDummy.SetActive(true);
+                inWire = true;
+                //we always want to move to the next index not the starting position (because we are already there)
+                //and it might cause issues
+                pathIndex = 1;
+                wireDummy.transform.rotation = Quaternion.LookRotation((wirePath[pathIndex] - wireDummy.transform.position).normalized, Vector3.up);
             }
             //run functions for the object type or etc
         }
@@ -177,16 +245,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnEnable()
     {
-        playerInput.Enable();
-        playerInput.Player.Movement.performed += MovePlayer;
-        playerInput.Player.Movement.canceled += MoveOver;
-        playerInput.Player.Jump.performed += PlayerJump;
-        playerInput.Player.Camera.performed += PlayerSpin;
-        playerInput.Player.Camera.canceled += PlayerSpinOver;
-        playerInput.Player.Interaction.performed += Interact;
+        EnableInput();
     }
 
     private void OnDisable()
+    {
+        DisableInput();
+    }
+
+    private void DisableInput()
     {
         playerInput.Disable();
         playerInput.Player.Movement.performed -= MovePlayer;
@@ -195,5 +262,16 @@ public class PlayerMovement : MonoBehaviour
         playerInput.Player.Camera.performed -= PlayerSpin;
         playerInput.Player.Camera.canceled -= PlayerSpinOver;
         playerInput.Player.Interaction.performed -= Interact;
+    }
+
+    private void EnableInput()
+    {
+        playerInput.Enable();
+        playerInput.Player.Movement.performed += MovePlayer;
+        playerInput.Player.Movement.canceled += MoveOver;
+        playerInput.Player.Jump.performed += PlayerJump;
+        playerInput.Player.Camera.performed += PlayerSpin;
+        playerInput.Player.Camera.canceled += PlayerSpinOver;
+        playerInput.Player.Interaction.performed += Interact;
     }
 }

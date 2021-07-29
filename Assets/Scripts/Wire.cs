@@ -12,11 +12,15 @@ public class Wire : MonoBehaviour
     {
         if (Selection.activeObject == gameObject)
         {
+        }
             foreach (var point in path)
             {
                 Gizmos.DrawSphere(point, 1);
             }
-        }
     }
-    
+
+    public List<Vector3> GivePath()
+    {
+        return path;
+    }
 }
