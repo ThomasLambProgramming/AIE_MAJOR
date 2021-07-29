@@ -1963,7 +1963,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e7147f8fc65c9a5449a358b15250b972, type: 2}
+  - {fileID: 2100000, guid: 43300e515113d4d4b90e24906945ee47, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2823,7 +2823,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 43300e515113d4d4b90e24906945ee47, type: 2}
+  - {fileID: 2100000, guid: 67286ee10f2233845aeda181d8abd556, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4445,7 +4445,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 67286ee10f2233845aeda181d8abd556, type: 2}
+  - {fileID: 2100000, guid: e7147f8fc65c9a5449a358b15250b972, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7385,7 +7385,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh47002
+  m_Name: pb_Mesh19822
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7745,7 +7745,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 746552f8d471d8e43941c2dd0ec7ed92, type: 2}
+  - {fileID: 2100000, guid: ed83b9ba1091ef941b36b8ef322ae5d8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8973,7 +8973,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 746552f8d471d8e43941c2dd0ec7ed92, type: 2}
+  - {fileID: 2100000, guid: ed83b9ba1091ef941b36b8ef322ae5d8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10681,7 +10681,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 746552f8d471d8e43941c2dd0ec7ed92, type: 2}
+  - {fileID: 2100000, guid: ed83b9ba1091ef941b36b8ef322ae5d8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11274,11 +11274,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCam: {fileID: 246782958}
   playerCamFollow: {fileID: 949721396}
-  moveSpeed: 200
-  jumpForce: 250
+  moveSpeed: 300
+  jumpForce: 7
   spinSpeed: 30
   animationSwapSpeed: 3
   groundCheck: {fileID: 1314903098}
+  rotationSpeed: 10
+  wireSpeed: 20
+  wireDummy: {fileID: 0}
+  wireCameraOffset: {fileID: 0}
 --- !u!136 &1322797373
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -13705,7 +13709,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 746552f8d471d8e43941c2dd0ec7ed92, type: 2}
+  - {fileID: 2100000, guid: ed83b9ba1091ef941b36b8ef322ae5d8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -18228,7 +18232,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bb2dc84bddc73734cac0a2c72424b53b, type: 2}
+  - {fileID: 2100000, guid: e7147f8fc65c9a5449a358b15250b972, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
