@@ -43,10 +43,14 @@ public class GameEventManager : MonoBehaviour
     void Update()
     {
         PlayerUpdate?.Invoke();
-        PlayerFixedUpdate?.Invoke();
         EnemyUpdate?.Invoke();
-        EnemyFixedUpdate?.Invoke();
         GeneralUpdate?.Invoke();
+    }
+
+    private void FixedUpdate()
+    {
+        PlayerFixedUpdate?.Invoke();
+        EnemyFixedUpdate?.Invoke();
         GeneralFixedUpdate?.Invoke();
     }
 

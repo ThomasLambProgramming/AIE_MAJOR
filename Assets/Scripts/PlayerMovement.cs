@@ -56,20 +56,18 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        
-    }
-
-    private void FixedUpdate()
-    {
-        //FIX THE ANIMATOR FOR WHEN EXITED HACKED OBJECT (fine for proof of concept)
         currentAnimationVector = new Vector2(
             Mathf.Lerp(currentAnimationVector.x, playerMoveInput.x, animationSwapSpeed * Time.deltaTime),
             Mathf.Lerp(currentAnimationVector.y, playerMoveInput.y, animationSwapSpeed * Time.deltaTime));
         
         animator.SetFloat(xPos, currentAnimationVector.x);
         animator.SetFloat(yPos, currentAnimationVector.y);
-        
 
+    }
+
+    private void FixedUpdate()
+    {
+        //FIX THE ANIMATOR FOR WHEN EXITED HACKED OBJECT (fine for proof of concept)
         if (playerSpinInput != Vector2.zero)
         {
             currentPlayer.transform.Rotate(new Vector3(0, playerSpinInput.x * spinSpeed * Time.deltaTime, 0));
@@ -83,13 +81,16 @@ public class PlayerMovement : MonoBehaviour
             newVel.y = currentYAmount;
             currentPlayerRigidbody.velocity = newVel;
         }
+        
+        
+
         if (isJumping)
         {
             //for now if we are jumping it will set the jumping to false if it hits anything
             Collider[] colliders = Physics.OverlapSphere(groundCheck.position, 0.1f, ~(1 << 10));
             if (colliders.Length > 0)
             {
-                Debug.Log("found");
+                
                 isJumping = false;
                 canJump = true;
                 //animator.SetBool(jumping, false);   
@@ -123,7 +124,10 @@ public class PlayerMovement : MonoBehaviour
         {
             //set it to be kinematic for now so no weird bugs can occur
             currentPlayerRigidbody.isKinematic = true;
-            truePlayerObject.transform.position = currentPlayer.transform.position;
+            Vector3 spawnPoint = currentPlayer.transform.position;
+            
+            spawnPoint.y += currentPlayer.transform.localScale.y + 0.3f;
+            truePlayerObject.transform.position = spawnPoint;
             truePlayerObject.transform.rotation = currentPlayer.transform.rotation;
             currentPlayer = truePlayerObject;
             mainCam.Follow = playerCamFollow.transform;
@@ -134,7 +138,6 @@ public class PlayerMovement : MonoBehaviour
     void MovePlayer(InputAction.CallbackContext a_context)
     {
         playerMoveInput = a_context.ReadValue<Vector2>();
-        
     }
 
     void MoveOver(InputAction.CallbackContext a_context)
@@ -146,6 +149,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (canJump)
         {
+            
             currentPlayerRigidbody.AddForce(Vector3.up * jumpForce);
             //animator.SetBool(jumping, true);
             isJumping = true;
