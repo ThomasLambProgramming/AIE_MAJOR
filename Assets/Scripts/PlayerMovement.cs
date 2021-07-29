@@ -53,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
     private float jumpTimer = 0.3f;
     private float jumpStopTimer = 0;
 
+    private bool hasDoubleJumped = false;
     private bool holdingJump = false;
     // Start is called before the first frame update
     void Awake()
@@ -165,7 +166,7 @@ public class PlayerMovement : MonoBehaviour
                 Collider[] colliders = Physics.OverlapSphere(groundCheck.position, 0.1f, ~(1 << 10));
                 if (colliders.Length > 0)
                 {
-
+                    hasDoubleJumped = false;
                     isJumping = false;
                     canJump = true;
                     //animator.SetBool(jumping, false);   
@@ -236,15 +237,21 @@ public class PlayerMovement : MonoBehaviour
 
     void PlayerJump(InputAction.CallbackContext a_context)
     {
-        if (canJump)
+        if (canJump || hasDoubleJumped == false)
         {
             
-            currentPlayerRigidbody.AddForce(Vector3.up * jumpForce);
+            currentPlayerRigidbody.velocity = (Vector3.up * jumpForce);
             //animator.SetBool(jumping, true);
             isJumping = true;
-            canJump = false;
             jumpStopTimer = 0;
+            if (hasDoubleJumped == false && canJump == false)
+            {
+                hasDoubleJumped = true;
+            }
+            canJump = false;
+
         }
+        
 
         holdingJump = true;
     }
