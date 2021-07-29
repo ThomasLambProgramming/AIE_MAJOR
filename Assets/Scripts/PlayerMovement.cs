@@ -9,13 +9,14 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera mainCam = null;
+
     //the game object used will change (when the player moves to be an object for a short period)
     private GameObject truePlayerObject = null;
     [SerializeField] private GameObject playerCamFollow = null;
-    
+
     private GameObject currentPlayer = null;
     private Rigidbody currentPlayerRigidbody = null;
-    
+
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
     public float spinSpeed = 5f;
@@ -25,16 +26,16 @@ public class PlayerMovement : MonoBehaviour
     private bool rotateWireCam = false;
     private Quaternion rotationGoalWire = Quaternion.identity;
     [SerializeField] private float rotationSpeed = 10f;
-    
+
     private bool canJump = true;
-    
+
     private MasterInput playerInput = null;
-    
+
     private Animator animator = null;
     private Vector2 playerMoveInput = Vector2.zero;
     private Vector2 playerSpinInput = Vector2.zero;
     private Vector2 currentAnimationVector = Vector2.zero;
-    
+
     private readonly int xPos = Animator.StringToHash("XPos");
     private readonly int yPos = Animator.StringToHash("YPos");
     private readonly int jumping = Animator.StringToHash("Jumping");
@@ -45,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject wireDummy = null;
     [SerializeField] private GameObject wireCameraOffset = null;
     private List<Vector3> wirePath = null;
-    private float goNextDistance = 1f;
+    private float goNextDistance = 0.2f;
     private bool inWire = false;
     private int pathIndex = 0;
     private bool isJumping = false;
@@ -54,16 +55,19 @@ public class PlayerMovement : MonoBehaviour
     private float jumpStopTimer = 0;
 
     private bool hasDoubleJumped = false;
+
     private bool holdingJump = false;
+
     // Start is called before the first frame update
     void Awake()
     {
         truePlayerObject = gameObject;
         currentPlayer = truePlayerObject;
         playerInput = new MasterInput();
-        
     }
+
     private Vector3 cameraOffset = Vector3.zero;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -75,10 +79,9 @@ public class PlayerMovement : MonoBehaviour
         currentAnimationVector = new Vector2(
             Mathf.Lerp(currentAnimationVector.x, playerMoveInput.x, animationSwapSpeed * Time.deltaTime),
             Mathf.Lerp(currentAnimationVector.y, playerMoveInput.y, animationSwapSpeed * Time.deltaTime));
-        
+
         animator.SetFloat(xPos, currentAnimationVector.x);
         animator.SetFloat(yPos, currentAnimationVector.y);
-        
     }
 
     private void FixedUpdate()
@@ -94,8 +97,8 @@ public class PlayerMovement : MonoBehaviour
                 if (rotateWireCam)
                 {
                     wireDummy.transform.rotation = Quaternion.RotateTowards(
-                        wireDummy.transform.rotation, 
-                        rotationGoalWire, 
+                        wireDummy.transform.rotation,
+                        rotationGoalWire,
                         rotationSpeed);
                     if (wireDummy.transform.rotation == rotationGoalWire)
                         rotateWireCam = false;
@@ -120,29 +123,29 @@ public class PlayerMovement : MonoBehaviour
                     mainCam.Follow = playerCamFollow.transform;
                     truePlayerObject.transform.position = wireDummy.transform.position;
                 }
-                
             }
+
             //we dont want anything to run while in the wire except for the input to leave or if the
             //player gets to the end
             return;
-            
         }
+
         //FIX THE ANIMATOR FOR WHEN EXITED HACKED OBJECT (fine for proof of concept)
         if (playerSpinInput != Vector2.zero)
         {
             currentPlayer.transform.Rotate(new Vector3(0, playerSpinInput.x * spinSpeed * Time.deltaTime, 0));
         }
+
         if (playerMoveInput != Vector2.zero)
         {
             float currentYAmount = currentPlayerRigidbody.velocity.y;
-            Vector3 newVel = 
+            Vector3 newVel =
                 currentPlayer.transform.forward * (playerMoveInput.y * moveSpeed * Time.deltaTime) +
-                currentPlayer.transform.right *  (playerMoveInput.x * moveSpeed * Time.deltaTime);
+                currentPlayer.transform.right * (playerMoveInput.x * moveSpeed * Time.deltaTime);
             newVel.y = currentYAmount;
             currentPlayerRigidbody.velocity = newVel;
         }
-        
-        
+
 
         if (isJumping)
         {
@@ -161,7 +164,6 @@ public class PlayerMovement : MonoBehaviour
             jumpStopTimer += Time.deltaTime;
             if (jumpStopTimer >= jumpTimer)
             {
-                
                 //for now if we are jumping it will set the jumping to false if it hits anything
                 Collider[] colliders = Physics.OverlapSphere(groundCheck.position, 0.1f, ~(1 << 10));
                 if (colliders.Length > 0)
@@ -175,16 +177,14 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    
+
     void Interact(InputAction.CallbackContext a_context)
     {
-        
         if (currentInteractable != null)
         {
             currentInteractable.BeingHacked(out HackedType objectType, out Transform a_cameraFollow);
             if (objectType == HackedType.Enemy || objectType == HackedType.MoveableObject)
             {
-                
                 currentPlayer = currentInteractable.gameObject;
                 currentPlayerRigidbody = currentPlayer.GetComponent<Rigidbody>();
                 if (currentPlayerRigidbody.isKinematic)
@@ -203,10 +203,13 @@ public class PlayerMovement : MonoBehaviour
                 wireDummy.transform.position = wirePath[0];
                 wireDummy.SetActive(true);
                 inWire = true;
+                currentInteractable = null;
                 //we always want to move to the next index not the starting position (because we are already there)
                 //and it might cause issues
                 pathIndex = 1;
-                wireDummy.transform.rotation = Quaternion.LookRotation((wirePath[pathIndex] - wireDummy.transform.position).normalized, Vector3.up);
+                wireDummy.transform.rotation =
+                    Quaternion.LookRotation((wirePath[pathIndex] - wireDummy.transform.position).normalized,
+                        Vector3.up);
             }
             //run functions for the object type or etc
         }
@@ -215,7 +218,7 @@ public class PlayerMovement : MonoBehaviour
             //set it to be kinematic for now so no weird bugs can occur
             currentPlayerRigidbody.isKinematic = true;
             Vector3 spawnPoint = currentPlayer.transform.position;
-            
+
             spawnPoint.y += currentPlayer.transform.localScale.y + 0.3f;
             truePlayerObject.transform.position = spawnPoint;
             truePlayerObject.transform.rotation = currentPlayer.transform.rotation;
@@ -225,6 +228,7 @@ public class PlayerMovement : MonoBehaviour
             canJump = true;
         }
     }
+
     void MovePlayer(InputAction.CallbackContext a_context)
     {
         playerMoveInput = a_context.ReadValue<Vector2>();
@@ -237,9 +241,25 @@ public class PlayerMovement : MonoBehaviour
 
     void PlayerJump(InputAction.CallbackContext a_context)
     {
+        holdingJump = true;
+        if (inWire)
+        {
+            //end of path
+            pathIndex = 0;
+            wirePath = null;
+            inWire = false;
+            wireDummy.SetActive(false);
+            mainCam.Follow = playerCamFollow.transform;
+
+            Vector3 newPlayerPos = wireDummy.transform.position;
+            newPlayerPos.y += 1.5f;
+            truePlayerObject.transform.position = newPlayerPos;
+
+            return;
+        }
+
         if (canJump || hasDoubleJumped == false)
         {
-            
             currentPlayerRigidbody.velocity = (Vector3.up * jumpForce);
             //animator.SetBool(jumping, true);
             isJumping = true;
@@ -248,12 +268,9 @@ public class PlayerMovement : MonoBehaviour
             {
                 hasDoubleJumped = true;
             }
+
             canJump = false;
-
         }
-        
-
-        holdingJump = true;
     }
 
     void PlayerJumpOver(InputAction.CallbackContext a_context)
@@ -265,6 +282,7 @@ public class PlayerMovement : MonoBehaviour
     {
         playerSpinInput = a_context.ReadValue<Vector2>();
     }
+
     void PlayerSpinOver(InputAction.CallbackContext a_context)
     {
         playerSpinInput = Vector2.zero;
@@ -275,8 +293,8 @@ public class PlayerMovement : MonoBehaviour
     public void SetInteractable(HackableObject a_hackableObject)
     {
         currentInteractable = a_hackableObject;
-    } 
-        
+    }
+
     public void RemoveInteractable() => currentInteractable = null;
 
     private void OnEnable()
