@@ -146,6 +146,20 @@ public class PlayerMovement : MonoBehaviour
             currentPlayerRigidbody.velocity = newVel;
         }
 
+        if (Mathf.Abs(playerMoveInput.magnitude) < 0.1f)
+        {
+            //if we are actually moving 
+            if (Mathf.Abs(currentPlayerRigidbody.velocity.x) > 0.2f || Mathf.Abs(currentPlayerRigidbody.velocity.z) > 0.2f)
+            {
+                Vector3 newVel = currentPlayerRigidbody.velocity;
+                //takes off 5% of the current vel every physics update so the player can land on a platform without overshooting
+                //because the velocity doesnt stop
+                newVel.z = newVel.z * 0.95f;
+                newVel.x = newVel.x * 0.95f;
+                currentPlayerRigidbody.velocity = newVel;
+            }
+        }
+
 
         if (isJumping)
         {
