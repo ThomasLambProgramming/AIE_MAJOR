@@ -11,7 +11,7 @@ public class Door : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
     
     private bool openDoor = false;
-    private bool closeDoor = true;
+    
     private bool doneMoving = true;
     private void Start()
     {
@@ -54,14 +54,14 @@ public class Door : MonoBehaviour
     public void Open()
     {
         openDoor = true;
-        closeDoor = false;
+        
         doneMoving = false;
     }
     [ContextMenu("Close Door")]
     public void Close()
     {
         openDoor = false;
-        closeDoor = true;
+        
         doneMoving = false;
     }
 }

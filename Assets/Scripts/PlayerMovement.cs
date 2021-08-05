@@ -61,8 +61,6 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        truePlayerObject = gameObject;
-        currentPlayer = truePlayerObject;
         playerInput = new MasterInput();
     }
 
@@ -70,6 +68,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
+        truePlayerObject = gameObject;
+        currentPlayer = truePlayerObject;
         animator = GetComponent<Animator>();
         currentPlayerRigidbody = GetComponent<Rigidbody>();
     }

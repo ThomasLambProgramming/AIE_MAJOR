@@ -24,14 +24,20 @@ public class OnTriggerEventScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.CompareTag("Player") == false)
+            return;
         onEnterEvents?.Invoke();
     }
     private void OnTriggerStay(Collider other)
     {
+        if (other.gameObject.CompareTag("Player") == false)
+            return;
         onStayEvents?.Invoke();
     }
     private void OnTriggerExit(Collider other)
     {
+        if (other.gameObject.CompareTag("Player") == false)
+            return;
         onExitEvents?.Invoke();
     }
 }
