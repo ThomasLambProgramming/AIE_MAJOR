@@ -28,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float rotationSpeed = 10f;
 
     private bool canJump = true;
-
+    
     private MasterInput playerInput = null;
 
     private Animator animator = null;
@@ -77,8 +77,8 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         currentAnimationVector = new Vector2(
-            Mathf.Lerp(currentAnimationVector.x, playerMoveInput.x, animationSwapSpeed * Time.deltaTime),
-            Mathf.Lerp(currentAnimationVector.y, playerMoveInput.y, animationSwapSpeed * Time.deltaTime));
+        Mathf.Lerp(currentAnimationVector.x, playerMoveInput.x, animationSwapSpeed * Time.deltaTime),
+        Mathf.Lerp(currentAnimationVector.y, playerMoveInput.y, animationSwapSpeed * Time.deltaTime));
 
         animator.SetFloat(xPos, currentAnimationVector.x);
         animator.SetFloat(yPos, currentAnimationVector.y);
@@ -163,7 +163,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (isJumping)
         {
-            Debug.Log(holdingJump);
+            
             if (currentPlayerRigidbody.velocity.y < 0 && holdingJump == false)
             {
                 Vector3 grav = new Vector3(0, -9.8f, 0);
