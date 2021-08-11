@@ -8,8 +8,11 @@ using UnityEngine.InputSystem;
 namespace Malicious.Core
 {
     [SelectionBase]
-    public class PlayerMovement : MonoBehaviour
+    public class PlayerController : MonoBehaviour
     {
+        //We can assume there will be only one player
+        public static PlayerController MainPlayer;
+        
         [SerializeField] private CinemachineVirtualCamera mainCam = null;
         [SerializeField] private GameObject truePlayerObject = null;
 
@@ -39,7 +42,8 @@ namespace Malicious.Core
         private readonly int yPos = Animator.StringToHash("YPos");
         private readonly int jumping = Animator.StringToHash("Jumping");
 
-        private HackableObject currentInteractable = null;
+        private IHackableMovement currentMoveable = null;
+        private IHackableInteractable currentInteractable = null;
 
         [SerializeField] private float wireSpeed = 20f;
         [SerializeField] private GameObject wireDummy = null;
@@ -61,6 +65,7 @@ namespace Malicious.Core
         void Awake()
         {
             playerInput = new MasterInput();
+            MainPlayer = this;
         }
 
         private Vector3 cameraOffset = Vector3.zero;
@@ -181,6 +186,7 @@ namespace Malicious.Core
                     else
                     {
                         //end of path
+                        ResetToTruePlayer(wireDummy.transform.position);
                         pathIndex = 0;
                         wirePath = null;
                         inWire = false;
@@ -197,52 +203,40 @@ namespace Malicious.Core
             }
         }
 
-        public void UpdateInteractable(HackableObject a_hackableObject)
-        {
-            currentInteractable = a_hackableObject;
-        }
+       
         void Interact(InputAction.CallbackContext a_context)
         {
+            //Discuss the importance the order may have to be changed based on game feel to have importance
+            //of the interactables over the moveables
             if (currentInteractable != null)
             {
-                currentInteractable.BeingHacked(out HackedType objectType);
-                if (objectType == HackedType.Enemy || objectType == HackedType.MoveableObject)
+                //add dot product checks and etc
+                currentInteractable.Hacked();
+            }
+            else if (currentMoveable != null)
+            {
+                MovementHackables currentType = currentMoveable.TypeOfHackable();
+                switch (currentType)
                 {
-                    currentPlayer = currentInteractable.gameObject;
-                    currentPlayerRigidbody = currentPlayer.GetComponent<Rigidbody>();
-                    if (currentPlayerRigidbody.isKinematic)
-                        currentPlayerRigidbody.isKinematic = false;
-                    currentInteractable = null;
-                    currentPlayer.transform.rotation = truePlayerObject.transform.rotation;
-                    truePlayerObject.transform.position = new Vector3(0, -900, 0);
-                    mainCam.Follow = currentPlayer.transform;
-                    canJump = false;
+                    case MovementHackables.MoveableObject:
+                        SetToCurrentMoveable();
+                        break;
+                    case MovementHackables.Wire:
+                        if (!inWire)
+                            EnterWire();
+                        break;
+                    case MovementHackables.GroundAgent:
+                        break;
+                    case MovementHackables.FlyingAgent:
+                        break;
                 }
-                else if (objectType == HackedType.Wire)
-                {
-                    wirePath = currentInteractable.GetComponent<Wire>().GivePath();
-                    mainCam.Follow = wireCameraOffset.transform;
-                    truePlayerObject.transform.position = new Vector3(0, -900, 0);
-                    wireDummy.transform.position = wirePath[0];
-                    wireDummy.SetActive(true);
-                    inWire = true;
-                    currentInteractable = null;
-                    //we always want to move to the next index not the starting position (because we are already there)
-                    //and it might cause issues
-                    pathIndex = 1;
-                    wireDummy.transform.rotation =
-                        Quaternion.LookRotation((wirePath[pathIndex] - wireDummy.transform.position).normalized,
-                            Vector3.up);
-                    GameEventManager.PlayerFixedUpdate += inWireUpdate;
-                }
-                //run functions for the object type or etc
             }
             else if (currentPlayer != truePlayerObject)
             {
                 //set it to be kinematic for now so no weird bugs can occur
                 currentPlayerRigidbody.isKinematic = true;
                 Vector3 spawnPoint = currentPlayer.transform.position;
-
+                truePlayerObject.SetActive(true);
                 spawnPoint.y += currentPlayer.transform.localScale.y + 0.3f;
                 truePlayerObject.transform.position = spawnPoint;
                 truePlayerObject.transform.rotation = currentPlayer.transform.rotation;
@@ -252,17 +246,58 @@ namespace Malicious.Core
                 canJump = true;
             }
         }
+        /// <summary>
+        /// This is to only be used when a moveable hackable has been hacked
+        /// not for interactables
+        /// </summary>
+        void ResetToTruePlayer(Vector3 a_position)
+        {
+            
+            truePlayerObject.SetActive(true);
+            a_position.y += 1f;
+            truePlayerObject.transform.position = a_position;
+        }
 
+        void SetToCurrentMoveable()
+        {
+            MovementObjectInformation objectInfo = currentMoveable.GiveObjectInformation();
+            currentPlayer = objectInfo.hackableObject;
+            currentPlayerRigidbody = objectInfo.hackableRigigbody;
+            if (currentPlayerRigidbody != null && currentPlayerRigidbody.isKinematic == true)
+                currentPlayerRigidbody.isKinematic = false;
+            currentMoveable = null;
+            currentInteractable = null;
+            truePlayerObject.SetActive(false);
+            canJump = false;
+            hasDoubleJumped = true;
+            mainCam.Follow = currentPlayer.transform;
+            /*
+             * Figure out what we want to do for the rotation of the object (this might need to be tweaked alot)
+             */
+        }
+
+        void EnterWire()
+        {
+            GameObject wireObject = currentMoveable.GiveObjectInformation().hackableObject;
+            wirePath = wireObject.GetComponent<Wire>().GivePath();
+            mainCam.Follow = wireCameraOffset.transform;
+            truePlayerObject.SetActive(false);
+            wireDummy.transform.position = wirePath[0];
+            wireDummy.SetActive(true);
+            inWire = true;
+            currentInteractable = null;
+            pathIndex = 1;
+            wireDummy.transform.rotation = Quaternion.LookRotation((wirePath[pathIndex] - wireDummy.transform.position).normalized, Vector3.up);
+            GameEventManager.PlayerFixedUpdate += inWireUpdate;
+        }
         void MovePlayer(InputAction.CallbackContext a_context)
         {
             playerMoveInput = a_context.ReadValue<Vector2>();
         }
-
         void MoveOver(InputAction.CallbackContext a_context)
         {
             playerMoveInput = Vector2.zero;
         }
-
         void PlayerJump(InputAction.CallbackContext a_context)
         {
             holdingJump = true;
@@ -274,11 +309,11 @@ namespace Malicious.Core
                 inWire = false;
                 wireDummy.SetActive(false);
                 mainCam.Follow = currentPlayer.transform;
-
+                truePlayerObject.SetActive(true);
                 Vector3 newPlayerPos = wireDummy.transform.position;
                 newPlayerPos.y += 1.5f;
                 truePlayerObject.transform.position = newPlayerPos;
-
+                GameEventManager.PlayerFixedUpdate -= inWireUpdate;
                 return;
             }
 
@@ -296,29 +331,21 @@ namespace Malicious.Core
                 canJump = false;
             }
         }
-
         void PlayerJumpOver(InputAction.CallbackContext a_context)
         {
             holdingJump = false;
         }
-
         void PlayerSpin(InputAction.CallbackContext a_context)
         {
             playerSpinInput = a_context.ReadValue<Vector2>();
         }
-
         void PlayerSpinOver(InputAction.CallbackContext a_context)
         {
             playerSpinInput = Vector2.zero;
         }
 
-        //Functions for setting the interactable object for the player (its assumed that there will be only one
-        //object the player will "hack at a time")
-        public void SetInteractable(HackableObject a_hackableObject)
-        {
-            currentInteractable = a_hackableObject;
-        }
-
+        public void SetMoveable(IHackableMovement a_moveable) => currentMoveable = a_moveable;
+        public void SetInteractable(IHackableInteractable a_interactable) => currentInteractable = a_interactable;
         public void RemoveInteractable() => currentInteractable = null;
 
         private void OnEnable()

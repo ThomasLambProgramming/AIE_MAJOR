@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 namespace Malicious.Hackable
 {
-    public class ControlPanel : MonoBehaviour, IHackable
+    public class ControlPanel : MonoBehaviour, IHackableInteractable
     {
         [SerializeField] private bool reusable = true;
         [SerializeField] private UnityEvent onEvent;
@@ -39,6 +39,13 @@ namespace Malicious.Hackable
                     offEvent?.Invoke();
                     isOn = false;
                 }
+            }
+        }
+        private void OnTriggerEnter(Collider a_other)
+        {
+            if (a_other.transform.CompareTag("Player"))
+            {
+                //update the function for interactable from the player
             }
         }
     }

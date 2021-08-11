@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using Malicious.Interfaces;
 using UnityEditor;
 using UnityEngine;
 
 namespace Malicious.Hackable
 {
-    public class Wire : MonoBehaviour
+    public class Wire : MonoBehaviour, IHackableMovement
     {
         [ContextMenuItem("Add Path Point", "AddPathPoint")]
         [SerializeField] private List<Vector3> path = new List<Vector3>();
@@ -38,12 +39,35 @@ namespace Malicious.Hackable
             }
         }
 #endif
+        public void Hacked()
+        {
+            //play animation or particle effect
+        }
+        public void PlayerLeft(){}
+        public MovementHackables TypeOfHackable() => MovementHackables.Wire;
+        public MovementObjectInformation GiveObjectInformation()
+        {
+            return new MovementObjectInformation(gameObject);
+        }
         public List<Vector3> GivePath()
         {
             return path;
         }
         
-        
+        private void OnTriggerEnter(Collider a_other)
+        {
+            if (a_other.transform.CompareTag("Player"))
+            {
+                Malicious.Core.PlayerController.MainPlayer.SetMoveable(this);
+            }
+        }
+        private void OnTriggerExit(Collider a_other)
+        {
+            if (a_other.transform.CompareTag("Player"))
+            {
+                Malicious.Core.PlayerController.MainPlayer.SetMoveable(null);
+            }
+        }
         //Scaling of object (cables)
         //between points needs to be done, need the basic model to do
         //ask daniel or enis.
