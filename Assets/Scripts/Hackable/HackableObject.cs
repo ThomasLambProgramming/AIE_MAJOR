@@ -20,11 +20,6 @@ namespace Malicious.Hackable
     [SelectionBase]
     public class HackableObject : MonoBehaviour
     {
-        public float dotAllowance = 0.9f;
-        public float indicatorDistance = 1f;
-        public float indicatorSpinSpeed = 10f;
-    
-        public GameObject indiciator = null;
         private PlayerMovement playerScript = null;
         private BoxCollider[] colliders = null;
 
@@ -44,28 +39,6 @@ namespace Malicious.Hackable
             {
                 Vector3 playerToObject = (transform.position - a_other.transform.position).normalized;
                 Vector3 objectToPlayer = (a_other.transform.position - transform.position).normalized;
-                if (indiciator != null)
-                {
-                    if (leverUsed)
-                    {
-                        indiciator.SetActive(false);
-                    }
-                    else if (Vector3.Dot(playerToObject, a_other.transform.forward) > dotAllowance)
-                    {
-                        indiciator.SetActive(true);
-                        Vector3 indicatorPosition = transform.position + objectToPlayer * indicatorDistance;
-                        indicatorPosition.y = (transform.position.y + a_other.transform.position.y) / 2 + 2;
-
-                        indiciator.transform.position = indicatorPosition;
-                        indiciator.transform.Rotate(new Vector3(0, indicatorSpinSpeed * Time.deltaTime, 0));
-                        playerScript.SetInteractable(this);
-                    }
-                    else
-                    {
-                        playerScript.RemoveInteractable();
-                        indiciator.SetActive(false);
-                    }
-                }
             }
         }
 
@@ -150,16 +123,5 @@ namespace Malicious.Hackable
                 playerScript = a_other.GetComponent<PlayerMovement>();
             }
         }
-
-        private void OnTriggerExit(Collider a_other)
-        {
-            if (a_other.transform.CompareTag("Player"))
-            {
-                playerScript = null;
-                if (indiciator != null && indiciator.activeInHierarchy)
-                    indiciator.SetActive(false);
-            }
-        }
-
     }
 }
