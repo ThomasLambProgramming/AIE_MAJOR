@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Cinemachine;
 using Malicious.Hackable;
+using Malicious.Interfaces;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,10 +11,7 @@ namespace Malicious.Core
     public class PlayerMovement : MonoBehaviour
     {
         [SerializeField] private CinemachineVirtualCamera mainCam = null;
-
-        //the game object used will change (when the player moves to be an object for a short period)
-        private GameObject truePlayerObject = null;
-        [SerializeField] private GameObject playerCamFollow = null;
+        [SerializeField] private GameObject truePlayerObject = null;
 
         private GameObject currentPlayer = null;
         private Rigidbody currentPlayerRigidbody = null;
@@ -69,13 +67,14 @@ namespace Malicious.Core
 
         private void Start()
         {
-            truePlayerObject = gameObject;
             currentPlayer = truePlayerObject;
-            animator = GetComponent<Animator>();
-            currentPlayerRigidbody = GetComponent<Rigidbody>();
+            animator = currentPlayer.GetComponent<Animator>();
+            currentPlayerRigidbody = truePlayerObject.GetComponent<Rigidbody>();
+            GameEventManager.PlayerFixedUpdate += FixedTick;
+            GameEventManager.PlayerUpdate += PlayerTick;
         }
 
-        private void Update()
+        private void PlayerTick()
         {
             currentAnimationVector = new Vector2(
                 Mathf.Lerp(currentAnimationVector.x, playerMoveInput.x, animationSwapSpeed * Time.deltaTime),
@@ -84,52 +83,10 @@ namespace Malicious.Core
             animator.SetFloat(xPos, currentAnimationVector.x);
             animator.SetFloat(yPos, currentAnimationVector.y);
         }
-
-        private void FixedUpdate()
+        //Had to name this function something else then fixedupdate so it can be on events not the monobehaviour
+        private void FixedTick()
         {
-            if (inWire)
-            {
-                if (Vector3.Distance(wireDummy.transform.position, wirePath[pathIndex]) > goNextDistance)
-                {
-                    Vector3 currentWirePos = wireDummy.transform.position;
-                    currentWirePos = currentWirePos + (wirePath[pathIndex] - wireDummy.transform.position).normalized *
-                        (Time.deltaTime * (wireSpeed));
-                    wireDummy.transform.position = currentWirePos;
-                    if (rotateWireCam)
-                    {
-                        wireDummy.transform.rotation = Quaternion.RotateTowards(
-                            wireDummy.transform.rotation,
-                            rotationGoalWire,
-                            rotationSpeed);
-                        if (wireDummy.transform.rotation == rotationGoalWire)
-                            rotateWireCam = false;
-                    }
-                }
-                else
-                {
-                    if (pathIndex < wirePath.Count - 1)
-                    {
-                        pathIndex++;
-                        rotationGoalWire = Quaternion.LookRotation(
-                            (wirePath[pathIndex] - wireDummy.transform.position).normalized, Vector3.up);
-                        rotateWireCam = true;
-                    }
-                    else
-                    {
-                        //end of path
-                        pathIndex = 0;
-                        wirePath = null;
-                        inWire = false;
-                        wireDummy.SetActive(false);
-                        mainCam.Follow = playerCamFollow.transform;
-                        truePlayerObject.transform.position = wireDummy.transform.position;
-                    }
-                }
-
-                //we dont want anything to run while in the wire except for the input to leave or if the
-                //player gets to the end
-                return;
-            }
+            
 
             //FIX THE ANIMATOR FOR WHEN EXITED HACKED OBJECT (fine for proof of concept)
             if (playerSpinInput != Vector2.zero)
@@ -192,12 +149,63 @@ namespace Malicious.Core
             }
         }
 
+        private void inWireUpdate()
+        {
+            if (inWire)
+            {
+                if (Vector3.Distance(wireDummy.transform.position, wirePath[pathIndex]) > goNextDistance)
+                {
+                    Vector3 currentWirePos = wireDummy.transform.position;
+                    currentWirePos = currentWirePos + (wirePath[pathIndex] - wireDummy.transform.position).normalized *
+                        (Time.deltaTime * (wireSpeed));
+                    wireDummy.transform.position = currentWirePos;
+                    if (rotateWireCam)
+                    {
+                        wireDummy.transform.rotation = Quaternion.RotateTowards(
+                            wireDummy.transform.rotation,
+                            rotationGoalWire,
+                            rotationSpeed);
+                        if (wireDummy.transform.rotation == rotationGoalWire)
+                            rotateWireCam = false;
+                    }
+                }
+                else
+                {
+                    if (pathIndex < wirePath.Count - 1)
+                    {
+                        pathIndex++;
+                        rotationGoalWire = Quaternion.LookRotation(
+                            (wirePath[pathIndex] - wireDummy.transform.position).normalized, Vector3.up);
+                        rotateWireCam = true;
+                    }
+                    else
+                    {
+                        //end of path
+                        pathIndex = 0;
+                        wirePath = null;
+                        inWire = false;
+                        wireDummy.SetActive(false);
+                        mainCam.Follow = currentPlayer.transform;
+                        truePlayerObject.transform.position = wireDummy.transform.position;
+                        GameEventManager.PlayerFixedUpdate -= inWireUpdate;
+                    }
+                }
 
+                //we dont want anything to run while in the wire except for the input to leave or if the
+                //player gets to the end
+                return;
+            }
+        }
+
+        public void UpdateInteractable(HackableObject a_hackableObject)
+        {
+            currentInteractable = a_hackableObject;
+        }
         void Interact(InputAction.CallbackContext a_context)
         {
             if (currentInteractable != null)
             {
-                currentInteractable.BeingHacked(out HackedType objectType, out Transform a_cameraFollow);
+                currentInteractable.BeingHacked(out HackedType objectType);
                 if (objectType == HackedType.Enemy || objectType == HackedType.MoveableObject)
                 {
                     currentPlayer = currentInteractable.gameObject;
@@ -207,7 +215,7 @@ namespace Malicious.Core
                     currentInteractable = null;
                     currentPlayer.transform.rotation = truePlayerObject.transform.rotation;
                     truePlayerObject.transform.position = new Vector3(0, -900, 0);
-                    mainCam.Follow = a_cameraFollow;
+                    mainCam.Follow = currentPlayer.transform;
                     canJump = false;
                 }
                 else if (objectType == HackedType.Wire)
@@ -225,6 +233,7 @@ namespace Malicious.Core
                     wireDummy.transform.rotation =
                         Quaternion.LookRotation((wirePath[pathIndex] - wireDummy.transform.position).normalized,
                             Vector3.up);
+                    GameEventManager.PlayerFixedUpdate += inWireUpdate;
                 }
                 //run functions for the object type or etc
             }
@@ -238,7 +247,7 @@ namespace Malicious.Core
                 truePlayerObject.transform.position = spawnPoint;
                 truePlayerObject.transform.rotation = currentPlayer.transform.rotation;
                 currentPlayer = truePlayerObject;
-                mainCam.Follow = playerCamFollow.transform;
+                mainCam.Follow = currentPlayer.transform;
                 currentPlayerRigidbody = currentPlayer.GetComponent<Rigidbody>();
                 canJump = true;
             }
@@ -264,7 +273,7 @@ namespace Malicious.Core
                 wirePath = null;
                 inWire = false;
                 wireDummy.SetActive(false);
-                mainCam.Follow = playerCamFollow.transform;
+                mainCam.Follow = currentPlayer.transform;
 
                 Vector3 newPlayerPos = wireDummy.transform.position;
                 newPlayerPos.y += 1.5f;

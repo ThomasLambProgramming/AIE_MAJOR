@@ -8,7 +8,7 @@ namespace Malicious.Hackable
 {
     public class Lever : MonoBehaviour, IHackable
     {
-        [SerializeField] private bool Reuseable = true;
+        [SerializeField] private bool reusable = true;
         [SerializeField] private UnityEvent onEvent;
         [SerializeField] private UnityEvent offEvent;
         
@@ -17,16 +17,18 @@ namespace Malicious.Hackable
         [SerializeField] private float rotateAmount = 70;
         [SerializeField] private Transform rotateAnchor = null;
 
-        [SerializeField] private bool testRotation = false;
+        #if UNITY_EDITOR
+        [SerializeField] private bool testEvents = false;
         private void Update()
         {
-            if (testRotation)
+            if (testEvents)
             {
                 Hacked();
-                testRotation = false;
+                testEvents = false;
             }
         }
-
+        #endif
+        
         private bool isOn = false;
         private bool isRotating = false;
         
@@ -46,7 +48,7 @@ namespace Malicious.Hackable
             }
             else
             {
-                if (Reuseable)
+                if (reusable)
                 {
                     offEvent?.Invoke();
                     isOn = false;
@@ -73,6 +75,14 @@ namespace Malicious.Hackable
                 rotateAnchor.Rotate(new Vector3((rotateAmount * Time.deltaTime) / timeForRotate,0,0));
             else
                 rotateAnchor.Rotate(new Vector3((-rotateAmount * Time.deltaTime) / timeForRotate,0,0));
+        }
+        private void OnTriggerEnter(Collider a_other)
+        {
+            if (a_other.transform.CompareTag("Player"))
+            {
+                PlayerMovement playerScript = a_other.transform.parent.GetComponent<PlayerMovement>();
+                playerScript.UpdateInteractable(this);
+            }
         }
     }
 }
