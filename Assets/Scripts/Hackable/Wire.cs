@@ -58,14 +58,14 @@ namespace Malicious.Hackable
         {
             if (a_other.transform.CompareTag("Player"))
             {
-                Malicious.Core.PlayerController.MainPlayer.SetMoveable(this);
+                Malicious.Player.PlayerController.MainPlayer.SetMoveable(this);
             }
         }
         private void OnTriggerExit(Collider a_other)
         {
             if (a_other.transform.CompareTag("Player"))
             {
-                Malicious.Core.PlayerController.MainPlayer.SetMoveable(null);
+                Malicious.Player.PlayerController.MainPlayer.SetMoveable(null);
             }
         }
         //Scaling of object (cables)

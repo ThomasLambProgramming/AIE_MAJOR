@@ -82,7 +82,7 @@ namespace Malicious.Hackable
         {
             if (a_other.transform.CompareTag("Player"))
             {
-                Malicious.Core.PlayerController.MainPlayer.SetInteractable(this);
+                Malicious.Player.PlayerController.MainPlayer.SetInteractable(this);
             }
         }
 
@@ -90,7 +90,7 @@ namespace Malicious.Hackable
         {
             if (a_other.transform.CompareTag("Player"))
             {
-                Malicious.Core.PlayerController.MainPlayer.SetInteractable(null);
+                Malicious.Player.PlayerController.MainPlayer.SetInteractable(null);
             }
         }
     }
