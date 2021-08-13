@@ -17,7 +17,7 @@ namespace Malicious.Player
             currentPlayerObject = a_playerObject;
             currentPlayerRigidbody = a_playerRigidbody;
         }
-        void UpdatePlayer(GameObject a_playerObject, Rigidbody a_playerRigidbody)
+        public void UpdatePlayer(GameObject a_playerObject, Rigidbody a_playerRigidbody)
         {
             currentPlayerObject = a_playerObject;
             currentPlayerRigidbody = a_playerRigidbody;

@@ -1,10 +1,11 @@
 using Malicious.Interfaces;
 using UnityEngine;
 using UnityEngine.Events;
+using Malicious.Player;
 
 namespace Malicious.Hackable
 {
-    public class ControlPanel : MonoBehaviour, IHackableInteractable
+    public class ControlPanel : MonoBehaviour, IHackable
     {
         [SerializeField] private bool reusable = true;
         [SerializeField] private UnityEvent onEvent;
@@ -41,11 +42,23 @@ namespace Malicious.Hackable
                 }
             }
         }
+        public void PlayerExit(){}
+        public HackableInformation GiveInformation() =>
+            new HackableInformation(gameObject, null, null, ObjectType.ControlPanel);
+
         private void OnTriggerEnter(Collider a_other)
         {
             if (a_other.transform.CompareTag("Player"))
             {
-                //update the function for interactable from the player
+                Malicious.Player.PlayerController.PlayerControl.SetInteractable(this);
+            }
+        }
+
+        private void OnTriggerExit(Collider a_other)
+        {
+            if (a_other.transform.CompareTag("Player"))
+            {
+                Malicious.Player.PlayerController.PlayerControl.SetInteractable(null);
             }
         }
     }

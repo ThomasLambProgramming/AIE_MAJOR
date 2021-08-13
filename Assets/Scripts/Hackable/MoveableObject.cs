@@ -2,54 +2,47 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Malicious.Interfaces;
+using Malicious.Player;
 using UnityEngine;
 
 namespace Malicious.Hackable
 {
-    public class MoveableObject : MonoBehaviour, IHackableMovement
+    public class MoveableObject : MonoBehaviour, IHackable
     {
         private Rigidbody objectRigidbody = null;
-
+        [SerializeField] private Transform m_cameraOffset = null;
         private void Start()
         {
             objectRigidbody = GetComponent<Rigidbody>();
         }
 
-        public MovementObjectInformation GiveObjectInformation()
+        public HackableInformation GiveInformation()
         {
-            return new MovementObjectInformation(gameObject, objectRigidbody);
+            return new HackableInformation(gameObject, objectRigidbody, m_cameraOffset, ObjectType.MoveableObject);
         }
-        //Function for when the player hacks the movement object
-
-
-
-        //dont forget to disable iskinematic for objects 
+       
         public void Hacked()
         {
             
         }
 
-        //for when the player exits the hacked object (so ai can return to path and etc)
-        public void PlayerLeft()
+        public void PlayerExit()
         {
-            //objectRigidbody.isKinematic = true;
+            objectRigidbody.isKinematic = true;
         }
-
-    //This is so the needed information can be taken from get component eg get path from wire
-        public MovementHackables TypeOfHackable() => MovementHackables.MoveableObject;
 
         private void OnTriggerEnter(Collider a_other)
         {
             if (a_other.transform.CompareTag("Player"))
             {
-                //Malicious.Player.PlayerController.MainPlayer.SetMoveable(this);
+                Malicious.Player.PlayerController.PlayerControl.SetInteractable(this);
             }
         }
         private void OnTriggerExit(Collider a_other)
         {
             if (a_other.transform.CompareTag("Player"))
             {
-                //Malicious.Player.PlayerController.MainPlayer.SetMoveable(null);
+                Malicious.Player.PlayerController.PlayerControl.SetInteractable(null);
             }
         }
     }

@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using Malicious.Core;
 using Malicious.Hackable;
 using Malicious.Interfaces;
+using UnityEditor;
 
 namespace Malicious.Player
 {
@@ -19,12 +20,14 @@ namespace Malicious.Player
         MoveableObject = 1,
         Wire = 2,
         GroundEnemy = 3,
-        FlyingEnemy = 4
+        FlyingEnemy = 4,
+        ControlPanel = 5
     }
     
     [SelectionBase]
     public class PlayerController : MonoBehaviour
     {
+        public static PlayerController PlayerControl = null;
         #region Variables
         private PlayerMovement m_playerMovement = null;
         
@@ -48,8 +51,8 @@ namespace Malicious.Player
 
 
         //------Hackable Variables-----------------//
-        [HideInInspector] public IHackable m_currentInteractable = null;
-        [HideInInspector] private ObjectType m_currentPlayerType = ObjectType.TruePlayer;
+        public IHackable m_currentInteractable = null;
+        [SerializeField] private ObjectType m_currentPlayerType = ObjectType.TruePlayer;
         
         //------True Player Variables--------------//
         [Space(10f)]
@@ -101,6 +104,7 @@ namespace Malicious.Player
         #endregion
         void Awake()
         {
+            PlayerControl = this;
             m_playerInput = new MasterInput();
         }
 
@@ -132,6 +136,8 @@ namespace Malicious.Player
                     m_playerMovement.SpinMove(m_playerSpinInput, m_spinSpeed);
                     break;
                 case ObjectType.MoveableObject:
+                    m_playerMovement.StandardMove(m_playerMoveInput, m_moveSpeed);
+                    m_playerMovement.SpinMove(m_playerSpinInput, m_spinSpeed);
                     break;
                 case ObjectType.Wire:
                     break;
@@ -147,16 +153,18 @@ namespace Malicious.Player
         }
         void Interact(InputAction.CallbackContext a_context)
         {
-            if (m_currentInteractable != null)
-            {
-                //add dot product checks and etc
-                m_currentInteractable.Hacked();
-            }
-            else if (m_currentPlayerObject != m_truePlayerObject)
+            if (m_currentPlayerObject != m_truePlayerObject)
             {
                 //Run set to true player
                 SwapPlayer(0);
             }
+            else if (m_currentInteractable != null)
+            {
+                //add dot product checks and etc
+                m_currentInteractable.Hacked();
+                SwapPlayer(m_currentInteractable.GiveInformation().m_objectType);
+            }
+            
         }
         /// <summary>
         /// Swaps the current player to any of the hackable types or the original player
@@ -164,6 +172,28 @@ namespace Malicious.Player
         /// </summary>
         private void SwapPlayer(ObjectType a_type)
         {
+            //Unloading current type
+            switch (m_currentPlayerType)
+            {
+                case ObjectType.TruePlayer:
+                    
+                    break;
+                case ObjectType.MoveableObject:
+                    
+                    break;
+                case ObjectType.Wire:
+                    m_wireModel.SetActive(false);
+                    break;
+                case ObjectType.GroundEnemy:
+                    
+                    break;
+                case ObjectType.FlyingEnemy:
+                                        
+                    break;
+            }
+
+            bool updateMovement = true;
+            //loading current type
             switch (a_type)
             {
                 case ObjectType.TruePlayer:
@@ -181,11 +211,22 @@ namespace Malicious.Player
                 case ObjectType.FlyingEnemy:
                     SetToFlyEnemy();
                     break;
+                case ObjectType.ControlPanel:
+                    m_currentInteractable.Hacked();
+                    updateMovement = false;
+                    break;
             }
+            if (updateMovement)
+                m_playerMovement.UpdatePlayer(m_currentPlayerObject, m_currentRigidbody);
         }
 
         private void SetToPlayer()
         {
+            m_currentPlayerType = ObjectType.TruePlayer;
+            m_truePlayerObject.SetActive(true);
+            Vector3 newpos = m_currentPlayerObject.transform.position;
+            newpos.y += 1;
+            m_truePlayerObject.transform.position = newpos;
             m_currentInteractable.PlayerExit();
             m_currentPlayerObject = m_truePlayerObject;
             m_currentRigidbody = m_trueRigidbody;
@@ -194,11 +235,14 @@ namespace Malicious.Player
 
         private void SetToMoveable()
         {
+            m_currentPlayerType = ObjectType.MoveableObject;
             m_truePlayerObject.SetActive(false);
             HackableInformation objectInformation = m_currentInteractable.GiveInformation();
             m_currentRigidbody = objectInformation.m_rigidBody;
             m_currentPlayerObject = objectInformation.m_object;
             m_cameraOffset = objectInformation.m_cameraOffset;
+            
+            m_mainCam.Follow = m_cameraOffset;
             if (m_currentRigidbody.isKinematic == true)
                 m_currentRigidbody.isKinematic = false;
         }
@@ -214,7 +258,11 @@ namespace Malicious.Player
             m_cameraOffset = m_wireCameraOffset;
             
             //At the moment this assumes we have a path
-            Vector3 directionToNode = 
+            //we get the direction from the start to the next node and face the wire object in that direction to 
+            //start so we arent looking in the wrong direction
+            Vector3 directionToNode = (m_wirePath[1] - m_wirePath[0]).normalized;
+            Quaternion newRotation = Quaternion.LookRotation(directionToNode);
+            m_currentPlayerObject.transform.rotation = newRotation;
         }
 
         private void SetToGroundEnemy()

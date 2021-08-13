@@ -1,12 +1,13 @@
 using System;
 using Malicious.Core;
 using Malicious.Interfaces;
+using Malicious.Player;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Malicious.Hackable
 {
-    public class Lever : MonoBehaviour, IHackableInteractable
+    public class Lever : MonoBehaviour, IHackable
     {
         [SerializeField] private bool reusable = true;
         [SerializeField] private UnityEvent onEvent;
@@ -60,6 +61,10 @@ namespace Malicious.Hackable
             }
         }
 
+        public void PlayerExit(){}
+        public HackableInformation GiveInformation() =>
+            new HackableInformation(gameObject, null, null, ObjectType.ControlPanel);
+        
         //This is temp to make the lever rotate from one side to another
         //just for visuals (get the designers to make an animation for this
         public void Rotating()
@@ -82,7 +87,7 @@ namespace Malicious.Hackable
         {
             if (a_other.transform.CompareTag("Player"))
             {
-                //Malicious.Player.PlayerController.MainPlayer.SetInteractable(this);
+                Malicious.Player.PlayerController.PlayerControl.SetInteractable(this);
             }
         }
 
@@ -90,7 +95,7 @@ namespace Malicious.Hackable
         {
             if (a_other.transform.CompareTag("Player"))
             {
-                //Malicious.Player.PlayerController.MainPlayer.SetInteractable(null);
+                Malicious.Player.PlayerController.PlayerControl.SetInteractable(null);
             }
         }
     }

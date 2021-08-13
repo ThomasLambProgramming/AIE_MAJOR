@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Malicious.Player;
 using UnityEngine;
 
 namespace Malicious.Interfaces
@@ -9,12 +10,18 @@ namespace Malicious.Interfaces
         public GameObject m_object;
         public Rigidbody m_rigidBody;
         public Transform m_cameraOffset;
+        public ObjectType m_objectType;
 
-        public HackableInformation(GameObject a_object, Rigidbody a_rigidbody, Transform a_transform)
+        public HackableInformation(
+            GameObject a_object, 
+            Rigidbody a_rigidbody, 
+            Transform a_cameraOffset, 
+            ObjectType a_objectType)
         {
             m_object = a_object;
             m_rigidBody = a_rigidbody;
-            m_cameraOffset = a_transform;
+            m_cameraOffset = a_cameraOffset;
+            m_objectType = a_objectType;
         }
     }
     public interface IHackable
@@ -24,18 +31,3 @@ namespace Malicious.Interfaces
         public HackableInformation GiveInformation();
     }
 }
-
-
-/*
- * Movement scheme changing from player to moveable or wire
- * function for each
- * or just running unity event
- * that way i can just have if interactable != null interactable.hacked();
- *
- *
- *
- * ----PLAYER-----
- * Enter wire, Exit Wire, Wire Jump Override
- *
- * Movement function for ground, flying and block with options for designers
- */

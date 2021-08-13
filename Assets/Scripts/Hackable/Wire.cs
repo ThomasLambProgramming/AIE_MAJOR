@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Malicious.Interfaces;
+using Malicious.Player;
 using UnityEditor;
 using UnityEngine;
 
@@ -43,12 +44,12 @@ namespace Malicious.Hackable
         {
             //play animation or particle effect
         }
-        public void PlayerLeft(){}
+        public void PlayerExit(){}
         
-        public HackableInformation GiveObjectInformation()
+        public HackableInformation GiveInformation()
         {
             //as the wire has its own movement object it doesnt need to give much information
-            return new HackableInformation(gameObject, null, null);
+            return new HackableInformation(gameObject, null, null, ObjectType.Wire);
         }
         public List<Vector3> GivePath()
         {
@@ -59,14 +60,14 @@ namespace Malicious.Hackable
         {
             if (a_other.transform.CompareTag("Player"))
             {
-               // Malicious.Player.PlayerController.MainPlayer.SetMoveable(this);
+               Malicious.Player.PlayerController.PlayerControl.SetInteractable(this);
             }
         }
         private void OnTriggerExit(Collider a_other)
         {
             if (a_other.transform.CompareTag("Player"))
             {
-                //Malicious.Player.PlayerController.MainPlayer.SetMoveable(null);
+                Malicious.Player.PlayerController.PlayerControl.SetInteractable(null);
             }
         }
         //Scaling of object (cables)
