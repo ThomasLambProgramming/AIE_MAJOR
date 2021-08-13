@@ -531,7 +531,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1274523758}
   m_Layer: 10
-  m_Name: CameraFollowObject
+  m_Name: CameraOffset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -655,6 +655,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1380348451}
+  - component: {fileID: 1380348453}
   - component: {fileID: 1380348452}
   m_Layer: 0
   m_Name: PlayerController
@@ -673,7 +674,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 4236778685609059405}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -689,17 +691,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c99087ce4119b0544aa8983bf01a0d24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCam: {fileID: 416194031}
-  truePlayerObject: {fileID: 3569066871663427319}
-  moveSpeed: 200
-  jumpForce: 7
-  spinSpeed: 70
-  animationSwapSpeed: 3
-  groundCheck: {fileID: 27276494}
-  rotationSpeed: 10
-  wireSpeed: 10
-  wireDummy: {fileID: 1298574718}
-  wireCameraOffset: {fileID: 1298574718}
+  m_mainCam: {fileID: 416194031}
+  m_cameraOffset: {fileID: 1274523758}
+  m_trueCameraOffset: {fileID: 0}
+  m_truePlayerObject: {fileID: 3569066871663427319}
+  m_trueRigidbody: {fileID: 0}
+  m_currentPlayerObject: {fileID: 0}
+  m_currentRigidbody: {fileID: 0}
+  m_moveSpeed: 100
+  m_jumpForce: 50
+  m_spinSpeed: 10
+  m_canJump: 1
+  m_hasDoubleJumped: 0
+  m_holdingJump: 0
+  m_groundCheck: {fileID: 27276494}
+  m_wireModel: {fileID: 0}
+  m_wireSpeed: 10
+  m_inWire: 0
+  m_pathIndex: 0
+  m_goNextWire: 0.2
+  m_wirePath: []
+  m_rotationGoal: {x: 0, y: 0, z: 0, w: 1}
+  m_rotateSpeed: 10
+  m_playerMoveInput: {x: 0, y: 0}
+  m_playerSpinInput: {x: 0, y: 0}
+  m_animationSwapSpeed: 3
+  m_playerAnimator: {fileID: 0}
+  m_currentAnimationVector: {x: 0, y: 0}
+--- !u!114 &1380348453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1380348450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89545a51fd86038409392f0a99f9856e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1831568971
 GameObject:
   m_ObjectHideFlags: 0
@@ -2327,8 +2357,8 @@ Transform:
   - {fileID: 8546808485413831897}
   - {fileID: 27276494}
   - {fileID: 1274523758}
-  m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_Father: {fileID: 1380348451}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!4 &4300392590405179884
 Transform:

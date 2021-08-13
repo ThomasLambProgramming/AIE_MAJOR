@@ -42,14 +42,14 @@ namespace Malicious.Hackable
         {
             if (a_other.transform.CompareTag("Player"))
             {
-                Malicious.Player.PlayerController.MainPlayer.SetMoveable(this);
+                //Malicious.Player.PlayerController.MainPlayer.SetMoveable(this);
             }
         }
         private void OnTriggerExit(Collider a_other)
         {
             if (a_other.transform.CompareTag("Player"))
             {
-                Malicious.Player.PlayerController.MainPlayer.SetMoveable(null);
+                //Malicious.Player.PlayerController.MainPlayer.SetMoveable(null);
             }
         }
     }

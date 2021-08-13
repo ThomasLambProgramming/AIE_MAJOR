@@ -4,11 +4,24 @@ using UnityEngine;
 
 namespace Malicious.Interfaces
 {
+    public struct HackableInformation
+    {
+        public GameObject m_object;
+        public Rigidbody m_rigidBody;
+        public Transform m_cameraOffset;
+
+        public HackableInformation(GameObject a_object, Rigidbody a_rigidbody, Transform a_transform)
+        {
+            m_object = a_object;
+            m_rigidBody = a_rigidbody;
+            m_cameraOffset = a_transform;
+        }
+    }
     public interface IHackable
     {
         public void Hacked();
-        //This can be null for interactable
         public void PlayerExit();
+        public HackableInformation GiveInformation();
     }
 }
 

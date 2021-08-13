@@ -2,30 +2,68 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Malicious
+namespace Malicious.Player
 {
+    /// <summary>
+    /// This script is to seperate all movement types out to be their own function
+    /// </summary>
     public class PlayerMovement
     {
         private GameObject currentPlayerObject = null;
-        private Rigidbody currentRigidbody = null;
+        private Rigidbody currentPlayerRigidbody = null;
         
-        PlayerMovement(GameObject a_playerObject, Rigidbody a_playerRigidbody)
+        public PlayerMovement(GameObject a_playerObject, Rigidbody a_playerRigidbody)
         {
             currentPlayerObject = a_playerObject;
-            currentRigidbody = a_playerRigidbody;
+            currentPlayerRigidbody = a_playerRigidbody;
         }
         void UpdatePlayer(GameObject a_playerObject, Rigidbody a_playerRigidbody)
         {
             currentPlayerObject = a_playerObject;
-            currentRigidbody = a_playerRigidbody;
-        }  
+            currentPlayerRigidbody = a_playerRigidbody;
+        }
+
+        public void SpinMove(Vector2 a_spinInput, float a_spinSpeed)
+        {
+            if (a_spinInput != Vector2.zero)
+            {
+                currentPlayerObject.transform.Rotate(new Vector3(0, a_spinInput.x * a_spinSpeed * Time.deltaTime, 0));
+            }
+        }
         
-        void StandardMove()
+        public void StandardMove(Vector2 a_moveInput, float a_moveSpeed)
+        {
+            if (a_moveInput != Vector2.zero)
+            {
+                float currentYAmount = currentPlayerRigidbody.velocity.y;
+                Vector3 newVel =
+                    currentPlayerObject.transform.forward * (a_moveInput.y * a_moveSpeed * Time.deltaTime) +
+                    currentPlayerObject.transform.right * (a_moveInput.x * a_moveSpeed * Time.deltaTime);
+                newVel.y = currentYAmount;
+                currentPlayerRigidbody.velocity = newVel;
+            }
+            
+            if (Mathf.Abs(a_moveInput.magnitude) < 0.1f)
+            {
+                //if we are actually moving 
+                if (Mathf.Abs(currentPlayerRigidbody.velocity.x) > 0.2f || Mathf.Abs(currentPlayerRigidbody.velocity.z) > 0.2f)
+                {
+                    Vector3 newVel = currentPlayerRigidbody.velocity;
+                    //takes off 5% of the current vel every physics update so the player can land on a platform without overshooting
+                    //because the velocity doesnt stop
+                    newVel.z = newVel.z * 0.95f;
+                    newVel.x = newVel.x * 0.95f;
+                    currentPlayerRigidbody.velocity = newVel;
+                }
+            }
+        }
+
+        public void HackObjectMove()
         {
             
         }
 
-        void WireMove()
+        public void WireMove()
         {
             //if (Vector3.Distance(wireDummy.transform.position, wirePath[pathIndex]) > goNextDistance)
             //{
@@ -67,12 +105,12 @@ namespace Malicious
             //}
         }
         
-        void GroundEnemyMove()
+        public void GroundEnemyMove()
         {
             
         }
 
-        void FlyingEnemyMove()
+        public void FlyingEnemyMove()
         {
             
         }

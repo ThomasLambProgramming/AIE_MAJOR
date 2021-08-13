@@ -3,243 +3,308 @@ using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
 using Malicious.Core;
+using Malicious.Hackable;
+using Malicious.Interfaces;
 
 namespace Malicious.Player
 {
-    //PlayerVariables.m_playerVariables
+    /// <summary>
+    /// This is for player swapping to be on a easy to read switch function
+    /// </summary>
+    public enum ObjectType
+    {
+        TruePlayer = 0,
+        MoveableObject = 1,
+        Wire = 2,
+        GroundEnemy = 3,
+        FlyingEnemy = 4
+    }
+    
     [SelectionBase]
     public class PlayerController : MonoBehaviour
     {
+        #region Variables
+        private PlayerMovement m_playerMovement = null;
+        
+        //------Camera Variables-------------------//
+        [Space(10f)]
+        [Header("Camera Variables")]
+        public CinemachineVirtualCamera m_mainCam = null;
+            //Universal camera offset              
+        public Transform m_cameraOffset = null;
+            //This is the default for the player that the offset will always be based off
+        [HideInInspector] public Transform m_trueCameraOffset = null;
+        
+        
+        //------Player Object Variables------------//
+        [Space(10f)]
+        [Header("Player Object Variables")]
+        public GameObject m_truePlayerObject = null;
+        [HideInInspector] public Rigidbody m_trueRigidbody = null;
+        [HideInInspector] public GameObject m_currentPlayerObject = null;
+        [HideInInspector] public Rigidbody m_currentRigidbody = null;
+
+
+        //------Hackable Variables-----------------//
+        [HideInInspector] public IHackable m_currentInteractable = null;
+        [HideInInspector] private ObjectType m_currentPlayerType = ObjectType.TruePlayer;
+        
+        //------True Player Variables--------------//
+        [Space(10f)]
+        [Header("Player Variables")]
+        public float m_moveSpeed = 5f;
+        public float m_jumpForce = 10f;
+        public float m_spinSpeed = 5f;
+
+
+        //------Jumping Variables--------------//
+        [Space(10f)]
+        [Header("Jumping Variables")]
+        [HideInInspector] public bool m_canJump = true;
+        [HideInInspector] public bool m_hasDoubleJumped = false;
+        [HideInInspector] public bool m_holdingJump = false;
+        public Transform m_groundCheck = null;
+
+
+        //------Wire Variables-----------------//
+        [Space(10f)]
+        [Header("Wire Variables")]
+        public GameObject m_wireModel = null;
+        public Transform m_wireCameraOffset = null;
+        public float m_wireSpeed = 10f;
+        [HideInInspector] public bool m_inWire = false;
+        [HideInInspector] public int m_pathIndex = 0;
+        [HideInInspector] public float m_goNextWire = 0.2f;
+        [HideInInspector] public List<Vector3> m_wirePath = null;
+        [HideInInspector] public Quaternion m_rotationGoal = Quaternion.identity;
+        [HideInInspector] public float m_rotateSpeed = 10f;
+        
+        
+        //------Player Input variables---------//
+        public MasterInput m_playerInput = null;
+        [HideInInspector] public Vector2 m_playerMoveInput = Vector2.zero;
+        [HideInInspector] public Vector2 m_playerSpinInput = Vector2.zero;
+
+        
+        //------Animator Variables-------------//
+        [Space(10f)]
+        [Header("Animator Variables")]
+        public float m_animationSwapSpeed = 3f;
+        [HideInInspector] public Animator m_playerAnimator = null;
+        [HideInInspector] public Vector2 m_currentAnimationVector = Vector2.zero;
+        public readonly int m_xPos = Animator.StringToHash("XPos");
+        public readonly int m_yPos = Animator.StringToHash("YPos");
+        public readonly int m_jumping = Animator.StringToHash("Jumping");
+        
+        #endregion
+        void Awake()
+        {
+            m_playerInput = new MasterInput();
+        }
+
         void Start()
         {
             GameEventManager.PlayerFixedUpdate += FixedTick;
             GameEventManager.PlayerUpdate += PlayerTick;
+            
+            m_currentPlayerObject = m_truePlayerObject;
+            m_trueRigidbody = m_truePlayerObject.GetComponent<Rigidbody>();
+            m_currentRigidbody = m_trueRigidbody;
+            m_playerAnimator = m_currentPlayerObject.GetComponent<Animator>();
+            m_playerMovement = new PlayerMovement(m_currentPlayerObject, m_currentRigidbody);
+            m_mainCam.Follow = m_cameraOffset;
+            m_trueCameraOffset = m_cameraOffset;
         }
-
         private void PlayerTick()
         {
-            PlayerVariables.m_playerVariables.m_CurrentAnimationVector = new Vector2(
-                Mathf.Lerp(PlayerVariables.m_playerVariables.m_CurrentAnimationVector.x, 
-                    PlayerVariables.m_playerVariables.m_PlayerMoveInput.x, 
-                    PlayerVariables.m_playerVariables.m_AnimationSwapSpeed * Time.deltaTime),
-                Mathf.Lerp(PlayerVariables.m_playerVariables.m_CurrentAnimationVector.y, 
-                    PlayerVariables.m_playerVariables.m_PlayerMoveInput.y, 
-                    PlayerVariables.m_playerVariables.m_AnimationSwapSpeed * Time.deltaTime));
-
-            PlayerVariables.m_playerVariables.m_PlayerAnimator.SetFloat(xPos, currentAnimationVector.x);
-            animator.SetFloat(yPos, currentAnimationVector.y);
+            UpdateAnimator();
         }
         //Had to name this function something else then fixedupdate so it can be on events not the monobehaviour
         private void FixedTick()
         {
+            //Current logic running for the active start
+            switch (m_currentPlayerType)
+            {
+                case ObjectType.TruePlayer:
+                    m_playerMovement.StandardMove(m_playerMoveInput, m_moveSpeed);
+                    m_playerMovement.SpinMove(m_playerSpinInput, m_spinSpeed);
+                    break;
+                case ObjectType.MoveableObject:
+                    break;
+                case ObjectType.Wire:
+                    break;
+                case ObjectType.GroundEnemy:
+                    break;
+                case ObjectType.FlyingEnemy:
+                    break;
+                default:
+                    Debug.LogWarning("ERROR PLAYER HAS NO TYPE");
+                    break;
+            }
             
-
-            //FIX THE ANIMATOR FOR WHEN EXITED HACKED OBJECT (fine for proof of concept)
-            if (playerSpinInput != Vector2.zero)
-            {
-                currentPlayer.transform.Rotate(new Vector3(0, playerSpinInput.x * spinSpeed * Time.deltaTime, 0));
-            }
-
-            if (playerMoveInput != Vector2.zero)
-            {
-                float currentYAmount = currentPlayerRigidbody.velocity.y;
-                Vector3 newVel =
-                    currentPlayer.transform.forward * (playerMoveInput.y * moveSpeed * Time.deltaTime) +
-                    currentPlayer.transform.right * (playerMoveInput.x * moveSpeed * Time.deltaTime);
-                newVel.y = currentYAmount;
-                currentPlayerRigidbody.velocity = newVel;
-            }
-
-            if (Mathf.Abs(playerMoveInput.magnitude) < 0.1f)
-            {
-                //if we are actually moving 
-                if (Mathf.Abs(currentPlayerRigidbody.velocity.x) > 0.2f || Mathf.Abs(currentPlayerRigidbody.velocity.z) > 0.2f)
-                {
-                    Vector3 newVel = currentPlayerRigidbody.velocity;
-                    //takes off 5% of the current vel every physics update so the player can land on a platform without overshooting
-                    //because the velocity doesnt stop
-                    newVel.z = newVel.z * 0.95f;
-                    newVel.x = newVel.x * 0.95f;
-                    currentPlayerRigidbody.velocity = newVel;
-                }
-            }
-
-
-            if (isJumping)
-            {
-            
-                if (currentPlayerRigidbody.velocity.y < 0 && holdingJump == false)
-                {
-                    Vector3 grav = new Vector3(0, -9.8f, 0);
-                    currentPlayerRigidbody.velocity += grav * Time.deltaTime;
-                }
-                else if (holdingJump == false)
-                {
-                    Vector3 grav = new Vector3(0, -9.8f, 0);
-                    currentPlayerRigidbody.velocity += grav * Time.deltaTime;
-                }
-
-                jumpStopTimer += Time.deltaTime;
-                
-                if (jumpStopTimer >= jumpTimer)
-                {
-                    //for now if we are jumping it will set the jumping to false if it hits anything
-                    Collider[] colliders = Physics.OverlapSphere(groundCheck.position, 0.1f, ~(1 << 10));
-                    if (colliders.Length > 0)
-                    {
-                        hasDoubleJumped = false;
-                        isJumping = false;
-                        canJump = true;
-                        //animator.SetBool(jumping, false);   
-                    }
-                }
-            }
         }
-
-        private void inWireUpdate()
-        {
-            if (inWire)
-            {
-                
-
-                //we dont want anything to run while in the wire except for the input to leave or if the
-                //player gets to the end
-                return;
-            }
-        }
-
-       
         void Interact(InputAction.CallbackContext a_context)
         {
-            if (currentInteractable != null)
+            if (m_currentInteractable != null)
             {
                 //add dot product checks and etc
-                currentInteractable.Hacked();
+                m_currentInteractable.Hacked();
             }
-            else if (currentPlayer != truePlayerObject)
+            else if (m_currentPlayerObject != m_truePlayerObject)
             {
                 //Run set to true player
-                ResetToTruePlayer(currentPlayer.transform.position);
+                SwapPlayer(0);
             }
         }
-        void ResetToTruePlayer(Vector3 a_position)
+        /// <summary>
+        /// Swaps the current player to any of the hackable types or the original player
+        /// this is used to have clean transitions without overwriting code
+        /// </summary>
+        private void SwapPlayer(ObjectType a_type)
         {
-            
-            truePlayerObject.SetActive(true);
-            a_position.y += 1f;
-            truePlayerObject.transform.position = a_position;
-        }
-
-        void SetToCurrentMoveable()
-        {
-            
-        }
-
-        void EnterWire()
-        {
-            GameObject wireObject = currentMoveable.GiveObjectInformation().hackableObject;
-            wirePath = wireObject.GetComponent<Wire>().GivePath();
-            mainCam.Follow = wireCameraOffset.transform;
-            truePlayerObject.SetActive(false);
-            wireDummy.transform.position = wirePath[0];
-            wireDummy.SetActive(true);
-            inWire = true;
-            currentInteractable = null;
-            pathIndex = 1;
-            wireDummy.transform.rotation = Quaternion.LookRotation((wirePath[pathIndex] - wireDummy.transform.position).normalized, Vector3.up);
-            GameEventManager.PlayerFixedUpdate += inWireUpdate;
-        }
-        void MovePlayer(InputAction.CallbackContext a_context)
-        {
-            playerMoveInput = a_context.ReadValue<Vector2>();
-        }
-        void MoveOver(InputAction.CallbackContext a_context)
-        {
-            playerMoveInput = Vector2.zero;
-        }
-        void PlayerJump(InputAction.CallbackContext a_context)
-        {
-            holdingJump = true;
-            if (inWire)
+            switch (a_type)
             {
-                //end of path
-                pathIndex = 0;
-                wirePath = null;
-                inWire = false;
-                wireDummy.SetActive(false);
-                mainCam.Follow = currentPlayer.transform;
-                truePlayerObject.SetActive(true);
-                Vector3 newPlayerPos = wireDummy.transform.position;
-                newPlayerPos.y += 1.5f;
-                truePlayerObject.transform.position = newPlayerPos;
-                GameEventManager.PlayerFixedUpdate -= inWireUpdate;
+                case ObjectType.TruePlayer:
+                    SetToPlayer();
+                    break;
+                case ObjectType.MoveableObject:
+                    SetToMoveable();
+                    break;
+                case ObjectType.Wire:
+                    SetToWire();
+                    break;
+                case ObjectType.GroundEnemy:
+                    SetToGroundEnemy();
+                    break;
+                case ObjectType.FlyingEnemy:
+                    SetToFlyEnemy();
+                    break;
+            }
+        }
+
+        private void SetToPlayer()
+        {
+            m_currentInteractable.PlayerExit();
+            m_currentPlayerObject = m_truePlayerObject;
+            m_currentRigidbody = m_trueRigidbody;
+            m_cameraOffset = m_trueCameraOffset;
+        }
+
+        private void SetToMoveable()
+        {
+            m_truePlayerObject.SetActive(false);
+            HackableInformation objectInformation = m_currentInteractable.GiveInformation();
+            m_currentRigidbody = objectInformation.m_rigidBody;
+            m_currentPlayerObject = objectInformation.m_object;
+            m_cameraOffset = objectInformation.m_cameraOffset;
+            if (m_currentRigidbody.isKinematic == true)
+                m_currentRigidbody.isKinematic = false;
+        }
+
+        private void SetToWire()
+        {
+            m_truePlayerObject.SetActive(false);
+            HackableInformation wireInfo = m_currentInteractable.GiveInformation();
+            Malicious.Hackable.Wire wireScript = wireInfo.m_object.GetComponent<Wire>();
+            m_wirePath = wireScript.GivePath();
+            m_currentPlayerObject = m_wireModel;
+            m_currentRigidbody = null;
+            m_cameraOffset = m_wireCameraOffset;
+            
+            //At the moment this assumes we have a path
+            Vector3 directionToNode = 
+        }
+
+        private void SetToGroundEnemy()
+        {
+            
+        }
+
+        private void SetToFlyEnemy()
+        {
+            
+        }
+
+        
+        private void MoveInputPlayer(InputAction.CallbackContext a_context)
+        {
+            m_playerMoveInput = a_context.ReadValue<Vector2>();
+        }
+        private void MoveInputOver(InputAction.CallbackContext a_context)
+        {
+            m_playerMoveInput = Vector2.zero;
+        }
+        private void PlayerJumpInput(InputAction.CallbackContext a_context)
+        {
+            //Conditional for if in ai no jump
+            //Normal Jump Function
+            //In Wire Jump
+        }
+        private void PlayerJumpInputOver(InputAction.CallbackContext a_context)
+        {
+           m_holdingJump = false;
+        }
+        private void PlayerSpinInput(InputAction.CallbackContext a_context)
+        {
+           m_playerSpinInput = a_context.ReadValue<Vector2>();
+        }
+        private void PlayerSpinInputOver(InputAction.CallbackContext a_context)
+        {
+           m_playerSpinInput = Vector2.zero;
+        }
+        
+        public void SetInteractable(IHackable a_interactable) => m_currentInteractable = a_interactable;
+        public void RemoveInteractable() => m_currentInteractable = null;
+        private void UpdateAnimator()
+        {
+            if (m_currentPlayerObject != m_truePlayerObject)
                 return;
-            }
+            m_currentAnimationVector = new Vector2(
+                Mathf.Lerp(m_currentAnimationVector.x, 
+                    m_playerMoveInput.x, 
+                    m_animationSwapSpeed * Time.deltaTime),
+                Mathf.Lerp(m_currentAnimationVector.y, 
+                    m_playerMoveInput.y, 
+                    m_animationSwapSpeed * Time.deltaTime));
 
-            if (canJump || hasDoubleJumped == false)
-            {
-                currentPlayerRigidbody.velocity = (Vector3.up * jumpForce);
-                //animator.SetBool(jumping, true);
-                isJumping = true;
-                jumpStopTimer = 0;
-                if (hasDoubleJumped == false && canJump == false)
-                {
-                    hasDoubleJumped = true;
-                }
-
-                canJump = false;
-            }
+            m_playerAnimator.SetFloat(m_xPos, m_currentAnimationVector.x);
+            m_playerAnimator.SetFloat(m_yPos, m_currentAnimationVector.y);
         }
-        void PlayerJumpOver(InputAction.CallbackContext a_context)
-        {
-            holdingJump = false;
-        }
-        void PlayerSpin(InputAction.CallbackContext a_context)
-        {
-            playerSpinInput = a_context.ReadValue<Vector2>();
-        }
-        void PlayerSpinOver(InputAction.CallbackContext a_context)
-        {
-            playerSpinInput = Vector2.zero;
-        }
-
-        public void SetMoveable(IHackableMovement a_moveable) => currentMoveable = a_moveable;
-        public void SetInteractable(IHackableInteractable a_interactable) => currentInteractable = a_interactable;
-        public void RemoveInteractable() => currentInteractable = null;
 
         private void OnEnable()
         {
             EnableInput();
         }
-
+        
         private void OnDisable()
         {
             DisableInput();
         }
-
+        
         private void DisableInput()
         {
-            PlayerVariables.m_playerVariables.m_PlayerInput.Disable();
-            PlayerVariables.m_playerVariables.m_PlayerInput.Player.Movement.performed -= MovePlayer;
-            PlayerVariables.m_playerVariables.m_PlayerInput.Player.Movement.canceled -= MoveOver;
-            PlayerVariables.m_playerVariables.m_PlayerInput.Player.Jump.performed -= PlayerJump;
-            PlayerVariables.m_playerVariables.m_PlayerInput.Player.Jump.canceled -= PlayerJumpOver;
-            PlayerVariables.m_playerVariables.m_PlayerInput.Player.Camera.performed -= PlayerSpin;
-            PlayerVariables.m_playerVariables.m_PlayerInput.Player.Camera.canceled -= PlayerSpinOver;
-            PlayerVariables.m_playerVariables.m_PlayerInput.Player.Interaction.performed -= Interact;
+            m_playerInput.Disable();
+            m_playerInput.Player.Movement.performed -= MoveInputPlayer;
+            m_playerInput.Player.Movement.canceled -= MoveInputOver;
+            m_playerInput.Player.Jump.performed -= PlayerJumpInput;
+            m_playerInput.Player.Jump.canceled -= PlayerJumpInputOver;
+            m_playerInput.Player.Camera.performed -= PlayerSpinInput;
+            m_playerInput.Player.Camera.canceled -= PlayerSpinInputOver;
+            m_playerInput.Player.Interaction.performed -= Interact;
         }
-
+        
         private void EnableInput()
         {
-            PlayerVariables.m_playerVariables.m_PlayerInput.Enable();
-            PlayerVariables.m_playerVariables.m_PlayerInput.Player.Movement.performed += MovePlayer;
-            PlayerVariables.m_playerVariables.m_PlayerInput.Player.Movement.canceled += MoveOver;
-            PlayerVariables.m_playerVariables.m_PlayerInput.Player.Jump.performed += PlayerJump;
-            PlayerVariables.m_playerVariables.m_PlayerInput.Player.Jump.canceled += PlayerJumpOver;
-            PlayerVariables.m_playerVariables.m_PlayerInput.Player.Camera.performed += PlayerSpin;
-            PlayerVariables.m_playerVariables.m_PlayerInput.Player.Camera.canceled += PlayerSpinOver;
-            PlayerVariables.m_playerVariables.m_PlayerInput.Player.Interaction.performed += Interact;
+            m_playerInput.Enable();
+            m_playerInput.Player.Movement.performed += MoveInputPlayer;
+            m_playerInput.Player.Movement.canceled += MoveInputOver;
+            m_playerInput.Player.Jump.performed += PlayerJumpInput;
+            m_playerInput.Player.Jump.canceled += PlayerJumpInputOver;
+            m_playerInput.Player.Camera.performed += PlayerSpinInput;
+            m_playerInput.Player.Camera.canceled += PlayerSpinInputOver;
+            m_playerInput.Player.Interaction.performed += Interact;
         }
     }
 }
