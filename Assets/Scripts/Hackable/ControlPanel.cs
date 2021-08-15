@@ -1,7 +1,7 @@
 using Malicious.Interfaces;
 using UnityEngine;
 using UnityEngine.Events;
-using Malicious.Player;
+using Malicious.Core;
 
 namespace Malicious.Hackable
 {

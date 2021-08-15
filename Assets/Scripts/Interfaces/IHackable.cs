@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Malicious.Player;
 using UnityEngine;
+using Malicious.Core;
 
 namespace Malicious.Interfaces
 {

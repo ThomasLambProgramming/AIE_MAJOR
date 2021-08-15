@@ -57,10 +57,39 @@ namespace Malicious.Player
                 }
             }
         }
-
-        public void HackObjectMove()
+        
+        //needs seperate function as the move goes off camera transform not players forward direction
+        public void HackObjectMove(Vector2 a_moveInput, float a_moveSpeed, Transform a_camTransform)
         {
+            if (a_moveInput != Vector2.zero)
+            {
+                Vector3 camForward = a_camTransform.forward;
+                //camForward.y = 0;
+
+                Vector3 camRight = a_camTransform.right;
+                //camRight.y = 0;
+                
+                float currentYAmount = currentPlayerRigidbody.velocity.y;
+                Vector3 newVel =
+                    camForward * (a_moveInput.y * a_moveSpeed * Time.deltaTime) +
+                    camRight * (a_moveInput.x * a_moveSpeed * Time.deltaTime);
+                newVel.y = currentYAmount;
+                currentPlayerRigidbody.velocity = newVel;
+            }
             
+            if (Mathf.Abs(a_moveInput.magnitude) < 0.1f)
+            {
+                //if we are actually moving 
+                if (Mathf.Abs(currentPlayerRigidbody.velocity.x) > 0.2f || Mathf.Abs(currentPlayerRigidbody.velocity.z) > 0.2f)
+                {
+                    Vector3 newVel = currentPlayerRigidbody.velocity;
+                    //takes off 5% of the current vel every physics update so the player can land on a platform without overshooting
+                    //because the velocity doesnt stop
+                    newVel.z = newVel.z * 0.95f;
+                    newVel.x = newVel.x * 0.95f;
+                    currentPlayerRigidbody.velocity = newVel;
+                }
+            }
         }
 
         public void WireMove()

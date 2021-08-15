@@ -3,27 +3,12 @@ using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
 using Malicious.Core;
 using Malicious.Hackable;
 using Malicious.Interfaces;
-using UnityEditor;
 
 namespace Malicious.Player
 {
-    /// <summary>
-    /// This is for player swapping to be on a easy to read switch function
-    /// </summary>
-    public enum ObjectType
-    {
-        TruePlayer = 0,
-        MoveableObject = 1,
-        Wire = 2,
-        GroundEnemy = 3,
-        FlyingEnemy = 4,
-        ControlPanel = 5
-    }
-    
     [SelectionBase]
     public class PlayerController : MonoBehaviour
     {
@@ -124,6 +109,24 @@ namespace Malicious.Player
         private void PlayerTick()
         {
             UpdateAnimator();
+            switch (m_currentPlayerType)
+            {
+                case ObjectType.TruePlayer:
+                    m_playerMovement.SpinMove(m_playerSpinInput, m_spinSpeed);
+                    break;
+                case ObjectType.MoveableObject:
+                    m_playerMovement.SpinMove(m_playerSpinInput, m_spinSpeed);
+                    break;
+                case ObjectType.Wire:
+                    break;
+                case ObjectType.GroundEnemy:
+                    break;
+                case ObjectType.FlyingEnemy:
+                    break;
+                default:
+                    Debug.LogWarning("ERROR PLAYER HAS NO TYPE");
+                    break;
+            }
         }
         //Had to name this function something else then fixedupdate so it can be on events not the monobehaviour
         private void FixedTick()
@@ -133,11 +136,9 @@ namespace Malicious.Player
             {
                 case ObjectType.TruePlayer:
                     m_playerMovement.StandardMove(m_playerMoveInput, m_moveSpeed);
-                    m_playerMovement.SpinMove(m_playerSpinInput, m_spinSpeed);
                     break;
                 case ObjectType.MoveableObject:
-                    m_playerMovement.StandardMove(m_playerMoveInput, m_moveSpeed);
-                    m_playerMovement.SpinMove(m_playerSpinInput, m_spinSpeed);
+                    m_playerMovement.HackObjectMove(m_playerMoveInput, m_moveSpeed, m_cameraOffset);
                     break;
                 case ObjectType.Wire:
                     break;
@@ -179,30 +180,38 @@ namespace Malicious.Player
                     
                     break;
                 case ObjectType.MoveableObject:
-                    
+                    m_currentInteractable.PlayerExit();
+                    m_truePlayerObject.transform.rotation = new Quaternion(0, m_cameraOffset.rotation.y, 0, m_cameraOffset.rotation.w);
                     break;
                 case ObjectType.Wire:
                     m_wireModel.SetActive(false);
+                    m_currentInteractable.PlayerExit();
                     break;
                 case ObjectType.GroundEnemy:
-                    
+                    m_currentInteractable.PlayerExit();
                     break;
                 case ObjectType.FlyingEnemy:
-                                        
+                    m_currentInteractable.PlayerExit();                    
                     break;
             }
 
             bool updateMovement = true;
+            bool updateRigid = true;
             //loading current type
             switch (a_type)
             {
                 case ObjectType.TruePlayer:
+                    updateRigid = false;
                     SetToPlayer();
                     break;
                 case ObjectType.MoveableObject:
+                    //since we are not moving the camera from its original rotation the offset on the moveable needs to be the
+                    //same as the current object
+                    m_currentInteractable.GiveInformation().m_cameraOffset.rotation = m_cameraOffset.transform.rotation;
                     SetToMoveable();
                     break;
                 case ObjectType.Wire:
+                    updateRigid = false;
                     SetToWire();
                     break;
                 case ObjectType.GroundEnemy:
@@ -214,37 +223,50 @@ namespace Malicious.Player
                 case ObjectType.ControlPanel:
                     m_currentInteractable.Hacked();
                     updateMovement = false;
+                    updateRigid = false;
                     break;
             }
+
+
+            if (updateRigid)
+            {
+                HackableInformation objectInformation = m_currentInteractable.GiveInformation();
+                m_currentRigidbody = objectInformation.m_rigidBody;
+                m_currentPlayerObject = objectInformation.m_object;
+                m_cameraOffset = objectInformation.m_cameraOffset;
+                
+                if (objectInformation.m_cameraOffset != null)
+                    m_mainCam.Follow = m_cameraOffset;
+                
+                if (m_currentRigidbody.isKinematic == true)
+                    m_currentRigidbody.isKinematic = false;
+            }
             if (updateMovement)
+            {
+                m_currentPlayerType = a_type;
                 m_playerMovement.UpdatePlayer(m_currentPlayerObject, m_currentRigidbody);
+                m_mainCam.Follow = m_cameraOffset;
+            }
+            
         }
 
         private void SetToPlayer()
         {
-            m_currentPlayerType = ObjectType.TruePlayer;
             m_truePlayerObject.SetActive(true);
+            
             Vector3 newpos = m_currentPlayerObject.transform.position;
             newpos.y += 1;
             m_truePlayerObject.transform.position = newpos;
-            m_currentInteractable.PlayerExit();
+            
             m_currentPlayerObject = m_truePlayerObject;
             m_currentRigidbody = m_trueRigidbody;
             m_cameraOffset = m_trueCameraOffset;
+            m_currentInteractable = null;
         }
 
         private void SetToMoveable()
         {
-            m_currentPlayerType = ObjectType.MoveableObject;
             m_truePlayerObject.SetActive(false);
-            HackableInformation objectInformation = m_currentInteractable.GiveInformation();
-            m_currentRigidbody = objectInformation.m_rigidBody;
-            m_currentPlayerObject = objectInformation.m_object;
-            m_cameraOffset = objectInformation.m_cameraOffset;
-            
-            m_mainCam.Follow = m_cameraOffset;
-            if (m_currentRigidbody.isKinematic == true)
-                m_currentRigidbody.isKinematic = false;
         }
 
         private void SetToWire()

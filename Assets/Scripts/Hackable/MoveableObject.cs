@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Malicious.Interfaces;
-using Malicious.Player;
+using Malicious.Core;
 using UnityEngine;
 
 namespace Malicious.Hackable

@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using Malicious.Interfaces;
-using Malicious.Player;
-using UnityEditor;
 using UnityEngine;
+using Malicious.Core;
 
 namespace Malicious.Hackable
 {
