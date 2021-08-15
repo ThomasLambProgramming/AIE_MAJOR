@@ -92,46 +92,46 @@ namespace Malicious.Player
             }
         }
 
+        public int m_pathIndex = 0;
+        public List<Vector3> m_wirePath = new List<Vector3>();
+        private float m_goNextWire = 0.2f;
+        private float m_wireSpeed = 10f;
+        private float m_rotateSpeed = 10f;
+        public Quaternion m_rotationGoal = Quaternion.identity;
+        private bool m_rotateWireCam = false;
         public void WireMove()
         {
-            //if (Vector3.Distance(wireDummy.transform.position, wirePath[pathIndex]) > goNextDistance)
-            //{
-            //    Vector3 currentWirePos = wireDummy.transform.position;
-            //    currentWirePos = currentWirePos + (wirePath[pathIndex] - wireDummy.transform.position).normalized *
-            //        (Time.deltaTime * (wireSpeed));
-            //    wireDummy.transform.position = currentWirePos;
-            //    if (rotateWireCam)
-            //    {
-            //        wireDummy.transform.rotation = Quaternion.RotateTowards(
-            //            wireDummy.transform.rotation,
-            //            rotationGoalWire,
-            //            rotationSpeed);
-            //        if (wireDummy.transform.rotation == rotationGoalWire)
-            //            rotateWireCam = false;
-            //    }
-            //}
-            //else
-            //{
-            //    if (pathIndex < wirePath.Count - 1)
-            //    {
-            //        pathIndex++;
-            //        rotationGoalWire = Quaternion.LookRotation(
-            //            (wirePath[pathIndex] - wireDummy.transform.position).normalized, Vector3.up);
-            //        rotateWireCam = true;
-            //    }
-            //    else
-            //    {
-            //        //end of path
-            //        ResetToTruePlayer(wireDummy.transform.position);
-            //        pathIndex = 0;
-            //        wirePath = null;
-            //        inWire = false;
-            //        wireDummy.SetActive(false);
-            //        mainCam.Follow = currentPlayer.transform;
-            //        truePlayerObject.transform.position = wireDummy.transform.position;
-            //        GameEventManager.PlayerFixedUpdate -= inWireUpdate;
-            //    }
-            //}
+            if (Vector3.Distance(currentPlayerObject.transform.position, m_wirePath[m_pathIndex]) > m_goNextWire)
+            {
+                Vector3 currentWirePos = currentPlayerObject.transform.position;
+                currentWirePos = currentWirePos + (m_wirePath[m_pathIndex] - currentPlayerObject.transform.position).normalized *
+                    (Time.deltaTime * (m_wireSpeed));
+                currentPlayerObject.transform.position = currentWirePos;
+                if (m_rotateWireCam)
+                {
+                    currentPlayerObject.transform.rotation = Quaternion.RotateTowards(
+                        currentPlayerObject.transform.rotation,
+                        m_rotationGoal,
+                        m_rotateSpeed);
+                    if (currentPlayerObject.transform.rotation == m_rotationGoal)
+                        m_rotateWireCam = false;
+                }
+            }
+            else
+            {
+                if (m_pathIndex < m_wirePath.Count - 1)
+                {
+                    m_pathIndex++;
+                    m_rotationGoal = Quaternion.LookRotation(
+                        (m_wirePath[m_pathIndex] - currentPlayerObject.transform.position).normalized, Vector3.up);
+                    m_rotateWireCam = true;
+                }
+                else
+                {
+                    //end of path
+                    PlayerController.PlayerControl.SwapPlayer(0);
+                }
+            }
         }
         
         public void GroundEnemyMove()

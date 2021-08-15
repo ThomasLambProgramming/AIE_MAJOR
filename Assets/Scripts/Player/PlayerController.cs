@@ -61,15 +61,9 @@ namespace Malicious.Player
         [Header("Wire Variables")]
         public GameObject m_wireModel = null;
         public Transform m_wireCameraOffset = null;
-        public float m_wireSpeed = 10f;
         [HideInInspector] public bool m_inWire = false;
-        [HideInInspector] public int m_pathIndex = 0;
-        [HideInInspector] public float m_goNextWire = 0.2f;
-        [HideInInspector] public List<Vector3> m_wirePath = null;
-        [HideInInspector] public Quaternion m_rotationGoal = Quaternion.identity;
-        [HideInInspector] public float m_rotateSpeed = 10f;
         
-        
+
         //------Player Input variables---------//
         public MasterInput m_playerInput = null;
         [HideInInspector] public Vector2 m_playerMoveInput = Vector2.zero;
@@ -141,6 +135,7 @@ namespace Malicious.Player
                     m_playerMovement.HackObjectMove(m_playerMoveInput, m_moveSpeed, m_cameraOffset);
                     break;
                 case ObjectType.Wire:
+                    m_playerMovement.WireMove();
                     break;
                 case ObjectType.GroundEnemy:
                     break;
@@ -171,7 +166,7 @@ namespace Malicious.Player
         /// Swaps the current player to any of the hackable types or the original player
         /// this is used to have clean transitions without overwriting code
         /// </summary>
-        private void SwapPlayer(ObjectType a_type)
+        public void SwapPlayer(ObjectType a_type)
         {
             //Unloading current type
             switch (m_currentPlayerType)
@@ -185,6 +180,16 @@ namespace Malicious.Player
                     break;
                 case ObjectType.Wire:
                     m_wireModel.SetActive(false);
+                    m_playerMovement.m_pathIndex = 0;
+                    m_playerMovement.m_wirePath = null;
+                    m_playerMovement.m_rotationGoal = Quaternion.identity;
+                    m_truePlayerObject.transform.position = m_wireModel.transform.position;
+                    m_truePlayerObject.transform.rotation = 
+                        new Quaternion(
+                            0, 
+                            m_wireModel.transform.rotation.y, 
+                            0, 
+                            m_wireModel.transform.rotation.z);
                     m_currentInteractable.PlayerExit();
                     break;
                 case ObjectType.GroundEnemy:
@@ -272,17 +277,18 @@ namespace Malicious.Player
         private void SetToWire()
         {
             m_truePlayerObject.SetActive(false);
+            m_wireModel.SetActive(true);
             HackableInformation wireInfo = m_currentInteractable.GiveInformation();
             Malicious.Hackable.Wire wireScript = wireInfo.m_object.GetComponent<Wire>();
-            m_wirePath = wireScript.GivePath();
+            m_playerMovement.m_wirePath = wireScript.GivePath();
             m_currentPlayerObject = m_wireModel;
             m_currentRigidbody = null;
             m_cameraOffset = m_wireCameraOffset;
-            
+            m_wireModel.transform.position = m_playerMovement.m_wirePath[0];
             //At the moment this assumes we have a path
             //we get the direction from the start to the next node and face the wire object in that direction to 
             //start so we arent looking in the wrong direction
-            Vector3 directionToNode = (m_wirePath[1] - m_wirePath[0]).normalized;
+            Vector3 directionToNode = (m_playerMovement.m_wirePath[1] - m_playerMovement.m_wirePath[0]).normalized;
             Quaternion newRotation = Quaternion.LookRotation(directionToNode);
             m_currentPlayerObject.transform.rotation = newRotation;
         }
