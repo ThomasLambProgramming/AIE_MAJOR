@@ -7,10 +7,10 @@ namespace Malicious.Hackable
 {
     public class Wire : MonoBehaviour, IHackable
     {
-        [ContextMenuItem("Add Path Point", "AddPathPoint")]
-        [SerializeField] private List<Vector3> path = new List<Vector3>();
+        [ContextMenuItem("Add Path Point", "AddPathPoint")] [SerializeField]
+        private List<Vector3> path = null;
         [SerializeField] private bool showPath = false;
-    
+
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
@@ -39,6 +39,7 @@ namespace Malicious.Hackable
             }
         }
 #endif
+        
         public void Hacked()
         {
             //play animation or particle effect

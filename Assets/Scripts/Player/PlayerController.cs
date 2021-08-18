@@ -99,6 +99,8 @@ namespace Malicious.Player
             m_playerMovement = new PlayerMovement(m_currentPlayerObject, m_currentRigidbody);
             m_mainCam.Follow = m_cameraOffset;
             m_trueCameraOffset = m_cameraOffset;
+            
+            m_playerMovement.SetJumpVariables(m_groundCheck);
         }
         private void PlayerTick()
         {
@@ -130,6 +132,7 @@ namespace Malicious.Player
             {
                 case ObjectType.TruePlayer:
                     m_playerMovement.StandardMove(m_playerMoveInput, m_moveSpeed);
+                    m_playerMovement.GroundCheck();
                     break;
                 case ObjectType.MoveableObject:
                     m_playerMovement.HackObjectMove(m_playerMoveInput, m_moveSpeed, m_cameraOffset);
@@ -314,9 +317,10 @@ namespace Malicious.Player
         }
         private void PlayerJumpInput(InputAction.CallbackContext a_context)
         {
-            //Conditional for if in ai no jump
-            //Normal Jump Function
-            //In Wire Jump
+            if (m_currentPlayerObject == m_truePlayerObject && m_holdingJump == false)
+            {
+                m_playerMovement.PlayerJump();
+            }
         }
         private void PlayerJumpInputOver(InputAction.CallbackContext a_context)
         {

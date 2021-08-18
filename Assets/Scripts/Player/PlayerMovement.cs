@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Malicious.Player
@@ -16,6 +18,7 @@ namespace Malicious.Player
         {
             currentPlayerObject = a_playerObject;
             currentPlayerRigidbody = a_playerRigidbody;
+            groundMask = 1 << LayerMask.NameToLayer("Ground");
         }
         public void UpdatePlayer(GameObject a_playerObject, Rigidbody a_playerRigidbody)
         {
@@ -30,7 +33,42 @@ namespace Malicious.Player
                 currentPlayerObject.transform.Rotate(new Vector3(0, a_spinInput.x * a_spinSpeed * Time.deltaTime, 0));
             }
         }
-        
+
+        #region JumpVariables
+
+        private bool canJump = true;
+        private bool canDoubleJump = true;
+        private Transform groundCheck = null;
+        private float jumpForce = 300f;
+        #endregion
+        public void PlayerJump()
+        {
+            Debug.Log(canJump);
+            Debug.Log(canDoubleJump);
+            if (canJump)
+            {
+                canJump = false;
+                currentPlayerRigidbody.AddForce(Vector3.up * jumpForce);
+            }
+            else if (canDoubleJump)
+            {
+                canDoubleJump = false;
+                currentPlayerRigidbody.AddForce(Vector3.up * jumpForce);
+            }
+        }
+
+        public void ResetJump()
+        {
+            canJump = true;
+            canDoubleJump = true;
+        }
+
+        public void SetJumpVariables(Transform a_groundCheck)
+        {
+            groundCheck = a_groundCheck;
+        }
+
+        private int groundMask = 0;
         public void StandardMove(Vector2 a_moveInput, float a_moveSpeed)
         {
             if (a_moveInput != Vector2.zero)
@@ -57,7 +95,22 @@ namespace Malicious.Player
                 }
             }
         }
-        
+
+        public void GroundCheck()
+        {
+            Collider[] collisions = Physics.OverlapSphere(groundCheck.position, 0.5f, groundMask);
+            if (collisions.Length > 0)
+            {
+                foreach (var collider in collisions)
+                {
+                    if (collider.transform.CompareTag("Ground"))
+                    {
+                        ResetJump();
+                    }
+                }
+            }
+        }
+
         //needs seperate function as the move goes off camera transform not players forward direction
         public void HackObjectMove(Vector2 a_moveInput, float a_moveSpeed, Transform a_camTransform)
         {
@@ -92,6 +145,8 @@ namespace Malicious.Player
             }
         }
 
+
+        #region WireVariables
         public int m_pathIndex = 0;
         public List<Vector3> m_wirePath = new List<Vector3>();
         private float m_goNextWire = 0.2f;
@@ -99,9 +154,10 @@ namespace Malicious.Player
         private float m_rotateSpeed = 10f;
         public Quaternion m_rotationGoal = Quaternion.identity;
         private bool m_rotateWireCam = false;
+        #endregion
         public void WireMove()
         {
-            if (Vector3.Distance(currentPlayerObject.transform.position, m_wirePath[m_pathIndex]) > m_goNextWire)
+            if (Vector3.SqrMagnitude(currentPlayerObject.transform.position - m_wirePath[m_pathIndex]) > m_goNextWire)
             {
                 Vector3 currentWirePos = currentPlayerObject.transform.position;
                 currentWirePos = currentWirePos + (m_wirePath[m_pathIndex] - currentPlayerObject.transform.position).normalized *
