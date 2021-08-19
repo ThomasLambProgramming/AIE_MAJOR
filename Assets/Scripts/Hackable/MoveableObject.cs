@@ -15,35 +15,36 @@ namespace Malicious.Hackable
         {
             objectRigidbody = GetComponent<Rigidbody>();
         }
-
         public HackableInformation GiveInformation()
         {
             return new HackableInformation(gameObject, objectRigidbody, m_cameraOffset, ObjectType.MoveableObject);
         }
-       
-        public void Hacked()
-        {
-            
-        }
-
         public void PlayerExit()
         {
             objectRigidbody.isKinematic = true;
         }
+        public void Tick(){}
+        public void FixedTick(){}
+        
 
-        private void OnTriggerEnter(Collider a_other)
+        public void Hacked()
         {
-            if (a_other.transform.CompareTag("Player"))
+            //Camera offset needs to be set to the players current offset (so it has that no camera rotate thing)
+        }
+        public void Movement(Vector2 a_input, float a_moveSpeed)
+        {
+            
+        }
+        public void SpinMovement(Vector2 a_input, float a_spinSpeed)
+        {
+            if (a_input != Vector2.zero)
             {
-                Malicious.Player.PlayerController.PlayerControl.SetInteractable(this);
+                transform.Rotate(new Vector3(0, a_input.x * a_spinSpeed * Time.deltaTime, 0));
             }
         }
-        private void OnTriggerExit(Collider a_other)
-        {
-            if (a_other.transform.CompareTag("Player"))
-            {
-                Malicious.Player.PlayerController.PlayerControl.SetInteractable(null);
-            }
-        }
+
+        public void Jump(){}
+        public void LeftShiftPressed(){}
+        public void SetPlayer(GameObject a_player){}
     }
 }

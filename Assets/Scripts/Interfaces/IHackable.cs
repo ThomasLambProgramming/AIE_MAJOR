@@ -29,5 +29,15 @@ namespace Malicious.Interfaces
         public void Hacked();
         public void PlayerExit();
         public HackableInformation GiveInformation();
+        
+        //Update and fixed update for hackables while hacked
+        public void Tick();
+        public void FixedTick();
+
+        public void LeftShiftPressed();
+        public void Movement(Vector2 a_input, float a_moveSpeed);
+        public void SpinMovement(Vector2 a_input, float a_spinSpeed);
+        public void Jump();
+        public void SetPlayer(GameObject a_player);
     }
 }

@@ -21,7 +21,7 @@ namespace Malicious.GameItems
             m_movementAmount = m_targetLocation - m_startLocation;
         }
 
-        void Update()
+        void FixedUpdate()
         {
             //later add a timer for waiting at the position for a short time and a slow down as it gets closer to the platform
             if (Vector3.SqrMagnitude(m_targetLocation - transform.position) < m_stoppingDistance)

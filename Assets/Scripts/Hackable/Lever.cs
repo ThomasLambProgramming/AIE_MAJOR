@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 namespace Malicious.Hackable
 {
-    public class Lever : MonoBehaviour, IHackable
+    public class Lever : MonoBehaviour
     {
         [SerializeField] private bool reusable = true;
         [SerializeField] private UnityEvent onEvent;
@@ -60,8 +60,6 @@ namespace Malicious.Hackable
                 }
             }
         }
-
-        public void PlayerExit(){}
         public HackableInformation GiveInformation() =>
             new HackableInformation(gameObject, null, null, ObjectType.ControlPanel);
         
@@ -81,22 +79,6 @@ namespace Malicious.Hackable
                 rotateAnchor.Rotate(new Vector3((rotateAmount * Time.deltaTime) / timeForRotate, 0, 0));
             else
                 rotateAnchor.Rotate(new Vector3((-rotateAmount * Time.deltaTime) / timeForRotate, 0, 0));
-        }
-
-        private void OnTriggerEnter(Collider a_other)
-        {
-            if (a_other.transform.CompareTag("Player"))
-            {
-                Malicious.Player.PlayerController.PlayerControl.SetInteractable(this);
-            }
-        }
-
-        private void OnTriggerExit(Collider a_other)
-        {
-            if (a_other.transform.CompareTag("Player"))
-            {
-                Malicious.Player.PlayerController.PlayerControl.SetInteractable(null);
-            }
         }
     }
 }
