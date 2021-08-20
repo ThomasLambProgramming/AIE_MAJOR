@@ -24,6 +24,7 @@ namespace Malicious.ReworkV2
         public void OnHackExit()
         {
             DisableInput();
+            //gameObject.SetActive(false);
         }
 
         public void Tick()
@@ -108,7 +109,7 @@ namespace Malicious.ReworkV2
 
         private void HackValidCheck()
         {
-            if (_values._currentInteract != null)
+            if (_values._currentHackable != null)
             {
                 if (DotCheck(transform, _values._currentHackableObj.transform))
                 {
@@ -152,17 +153,24 @@ namespace Malicious.ReworkV2
         public void OnHackFalse(){}
         
         //CameraOffset
-        public Transform GiveOffset() => _values._cameraOffset;
+        public OffsetContainer GiveOffset()
+        {
+            OffsetContainer temp = new OffsetContainer();
+            temp._offsetTransform = _values._cameraOffset;
+            temp._rigOffset = _values._rigOffset;
+            return temp;
+        }
+
         public void SetOffset(Transform a_transform) => _values._cameraOffset = a_transform;
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("Hackable"))
+            if (other.gameObject.CompareTag("Interactable"))
             {
                 _values._currentInteract = other.GetComponent<IPlayerObject>();
                 _values._currentInteractObj = other.gameObject;
             }
-            else if (other.gameObject.CompareTag("ControlPanel"))
+            else if (other.gameObject.CompareTag("Hackable"))
             {
                 _values._currentHackable = other.GetComponent<IHackable>();
                 _values._currentHackableObj = other.gameObject;
@@ -170,7 +178,7 @@ namespace Malicious.ReworkV2
         }
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.CompareTag("Hackable"))
+            if (other.gameObject.CompareTag("Interactable"))
             {
                 //Double check that the object gets set back to original state
                 if (_values._currentInteract != null)
@@ -180,7 +188,7 @@ namespace Malicious.ReworkV2
                 _values._currentInteractObj = null;
                 _values._canInteract = false;
             }
-            else if (other.gameObject.CompareTag("ControlPanel"))
+            else if (other.gameObject.CompareTag("Hackable"))
             {
                 //Double check that the object gets set back to original state
                 if (_values._currentHackable != null)
@@ -192,6 +200,7 @@ namespace Malicious.ReworkV2
             }
         }
 
+        public bool RequiresOffset() => false;
         private void MoveInputEnter(InputAction.CallbackContext a_context) => _values._moveInput = a_context.ReadValue<Vector2>();
         private void MoveInputExit(InputAction.CallbackContext a_context) => _values._moveInput = Vector2.zero;
         private void SpinInputEnter(InputAction.CallbackContext a_context) => _values._spinInput = a_context.ReadValue<Vector2>();

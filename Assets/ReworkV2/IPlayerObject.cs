@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Malicious.ReworkV2
 {
@@ -15,7 +16,8 @@ namespace Malicious.ReworkV2
         public void FixedTick();
 
         //Camera Offset functions
-        public Transform GiveOffset();
+        public OffsetContainer GiveOffset();
+        public bool RequiresOffset();
         public void SetOffset(Transform a_offset);
         
         //for all materials and other graphical changes when the player can hack
@@ -25,5 +27,11 @@ namespace Malicious.ReworkV2
         //Controlled Game Object functions
         //public GameObject GiveObject();
         //public void SetObject(GameObject a_gameObject);
+    }
+    [Serializable]
+    public class OffsetContainer
+    {
+        [SerializeField] public Transform _offsetTransform = null;
+        [SerializeField] public Vector3 _rigOffset = Vector3.zero;
     }
 }

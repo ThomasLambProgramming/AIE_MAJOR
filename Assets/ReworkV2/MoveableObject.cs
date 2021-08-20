@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using Malicious.Player;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Malicious.ReworkV2
 {
-    public class MoveableObject : MonoBehaviour
+    public class MoveableObject : MonoBehaviour, IPlayerObject
 
     {
     [SerializeField] private MoveObjValues _values = new MoveObjValues();
@@ -70,37 +72,62 @@ namespace Malicious.ReworkV2
         
     }
 
-    public Transform GiveOffset()
+    public void OnHackValid()
     {
-        throw new System.NotImplementedException();
+        //have material on node thing to change or play particle effect
+        //to indicate the player can now hack this object
     }
 
+    public void OnHackFalse()
+    {
+        //have material on node thing to change or play particle effect
+        //to tell the player they can no longer hack it
+    }
+    
+    public bool RequiresOffset() => false;
+    public OffsetContainer GiveOffset()
+    {
+        OffsetContainer temp = new OffsetContainer();
+        temp._offsetTransform = _values._cameraOffset;
+        temp._rigOffset = _values._rigOffset;
+        return temp;
+    }
     public void SetOffset(Transform a_transform)
     {
         _values._movementTransform = a_transform;
+
+        //This is so the camera offset is facing the same way as the player but keeping all other offset values
+        float yValue = a_transform.rotation.eulerAngles.y;
+        Vector3 prevEular = _values._cameraOffset.rotation.eulerAngles;
+        _values._cameraOffset.rotation = Quaternion.Euler(prevEular.x, yValue, prevEular.z);
+    }
+
+    private void ExitObject(InputAction.CallbackContext a_context)
+    {
+        PlayerController.PlayerControl.ResetToPlayer();
     }
     private void EnableInput()
     {
-        //GlobalData.InputManager.Player.Enable();
+        GlobalData.InputManager.Player.Enable();
         //GlobalData.InputManager.Player.Movement.performed += MoveInputEnter;
         //GlobalData.InputManager.Player.Movement.canceled += MoveInputExit;
         //GlobalData.InputManager.Player.Jump.performed += JumpInputEnter;
         //GlobalData.InputManager.Player.Jump.canceled += JumpInputExit;
         //GlobalData.InputManager.Player.Camera.performed += SpinInputEnter;
         //GlobalData.InputManager.Player.Camera.canceled += SpinInputExit;
-        //GlobalData.InputManager.Player.Interaction.performed += Interact;
+        GlobalData.InputManager.Player.Interaction.performed += ExitObject;
     }
 
     private void DisableInput()
     {
-        //GlobalData.InputManager.Player.Disable();
+        GlobalData.InputManager.Player.Disable();
         //GlobalData.InputManager.Player.Movement.performed -= MoveInputEnter;
         //GlobalData.InputManager.Player.Movement.canceled -= MoveInputExit;
         //GlobalData.InputManager.Player.Jump.performed -= JumpInputEnter;
         //GlobalData.InputManager.Player.Jump.canceled -= JumpInputExit;
         //GlobalData.InputManager.Player.Camera.performed -= SpinInputEnter;
         //GlobalData.InputManager.Player.Camera.canceled -= SpinInputExit;
-        //GlobalData.InputManager.Player.Interaction.performed -= Interact;
+        GlobalData.InputManager.Player.Interaction.performed -= ExitObject;
     }
 
 

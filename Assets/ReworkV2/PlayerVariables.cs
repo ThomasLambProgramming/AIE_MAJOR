@@ -8,6 +8,7 @@ namespace Malicious.ReworkV2
     public class PlayerValues
     {
         [SerializeField] public Transform _cameraOffset = null;
+        [SerializeField] public Vector3 _rigOffset = Vector3.zero;
         [HideInInspector] public Rigidbody _rigidbody = null;
 
         //------Hacking Variables--------------//
@@ -65,6 +66,8 @@ namespace Malicious.ReworkV2
     public class MoveObjValues
     {
         [SerializeField] public Rigidbody _rigidbody = null;
+        [SerializeField] public Transform _cameraOffset = null;
+        [SerializeField] public Vector3 _rigOffset = Vector3.zero;
         [HideInInspector] public Transform _movementTransform = null;
         
         //------Speed Variables----------------//
