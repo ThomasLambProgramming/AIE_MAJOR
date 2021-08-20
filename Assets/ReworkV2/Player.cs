@@ -1,4 +1,5 @@
 ﻿using System;
+using Malicious.Interfaces;
 using Malicious.Player;
 using UnityEngine.InputSystem;
 using UnityEngine;
@@ -36,6 +37,7 @@ namespace Malicious.ReworkV2
         {
             //Movement and etc
             Movement();
+            HackValidCheck();
         }
 
         private void Movement()
@@ -104,6 +106,51 @@ namespace Malicious.ReworkV2
             //}
         }
 
+        private void HackValidCheck()
+        {
+            if (_values._currentInteract != null)
+            {
+                if (DotCheck(transform, _values._currentHackableObj.transform))
+                {
+                    _values._canHackable = true;
+                    _values._currentHackable.OnHackValid();
+                }
+                else
+                {
+                    _values._canHackable = false;
+                    _values._currentHackable.OnHackFalse();
+                }
+            }
+
+            if (_values._currentInteract != null)
+            {
+                if (DotCheck(transform, _values._currentInteractObj.transform))
+                {
+                    _values._canInteract = true;
+                    _values._currentInteract.OnHackValid();
+                }
+                else
+                {
+                    _values._canInteract = false;
+                    _values._currentInteract.OnHackFalse();
+                }
+            }
+        }
+        private bool DotCheck(Transform a_transform, Transform b_transform)
+        {
+            Vector3 direction = (b_transform.position - a_transform.position).normalized;
+            if (Vector3.Dot(direction, a_transform.forward) > _values._dotAllowance)
+            {
+                return true;
+            }
+
+            return false;
+        }
+        
+        //for all materials and other graphical changes when the player can hack
+        public void OnHackValid(){}
+        public void OnHackFalse(){}
+        
         //CameraOffset
         public Transform GiveOffset() => _values._cameraOffset;
         public void SetOffset(Transform a_transform) => _values._cameraOffset = a_transform;
@@ -113,13 +160,35 @@ namespace Malicious.ReworkV2
             if (other.gameObject.CompareTag("Hackable"))
             {
                 _values._currentInteract = other.GetComponent<IPlayerObject>();
+                _values._currentInteractObj = other.gameObject;
+            }
+            else if (other.gameObject.CompareTag("ControlPanel"))
+            {
+                _values._currentHackable = other.GetComponent<IHackable>();
+                _values._currentHackableObj = other.gameObject;
             }
         }
         private void OnTriggerExit(Collider other)
         {
             if (other.gameObject.CompareTag("Hackable"))
             {
+                //Double check that the object gets set back to original state
+                if (_values._currentInteract != null)
+                    _values._currentInteract.OnHackFalse();
+                
                 _values._currentInteract = null;
+                _values._currentInteractObj = null;
+                _values._canInteract = false;
+            }
+            else if (other.gameObject.CompareTag("ControlPanel"))
+            {
+                //Double check that the object gets set back to original state
+                if (_values._currentHackable != null)
+                    _values._currentHackable.OnHackFalse();
+                
+                _values._currentHackable = null;
+                _values._currentHackableObj = null;
+                _values._canHackable = false;
             }
         }
 
@@ -132,13 +201,14 @@ namespace Malicious.ReworkV2
             
         private void Interact(InputAction.CallbackContext a_context)
         {
-            if (_values._currentInteract != null)
+            if (_values._currentInteract != null && _values._canInteract)
             {
-                /*
-                 * Make a dot product check to enable the lights and etc ("possibly change to update method")
-                 */
-                
                 PlayerController.PlayerControl.SwapPlayer(_values._currentInteract);
+            }
+            else if (_values._currentHackable != null && _values._canHackable)
+            {
+                _values._currentHackable.Hacked();
+                   
             }
         }
 

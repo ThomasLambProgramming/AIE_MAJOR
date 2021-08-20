@@ -1,4 +1,5 @@
 ﻿using System;
+using Malicious.Interfaces;
 using UnityEngine;
 
 namespace Malicious.ReworkV2
@@ -9,7 +10,17 @@ namespace Malicious.ReworkV2
         [SerializeField] public Transform _cameraOffset = null;
         [HideInInspector] public Rigidbody _rigidbody = null;
 
+        //------Hacking Variables--------------//
+            //Current hackable movement
         [HideInInspector] public IPlayerObject _currentInteract = null;
+        [HideInInspector] public GameObject _currentInteractObj = null;
+            //Current hackable control panel/lever
+        [HideInInspector] public IHackable _currentHackable = null;
+        [HideInInspector] public GameObject _currentHackableObj = null;
+        
+        [HideInInspector] public bool _canInteract = false;
+        [HideInInspector] public bool _canHackable = false;
+        [SerializeField] public float _dotAllowance = 0.8f;
         
         //------Speed Variables----------------//
         [SerializeField] public float _moveSpeed = 5f;

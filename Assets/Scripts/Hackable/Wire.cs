@@ -151,7 +151,8 @@ namespace Malicious.Hackable
                 }
             }
         }
-
+        public void OnHackValid(){}
+        public void OnHackFalse(){}
         public void SpinMovement(Vector2 a_input, float a_spinSpeed)
         {
             throw new System.NotImplementedException();

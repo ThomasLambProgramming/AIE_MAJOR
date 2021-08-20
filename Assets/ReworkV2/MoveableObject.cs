@@ -81,12 +81,26 @@ namespace Malicious.ReworkV2
     }
     private void EnableInput()
     {
-        GlobalData.InputManager.Player.Enable();
+        //GlobalData.InputManager.Player.Enable();
+        //GlobalData.InputManager.Player.Movement.performed += MoveInputEnter;
+        //GlobalData.InputManager.Player.Movement.canceled += MoveInputExit;
+        //GlobalData.InputManager.Player.Jump.performed += JumpInputEnter;
+        //GlobalData.InputManager.Player.Jump.canceled += JumpInputExit;
+        //GlobalData.InputManager.Player.Camera.performed += SpinInputEnter;
+        //GlobalData.InputManager.Player.Camera.canceled += SpinInputExit;
+        //GlobalData.InputManager.Player.Interaction.performed += Interact;
     }
 
     private void DisableInput()
     {
-        GlobalData.InputManager.Player.Disable();
+        //GlobalData.InputManager.Player.Disable();
+        //GlobalData.InputManager.Player.Movement.performed -= MoveInputEnter;
+        //GlobalData.InputManager.Player.Movement.canceled -= MoveInputExit;
+        //GlobalData.InputManager.Player.Jump.performed -= JumpInputEnter;
+        //GlobalData.InputManager.Player.Jump.canceled -= JumpInputExit;
+        //GlobalData.InputManager.Player.Camera.performed -= SpinInputEnter;
+        //GlobalData.InputManager.Player.Camera.canceled -= SpinInputExit;
+        //GlobalData.InputManager.Player.Interaction.performed -= Interact;
     }
 
 

@@ -31,6 +31,8 @@ namespace Malicious.Hackable
         {
             //Camera offset needs to be set to the players current offset (so it has that no camera rotate thing)
         }
+        public void OnHackValid(){}
+        public void OnHackFalse(){}
         public void Movement(Vector2 a_input, float a_moveSpeed)
         {
             

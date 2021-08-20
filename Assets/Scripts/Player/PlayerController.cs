@@ -53,7 +53,7 @@ namespace Malicious.Player
         {
             _currentPlayer.OnHackExit();
             _currentPlayer = a_interactable;
-            a_interactable.OnHackEnter();
+            _currentPlayer.OnHackEnter();
 
             _mainCam.Follow = _currentPlayer.GiveOffset();
             /*
