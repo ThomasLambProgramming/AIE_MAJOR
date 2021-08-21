@@ -19,12 +19,13 @@ namespace Malicious.ReworkV2
         public void OnHackEnter()
         {
             EnableInput();
+            gameObject.SetActive(true);
         }
 
         public void OnHackExit()
         {
             DisableInput();
-            //gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
 
         public void Tick()

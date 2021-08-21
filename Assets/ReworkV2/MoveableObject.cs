@@ -17,31 +17,38 @@ namespace Malicious.ReworkV2
     public void OnHackEnter()
     {
         EnableInput();
+        if (_values._rigidbody.isKinematic)
+            _values._rigidbody.isKinematic = false;
+
     }
 
     public void OnHackExit()
     {
         DisableInput();
+        if (_values._rigidbody.isKinematic == false)
+            _values._rigidbody.isKinematic = true;
     }
 
     public void Tick()
     {
         //Logic
+        SpinMovement();
     }
 
     public void FixedTick()
     {
         //Movement and etc
+        Movement();
     }
 
     private void Movement()
     {
         if (_values._moveInput != Vector2.zero)
         {
-            Vector3 camForward = _values._movementTransform.forward;
+            Vector3 camForward = _values._cameraOffset.forward;
             //camForward.y = 0;
 
-            Vector3 camRight = _values._movementTransform.right;
+            Vector3 camRight = _values._cameraOffset.right;
             //camRight.y = 0;
                 
             float currentYAmount = _values._rigidbody.velocity.y;
@@ -69,7 +76,29 @@ namespace Malicious.ReworkV2
 
     private void SpinMovement()
     {
-        
+        if (_values._spinInput != Vector2.zero)
+        {
+            _values._cameraOffset.RotateAround(_values._cameraOffset.position, Vector3.up,
+                _values._spinInput.x * _values._spinSpeed * Time.deltaTime);
+        }
+    }
+
+    
+    private void SpinInputStart(InputAction.CallbackContext a_context)
+    {
+        _values._spinInput = a_context.ReadValue<Vector2>();
+    }
+    private void SpinInputEnd(InputAction.CallbackContext a_context)
+    {
+        _values._spinInput = Vector2.zero;
+    }
+    private void MoveInputStart(InputAction.CallbackContext a_context)
+    {
+        _values._moveInput = a_context.ReadValue<Vector2>();
+    }
+    private void MoveInputEnd(InputAction.CallbackContext a_context)
+    {
+        _values._moveInput = Vector2.zero;
     }
 
     public void OnHackValid()
@@ -84,7 +113,8 @@ namespace Malicious.ReworkV2
         //to tell the player they can no longer hack it
     }
     
-    public bool RequiresOffset() => false;
+    //Does the object require its 
+    public bool RequiresOffset() => true;
     public OffsetContainer GiveOffset()
     {
         OffsetContainer temp = new OffsetContainer();
@@ -106,27 +136,23 @@ namespace Malicious.ReworkV2
     {
         PlayerController.PlayerControl.ResetToPlayer();
     }
-    private void EnableInput()
+    private void EnableInput()                          
     {
         GlobalData.InputManager.Player.Enable();
-        //GlobalData.InputManager.Player.Movement.performed += MoveInputEnter;
-        //GlobalData.InputManager.Player.Movement.canceled += MoveInputExit;
-        //GlobalData.InputManager.Player.Jump.performed += JumpInputEnter;
-        //GlobalData.InputManager.Player.Jump.canceled += JumpInputExit;
-        //GlobalData.InputManager.Player.Camera.performed += SpinInputEnter;
-        //GlobalData.InputManager.Player.Camera.canceled += SpinInputExit;
+        GlobalData.InputManager.Player.Movement.performed += MoveInputStart;
+        GlobalData.InputManager.Player.Movement.canceled += MoveInputEnd;
+        GlobalData.InputManager.Player.Camera.performed += SpinInputStart;
+        GlobalData.InputManager.Player.Camera.canceled += SpinInputEnd;
         GlobalData.InputManager.Player.Interaction.performed += ExitObject;
     }
 
     private void DisableInput()
     {
         GlobalData.InputManager.Player.Disable();
-        //GlobalData.InputManager.Player.Movement.performed -= MoveInputEnter;
-        //GlobalData.InputManager.Player.Movement.canceled -= MoveInputExit;
-        //GlobalData.InputManager.Player.Jump.performed -= JumpInputEnter;
-        //GlobalData.InputManager.Player.Jump.canceled -= JumpInputExit;
-        //GlobalData.InputManager.Player.Camera.performed -= SpinInputEnter;
-        //GlobalData.InputManager.Player.Camera.canceled -= SpinInputExit;
+        GlobalData.InputManager.Player.Movement.performed -= MoveInputStart;
+        GlobalData.InputManager.Player.Movement.canceled -= MoveInputEnd;
+        GlobalData.InputManager.Player.Camera.performed -= SpinInputStart;
+        GlobalData.InputManager.Player.Camera.canceled -= SpinInputEnd;
         GlobalData.InputManager.Player.Interaction.performed -= ExitObject;
     }
 
