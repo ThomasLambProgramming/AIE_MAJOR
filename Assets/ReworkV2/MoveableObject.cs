@@ -112,7 +112,9 @@ namespace Malicious.ReworkV2
         //have material on node thing to change or play particle effect
         //to tell the player they can no longer hack it
     }
-    
+    public bool RequiresRotation() => true;
+    public bool RequiresRig() => true;
+    public bool RequiresPosition() => true;
     //Does the object require its 
     public bool RequiresOffset() => true;
     public OffsetContainer GiveOffset()
@@ -134,7 +136,12 @@ namespace Malicious.ReworkV2
 
     private void ExitObject(InputAction.CallbackContext a_context)
     {
-        PlayerController.PlayerControl.ResetToPlayer();
+        Vector3 inbetween = (_values._cameraOffset.position - transform.position) / 2;
+        inbetween += transform.position;
+        //Place the player half way between the moveable object and the camera offset
+        //this will need edge cases to make sure player cannot be placed out of bounds
+        
+        PlayerController.PlayerControl.ResetToPlayer(inbetween, _values._cameraOffset.rotation);
     }
     private void EnableInput()                          
     {

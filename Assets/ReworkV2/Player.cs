@@ -148,6 +148,10 @@ namespace Malicious.ReworkV2
 
             return false;
         }
+
+        public bool RequiresRotation() => false;
+        public bool RequiresRig() => true;
+        public bool RequiresPosition() => true;
         
         //for all materials and other graphical changes when the player can hack
         public void OnHackValid(){}
