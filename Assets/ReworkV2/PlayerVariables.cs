@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Malicious.Interfaces;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Malicious.ReworkV2
@@ -55,11 +57,26 @@ namespace Malicious.ReworkV2
         //------Wire Variables-----------------//
         [SerializeField] public GameObject _wireModel = null;
         [SerializeField] public Transform _wireCameraOffset = null;
+        [SerializeField] public List<Vector3> _wirePath = new List<Vector3>();
+        
+        //------Other Variables----------------//
+        public int _pathIndex = 0;
+        
+        public Quaternion _rotationGoal = quaternion.identity;
+        public bool _rotateObject = false;
 
+        public float _wireLength = 5f;
+        public int _wireCharges = 4;
+
+        public bool takingInput = false;
+        
         //------Speed Variables----------------//
         public float _goNextWire = 0.2f;
         public float _wireSpeed = 10f;
         public float _rotateSpeed = 10f;
+        
+        //------Debug Variables----------------//
+        public bool _showPath = true;
     }
 
     [Serializable]

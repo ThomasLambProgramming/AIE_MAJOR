@@ -18,15 +18,6 @@ namespace Malicious.ReworkV2
         //Camera Offset functions
         public OffsetContainer GiveOffset();
         public bool RequiresOffset();
-        
-        
-        //for transitions if the object needs to have its
-        //rotation,
-        //camera shoulder rig or
-        //position changed
-        public bool RequiresRotation();
-        public bool RequiresRig();
-        public bool RequiresPosition();
         public void SetOffset(Transform a_offset);
         
         //for all materials and other graphical changes when the player can hack

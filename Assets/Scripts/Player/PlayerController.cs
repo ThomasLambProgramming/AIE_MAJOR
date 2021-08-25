@@ -31,8 +31,8 @@ namespace Malicious.Player
 
         //This is to have one globally used wire model to give to any wire asset
         //and not have to link it 
-        [SerializeField] private GameObject _wireModel = null;
-        [SerializeField] private Transform _wireModelOffset = null;
+        public GameObject _wireModel = null;
+        public Transform _wireModelOffset = null;
         public GameObject GetWireModel() => _wireModel;
         public Transform GetWireOffset() => _wireModelOffset;
 
@@ -47,6 +47,16 @@ namespace Malicious.Player
         private IPlayerObject _truePlayer = null;
         //-------------------------------------------//
 
+
+        /// <summary>
+        /// This function is only to be called by the player class 
+        /// </summary>
+        public void PlayerDead()
+        {
+            
+        }
+        
+        
         void Awake()
         {
             PlayerControl = this;
@@ -111,10 +121,7 @@ namespace Malicious.Player
             GameEventManager.PlayerFixedUpdate -= FixedTick;
             GameEventManager.PlayerUpdate -= PlayerTick;
 
-            StartCoroutine(TransitionCamera(
-                _currentPlayer.RequiresRotation(),
-                _currentPlayer.RequiresPosition(), 
-                _currentPlayer.RequiresRig()));
+            StartCoroutine(TransitionCamera());
         }
 
         
@@ -124,31 +131,29 @@ namespace Malicious.Player
             _truePlayerObject.transform.rotation = 
                 Quaternion.Euler(0, a_playerRot.eulerAngles.y, 0);
             _truePlayerObject.transform.position = a_playerPos;
-            
+            _truePlayerObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             SwapPlayer(_truePlayer);
         }
 
         
         Vector3 rigMoveAmount = Vector3.zero;
-        IEnumerator TransitionCamera(bool a_needsRotation, bool a_needsPosition, bool a_needsRig)
+        IEnumerator TransitionCamera()
         {
             bool transitionFinished = false;
             
-            bool donePosition = true;
-            bool doneRotation = true;
-            bool doneRig = true;
+            bool donePosition = false;
+            bool doneRotation = false;
+            bool doneRig = false;
 
-            if (a_needsPosition)
-                donePosition = false;
-            if (a_needsRotation)
-                doneRotation = false;
-            if (a_needsRig)
-                doneRig = false;
             
             rigMoveAmount = _targetRigOffset - _currentRigOffset;
-            float rotationAmount = Mathf.Abs(
-                _targetOffset.rotation.eulerAngles.y - 
-                _previousOffset.rotation.eulerAngles.y);
+            float rotationAmount = 
+                Mathf.Abs(
+                    _targetOffset.rotation.eulerAngles.y - 
+                    _previousOffset.rotation.eulerAngles.y) + 
+                Mathf.Abs(
+                    _targetOffset.rotation.eulerAngles.x - 
+                    _previousOffset.rotation.eulerAngles.x);
 
             while (transitionFinished == false)
             {
@@ -180,16 +185,22 @@ namespace Malicious.Player
 
                 if (doneRotation != true)
                 {
+                    
                     if (_previousOffset.rotation != _targetOffset.rotation)
+                    {
+                        
                         _previousOffset.rotation =
                             Quaternion.RotateTowards(
                                 _previousOffset.rotation,
                                 _targetOffset.rotation,
                                 rotationAmount * _rotationSpeed * Time.deltaTime);
+                        
+                        
+                    }
                     else
                         doneRotation = true;
                 }
-
+                
                 if (donePosition && doneRig && doneRotation)
                     transitionFinished = true;
                 

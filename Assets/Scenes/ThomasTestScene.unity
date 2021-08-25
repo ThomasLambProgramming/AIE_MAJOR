@@ -566,13 +566,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1161191289}
-  m_LocalRotation: {x: 0.17395432, y: 0.8022434, z: -0.2805487, w: 0.49743134}
+  m_LocalRotation: {x: 0.1140573, y: 0.82973796, z: -0.18394844, w: 0.51447934}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1831568977}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 38.55, y: 116.398, z: 0}
+  m_LocalEulerAnglesHint: {x: 25, y: 116.398, z: 0}
 --- !u!1 &1274523757
 GameObject:
   m_ObjectHideFlags: 0
@@ -603,6 +603,115 @@ Transform:
   m_Father: {fileID: 4236778685609059405}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
+--- !u!1 &1337690389
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1337690393}
+  - component: {fileID: 1337690392}
+  - component: {fileID: 1337690391}
+  - component: {fileID: 1337690390}
+  - component: {fileID: 1337690394}
+  m_Layer: 0
+  m_Name: WireHack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &1337690390
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337690389}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1337690391
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337690389}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 83f8ab50a0baafb47b83584a8881ed10, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1337690392
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337690389}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1337690393
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337690389}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.18, y: 0.5, z: 13.18}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1337690394
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337690389}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.04, y: 1.73, z: 3.01}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1380348450
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,11 +758,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mainCam: {fileID: 416194031}
   _previousOffset: {fileID: 1407079523}
-  _rotationSpeed: 3
+  _rotationSpeed: 4
   _camMoveSpeed: 10
-  _rigTransitionSpeed: 3
-  _wireModel: {fileID: 0}
-  _wireModelOffset: {fileID: 0}
+  _rigTransitionSpeed: 4
+  _wireModel: {fileID: 1953435531}
+  _wireModelOffset: {fileID: 564771248}
   _truePlayerObject: {fileID: 3569066871663427319}
 --- !u!1 &1407079522
 GameObject:
@@ -718,7 +827,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 19.66, y: 2, z: 22.26}
+  m_Size: {x: 3, y: 2, z: 3}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1831568973
 MonoBehaviour:
@@ -737,8 +846,8 @@ MonoBehaviour:
     _cameraOffset: {fileID: 1161191290}
     _rigOffset: {x: 0.42, y: 0.35, z: -1}
     _movementTransform: {fileID: 0}
-    _moveSpeed: 5
-    _spinSpeed: 5
+    _moveSpeed: 100
+    _spinSpeed: 100
     _moveInput: {x: 0, y: 0}
     _spinInput: {x: 0, y: 0}
 --- !u!65 &1831568974

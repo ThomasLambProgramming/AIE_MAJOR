@@ -1,5 +1,4 @@
-﻿using System;
-using Malicious.Interfaces;
+﻿using Malicious.Interfaces;
 using Malicious.Player;
 using UnityEngine.InputSystem;
 using UnityEngine;
@@ -19,6 +18,7 @@ namespace Malicious.ReworkV2
         public void OnHackEnter()
         {
             EnableInput();
+            _values._currentAnimationVector = Vector2.zero;
             gameObject.SetActive(true);
         }
 
@@ -149,10 +149,6 @@ namespace Malicious.ReworkV2
             return false;
         }
 
-        public bool RequiresRotation() => false;
-        public bool RequiresRig() => true;
-        public bool RequiresPosition() => true;
-        
         //for all materials and other graphical changes when the player can hack
         public void OnHackValid(){}
         public void OnHackFalse(){}
