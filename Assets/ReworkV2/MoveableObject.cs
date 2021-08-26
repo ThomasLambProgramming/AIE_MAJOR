@@ -112,7 +112,7 @@ namespace Malicious.ReworkV2
         //have material on node thing to change or play particle effect
         //to tell the player they can no longer hack it
     }
-    public bool RequiresOffset() => true;
+    public bool RequiresTruePlayerOffset() => true;
     public OffsetContainer GiveOffset()
     {
         OffsetContainer temp = new OffsetContainer();

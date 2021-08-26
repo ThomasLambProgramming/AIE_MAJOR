@@ -17,7 +17,7 @@ namespace Malicious.ReworkV2
 
         //Camera Offset functions
         public OffsetContainer GiveOffset();
-        public bool RequiresOffset();
+        public bool RequiresTruePlayerOffset();
         public void SetOffset(Transform a_offset);
         
         //for all materials and other graphical changes when the player can hack

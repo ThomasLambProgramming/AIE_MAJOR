@@ -201,7 +201,7 @@ namespace Malicious.ReworkV2
             }
         }
 
-        public bool RequiresOffset() => false;
+        public bool RequiresTruePlayerOffset() => false;
         private void MoveInputEnter(InputAction.CallbackContext a_context) => _values._moveInput = a_context.ReadValue<Vector2>();
         private void MoveInputExit(InputAction.CallbackContext a_context) => _values._moveInput = Vector2.zero;
         private void SpinInputEnter(InputAction.CallbackContext a_context) => _values._spinInput = a_context.ReadValue<Vector2>();

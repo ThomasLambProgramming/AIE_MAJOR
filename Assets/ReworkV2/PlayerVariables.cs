@@ -60,15 +60,18 @@ namespace Malicious.ReworkV2
         [SerializeField] public List<Vector3> _wirePath = new List<Vector3>();
         
         //------Other Variables----------------//
-        public int _pathIndex = 0;
+        [HideInInspector] public int _pathIndex = 0;
         
-        public Quaternion _rotationGoal = quaternion.identity;
-        public bool _rotateObject = false;
+        [HideInInspector] public Quaternion _rotationGoal = quaternion.identity;
+        [HideInInspector] public bool _rotateObject = false;
 
         public float _wireLength = 5f;
         public int _wireCharges = 4;
-
-        public bool takingInput = false;
+        [HideInInspector] public int _chargesLeft = 0;
+        
+        public Vector3 _rigOffset = Vector3.zero;
+        [HideInInspector] public bool _moveToEnd = false;
+        [HideInInspector] public bool _takingInput = false;
         
         //------Speed Variables----------------//
         public float _goNextWire = 0.2f;

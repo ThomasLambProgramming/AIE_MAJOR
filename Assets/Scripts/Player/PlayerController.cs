@@ -33,10 +33,8 @@ namespace Malicious.Player
         //and not have to link it 
         public GameObject _wireModel = null;
         public Transform _wireModelOffset = null;
-        public GameObject GetWireModel() => _wireModel;
-        public Transform GetWireOffset() => _wireModelOffset;
 
-        private bool _rotating = false;
+        private bool _cameraRepositioning = false;
         //-------------------------------------------//
 
 
@@ -93,7 +91,7 @@ namespace Malicious.Player
 
         public void SwapPlayer(IPlayerObject a_interactable)
         {
-            if (_rotating)
+            if (_cameraRepositioning)
                 return;
 
             _currentPlayer.OnHackExit();
@@ -106,14 +104,14 @@ namespace Malicious.Player
             _mainCam.LookAt = _previousOffset;
 
             _currentPlayer = a_interactable;
-
-            //Only for moveable object but adding redundancy for future hackable objects
-            if (_currentPlayer.RequiresOffset())
-                _currentPlayer.SetOffset(_truePlayer.GiveOffset()._offsetTransform);
-
+            _currentPlayer.OnHackEnter();
             _currentOffset = null;
 
-            _currentPlayer.OnHackEnter();
+            //Only for moveable object but adding redundancy for future hackable objects
+            if (_currentPlayer.RequiresTruePlayerOffset())
+                _currentPlayer.SetOffset(_truePlayer.GiveOffset()._offsetTransform);
+
+
             
             _targetOffset = _currentPlayer.GiveOffset()._offsetTransform;
             _targetRigOffset = a_interactable.GiveOffset()._rigOffset;
@@ -127,6 +125,8 @@ namespace Malicious.Player
         
         public void ResetToPlayer(Vector3 a_playerPos, Quaternion a_playerRot)
         {
+            if (_cameraRepositioning)
+                return;
             //  Animation / check for where is valid for exit
             _truePlayerObject.transform.rotation = 
                 Quaternion.Euler(0, a_playerRot.eulerAngles.y, 0);
@@ -214,7 +214,7 @@ namespace Malicious.Player
             _currentOffset = _targetOffset;
             _mainCam.Follow = _currentOffset;
             _mainCam.LookAt = _currentOffset;
-            _rotating = false;
+            _cameraRepositioning = false;
         }
     }
 }

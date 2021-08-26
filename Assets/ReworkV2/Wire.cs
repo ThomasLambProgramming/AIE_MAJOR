@@ -1,93 +1,265 @@
-﻿using Malicious.Player;
+﻿using System;
+using Malicious.Player;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 namespace Malicious.ReworkV2
 {
     public class Wire : MonoBehaviour, IPlayerObject
     {
         [SerializeField] private WireValues _values = new WireValues();
+
+        private void Start()
+        {
+            //This will need to be changed to allow for saving the input
+            _values._chargesLeft = _values._wireCharges;
+        }
+
         public void OnHackEnter()
         {
             _values._wireModel = PlayerController.PlayerControl._wireModel;
             _values._wireCameraOffset = PlayerController.PlayerControl._wireModelOffset;
-            
+            _values._wireModel.SetActive(true);
+
             Vector3 directionToNode = (_values._wirePath[1] - _values._wirePath[0]).normalized;
             Quaternion newRotation = Quaternion.LookRotation(directionToNode);
-            //currentPlayerObject.transform.rotation = newRotation;
-            //currentPlayerObject.transform.position = m_wirePath[0];
+
+            _values._wireModel.transform.rotation = newRotation;
+            _values._wireModel.transform.position = _values._wirePath[0];
+
+            if (_values._wirePath.Count > 0)
+            {
+                _values._takingInput = false;
+                _values._moveToEnd = true;
+            }
+            else
+            {
+                _values._takingInput = true;
+                _values._moveToEnd = false;
+            }
+
+            EnableInput();
         }
 
         public void OnHackExit()
         {
-            //m_pathIndex = 0;
-            //m_rotationGoal = Quaternion.identity;
+            _values._pathIndex = 0;
+            _values._rotationGoal = Quaternion.identity;
+            _values._wireModel.SetActive(false);
+
+            _values._takingInput = false;
+            _values._moveToEnd = false;
+            DisableInput();
         }
 
         public void Tick()
         {
-            //if (Vector3.SqrMagnitude(currentPlayerObject.transform.position - m_wirePath[m_pathIndex]) > m_goNextWire)
-            //{
-            //    Vector3 currentWirePos = currentPlayerObject.transform.position;
-            //    currentWirePos = currentWirePos + (m_wirePath[m_pathIndex] - currentPlayerObject.transform.position).normalized *
-            //        (Time.deltaTime * (m_wireSpeed));
-            //    currentPlayerObject.transform.position = currentWirePos;
-            //    if (m_rotateWireCam)
-            //    {
-            //        currentPlayerObject.transform.rotation = Quaternion.RotateTowards(
-            //            currentPlayerObject.transform.rotation,
-            //            m_rotationGoal,
-            //            m_rotateSpeed);
-            //        if (currentPlayerObject.transform.rotation == m_rotationGoal)
-            //            m_rotateWireCam = false;
-            //    }
-            //}
-            //else
-            //{
-            //    if (m_pathIndex < m_wirePath.Count - 1)
-            //    {
-            //        // m_pathIndex++;
-            //        // m_rotationGoal = Quaternion.LookRotation(
-            //        //     (m_wirePath[m_pathIndex] - currentPlayerObject.transform.position).normalized, Vector3.up);
-            //        // m_rotateWireCam = true;
-            //    }
-            //    else
-            //    {
-            //        //end of path
-            //        
-            //    }
-            //}
+            
         }
-
         public void FixedTick()
         {
-            throw new System.NotImplementedException();
+            if (_values._takingInput)
+                return;
+            if (_values._moveToEnd)
+                MoveToEndOfWire();
+            else
+            {
+                SetToPlayer();
+            }
         }
+
+        private void MoveToEndOfWire()
+        {
+            if (Vector3.SqrMagnitude(_values._wireModel.transform.position - _values._wirePath[_values._pathIndex]) >
+                _values._goNextWire)
+            {
+                Vector3 currentWirePos = _values._wireModel.transform.position;
+                currentWirePos = currentWirePos +
+                                 (_values._wirePath[_values._pathIndex] - _values._wireModel.transform.position)
+                                 .normalized *
+                                 (Time.deltaTime * (_values._wireSpeed));
+                _values._wireModel.transform.position = currentWirePos;
+                if (_values._rotateObject)
+                {
+                    _values._wireModel.transform.rotation = Quaternion.RotateTowards(
+                        _values._wireModel.transform.rotation,
+                        _values._rotationGoal,
+                        _values._rotateSpeed);
+                    if (_values._wireModel.transform.rotation == _values._rotationGoal)
+                        _values._rotateObject = false;
+                }
+            }
+            else
+            {
+                if (_values._pathIndex < _values._wirePath.Count - 1)
+                {
+                    _values._pathIndex++;
+                    _values._rotationGoal = Quaternion.LookRotation(
+                        (_values._wirePath[_values._pathIndex] - _values._wireModel.transform.position).normalized,
+                        Vector3.up);
+                    _values._rotateObject = true;
+                }
+                else
+                {
+                    Debug.Log("sectionRan");
+                    if (_values._chargesLeft > 0)
+                    {
+                        _values._takingInput = true;
+                        _values._moveToEnd = false;
+                    }
+                    else
+                    {
+                        //we want to exit
+                        _values._moveToEnd = false;
+                        _values._takingInput = false;
+                    }
+                }
+            }
+        }
+
+        private void InputProcessing(InputAction.CallbackContext a_context)
+        {
+            if (!_values._takingInput)
+                return;
+            
+            Vector2 input = a_context.ReadValue<Vector2>();
+            
+            //player needs to move the stick a set amount
+            if (input.magnitude < 0.4f)
+                return;
+
+            Vector3 forwardDirection = _values._wireModel.transform.forward;
+            Vector3 rightDirection = _values._wireModel.transform.right;
+
+            if (Vector2.Dot(input, Vector2.up) > 0.8f)
+            {
+                AddPoint(forwardDirection);
+            }
+            if (Vector2.Dot(input, Vector2.down) > 0.8f)
+            {
+                _values._takingInput = false;
+                _values._chargesLeft++;
+                _values._moveToEnd = true;
+                _values._pathIndex--;
+                _values._wirePath.RemoveAt(_values._wirePath.Count - 1);
+            }
+            if (Vector2.Dot(input, Vector2.left) > 0.8f)
+            {
+                AddPoint(-rightDirection);
+                _values._rotateObject = true;
+            }
+            if (Vector2.Dot(input, Vector2.right) > 0.8f)
+            {
+                AddPoint(rightDirection);
+                _values._rotateObject = true;
+            }
+        }
+
+        private void AddPoint(Vector3 a_direction)
+        {
+            if (CheckDirection(a_direction))
+            {
+                _values._takingInput = false;
+                _values._chargesLeft--;
+                Vector3 newWirePoint = _values._wirePath[_values._wirePath.Count - 1];
+                Vector3 directionAdd = a_direction * _values._wireLength;
+
+                directionAdd = new Vector3(Mathf.Ceil(directionAdd.x), Mathf.Ceil(directionAdd.y),
+                    Mathf.Ceil(directionAdd.z));
+                
+                newWirePoint += directionAdd;
+                _values._wirePath.Add(newWirePoint);
+                _values._moveToEnd = true;
+                
+            }
+        }
+        private bool CheckDirection(Vector3 a_direction)
+        {
+            RaycastHit hit;
+            //if it collides with anything other than wire layer a new wire is not allowed 
+            if (Physics.Raycast(
+                _values._wireModel.transform.position, 
+                a_direction, 
+                out hit, 
+                _values._wireLength,
+                ~(1 << 8)))
+            {
+                if (hit.collider != null)
+                    Debug.Log(hit.collider.gameObject.name);    
+                return false;
+            }
+
+            
+            return true;
+        }
+        
+        private void UpDirection(InputAction.CallbackContext a_context)
+        {
+            if (_values._takingInput) 
+                AddPoint(_values._wireModel.transform.up);
+        }
+
+        private void DownDirection(InputAction.CallbackContext a_context)
+        {
+            if (_values._takingInput) 
+                AddPoint(-_values._wireModel.transform.up);
+        }
+
+        private void ExitWireInput(InputAction.CallbackContext a_context)
+        {
+            SetToPlayer();
+        }
+
+        private void SetToPlayer()
+        {
+            PlayerController.PlayerControl.ResetToPlayer(
+                _values._wireModel.transform.position,
+                _values._wireModel.transform.rotation);
+        }
+
 
         public OffsetContainer GiveOffset()
         {
-            throw new System.NotImplementedException();
+            OffsetContainer temp = new OffsetContainer();
+            temp._offsetTransform = _values._wireCameraOffset;
+            temp._rigOffset = _values._rigOffset;
+            return temp;
         }
 
-        public bool RequiresOffset()
+        private void EnableInput()                          
         {
-            throw new System.NotImplementedException();
+            GlobalData.InputManager.Player.Enable();
+            GlobalData.InputManager.Player.Movement.performed += InputProcessing;
+            GlobalData.InputManager.Player.Jump.performed += UpDirection;
+            GlobalData.InputManager.Player.Down.performed += DownDirection;
+            GlobalData.InputManager.Player.Interaction.performed += ExitWireInput;
+        }
+
+        private void DisableInput()
+        {
+            GlobalData.InputManager.Player.Disable();
+            GlobalData.InputManager.Player.Movement.performed -= InputProcessing;
+            GlobalData.InputManager.Player.Jump.performed -= UpDirection;
+            GlobalData.InputManager.Player.Down.performed -= DownDirection;
+            GlobalData.InputManager.Player.Interaction.performed -= ExitWireInput;
         }
         
-
+        public bool RequiresTruePlayerOffset() => false;
+        
         public void SetOffset(Transform a_offset)
         {
-            throw new System.NotImplementedException();
+            _values._wireCameraOffset = a_offset;
         }
 
         public void OnHackValid()
         {
-            throw new System.NotImplementedException();
+            //material change
         }
 
         public void OnHackFalse()
         {
-            throw new System.NotImplementedException();
+            //material change
         }
 #if UNITY_EDITOR
         private void OnDrawGizmos()
