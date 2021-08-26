@@ -65,6 +65,7 @@ namespace Malicious.ReworkV2
         [HideInInspector] public Quaternion _rotationGoal = quaternion.identity;
         [HideInInspector] public bool _rotateObject = false;
 
+        public float _heightAngleAllowance = 0.6f;
         public float _wireLength = 5f;
         public int _wireCharges = 4;
         [HideInInspector] public int _chargesLeft = 0;

@@ -734,16 +734,17 @@ MonoBehaviour:
     _pathIndex: 0
     _rotationGoal: {x: 0, y: 0, z: 0, w: 1}
     _rotateObject: 0
+    _heightAngleAllowance: 0.8
     _wireLength: 5
-    _wireCharges: 4
+    _wireCharges: 90
     _chargesLeft: 0
     _rigOffset: {x: 0, y: 0, z: 0}
     _moveToEnd: 0
     _takingInput: 0
     _goNextWire: 0.2
     _wireSpeed: 5
-    _rotateSpeed: 4
-    _showPath: 1
+    _rotateSpeed: 1
+    _showPath: 0
 --- !u!1 &1380348450
 GameObject:
   m_ObjectHideFlags: 0

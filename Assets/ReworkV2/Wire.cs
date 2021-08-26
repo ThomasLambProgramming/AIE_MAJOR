@@ -71,38 +71,47 @@ namespace Malicious.ReworkV2
 
         private void MoveToEndOfWire()
         {
-            if (Vector3.SqrMagnitude(_values._wireModel.transform.position - _values._wirePath[_values._pathIndex]) >
+            bool moveRotOccuring = false;
+            if (Vector3.SqrMagnitude(_values._wirePath[_values._pathIndex] - _values._wireModel.transform.position) >
                 _values._goNextWire)
             {
+                moveRotOccuring = true;
                 Vector3 currentWirePos = _values._wireModel.transform.position;
                 currentWirePos = currentWirePos +
                                  (_values._wirePath[_values._pathIndex] - _values._wireModel.transform.position)
                                  .normalized *
                                  (Time.deltaTime * (_values._wireSpeed));
                 _values._wireModel.transform.position = currentWirePos;
-                if (_values._rotateObject)
-                {
-                    _values._wireModel.transform.rotation = Quaternion.RotateTowards(
-                        _values._wireModel.transform.rotation,
-                        _values._rotationGoal,
-                        _values._rotateSpeed);
-                    if (_values._wireModel.transform.rotation == _values._rotationGoal)
-                        _values._rotateObject = false;
-                }
             }
-            else
+            if (_values._rotateObject)
+            {
+                moveRotOccuring = true;
+                _values._wireModel.transform.rotation = Quaternion.RotateTowards(
+                    _values._wireModel.transform.rotation,
+                    _values._rotationGoal,
+                    _values._rotateSpeed);
+                if (_values._wireModel.transform.rotation == _values._rotationGoal)
+                    _values._rotateObject = false;
+                
+            }
+
+            if (moveRotOccuring == false) 
             {
                 if (_values._pathIndex < _values._wirePath.Count - 1)
                 {
                     _values._pathIndex++;
-                    _values._rotationGoal = Quaternion.LookRotation(
-                        (_values._wirePath[_values._pathIndex] - _values._wireModel.transform.position).normalized,
-                        Vector3.up);
-                    _values._rotateObject = true;
+                    Vector3 newDirection = (_values._wirePath[_values._pathIndex] - _values._wirePath[_values._pathIndex - 1]).normalized;
+
+                    if (Vector3.Dot(newDirection, Vector3.up) < _values._heightAngleAllowance &&
+                        Vector3.Dot(newDirection, Vector3.down) < _values._heightAngleAllowance)
+                    {
+                        _values._rotationGoal = Quaternion.LookRotation(
+                            newDirection, Vector3.up);
+                        _values._rotateObject = true;
+                    }
                 }
                 else
                 {
-                    Debug.Log("sectionRan");
                     if (_values._chargesLeft > 0)
                     {
                         _values._takingInput = true;
@@ -161,16 +170,19 @@ namespace Malicious.ReworkV2
             if (CheckDirection(a_direction))
             {
                 _values._takingInput = false;
+                _values._moveToEnd = true;
                 _values._chargesLeft--;
-                Vector3 newWirePoint = _values._wirePath[_values._wirePath.Count - 1];
-                Vector3 directionAdd = a_direction * _values._wireLength;
 
-                directionAdd = new Vector3(Mathf.Ceil(directionAdd.x), Mathf.Ceil(directionAdd.y),
-                    Mathf.Ceil(directionAdd.z));
+                Vector3 newWirePoint = _values._wirePath[_values._wirePath.Count - 1];
+                Vector3 directionAdd = a_direction;
+                
+                directionAdd = directionAdd.normalized;
+                directionAdd *= _values._wireLength;
+                
+                
                 
                 newWirePoint += directionAdd;
                 _values._wirePath.Add(newWirePoint);
-                _values._moveToEnd = true;
                 
             }
         }
