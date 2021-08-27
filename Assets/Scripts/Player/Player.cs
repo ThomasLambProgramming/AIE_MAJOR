@@ -167,12 +167,12 @@ namespace Malicious.Player
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("Interactable"))
+            if (other.gameObject.CompareTag("Hackable"))
             {
                 _values._currentInteract = other.GetComponent<IPlayerObject>();
                 _values._currentInteractObj = other.gameObject;
             }
-            else if (other.gameObject.CompareTag("Hackable"))
+            else if (other.gameObject.CompareTag("Interactable"))
             {
                 _values._currentHackable = other.GetComponent<IHackable>();
                 _values._currentHackableObj = other.gameObject;
@@ -180,7 +180,7 @@ namespace Malicious.Player
         }
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.CompareTag("Interactable"))
+            if (other.gameObject.CompareTag("Hackable"))
             {
                 //Double check that the object gets set back to original state
                 if (_values._currentInteract != null)
@@ -190,7 +190,7 @@ namespace Malicious.Player
                 _values._currentInteractObj = null;
                 _values._canInteract = false;
             }
-            else if (other.gameObject.CompareTag("Hackable"))
+            else if (other.gameObject.CompareTag("Interactable"))
             {
                 //Double check that the object gets set back to original state
                 if (_values._currentHackable != null)
