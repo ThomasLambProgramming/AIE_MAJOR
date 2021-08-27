@@ -1,11 +1,13 @@
+using System;
 using Malicious.Core;
-
+using Malicious.Interfaces;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Malicious.Hackable
 {
-    public class Lever : MonoBehaviour
+    [SelectionBase]
+    public class Lever : MonoBehaviour, IHackable
     {
         [SerializeField] private bool reusable = true;
         [SerializeField] private UnityEvent onEvent;
@@ -15,6 +17,28 @@ namespace Malicious.Hackable
         [SerializeField] private float timeForRotate = 2f;
         [SerializeField] private float rotateAmount = 70;
         [SerializeField] private Transform rotateAnchor = null;
+
+        [SerializeField] private GameObject _nodeObject = null;
+        private MeshRenderer _nodeRenderer = null;
+        [SerializeField] private Material _defaultMaterial = null;
+        [SerializeField] private Material _hackValidMaterial = null;
+        [SerializeField] private Material _hackedMaterial = null;
+        private bool _beenHacked = false;
+        public void OnHackValid()
+        { 
+            if (!_beenHacked)
+                _nodeRenderer.material = _hackValidMaterial;
+        }
+
+        public void OnHackFalse()
+        {
+            if (!_beenHacked)
+                _nodeRenderer.material = _defaultMaterial;
+        }
+        private void Start()
+        {
+            _nodeRenderer = _nodeObject.GetComponent<MeshRenderer>();
+        }
 
 #if UNITY_EDITOR
         [SerializeField] private bool testEvents = false;
@@ -33,6 +57,8 @@ namespace Malicious.Hackable
 
         public void Hacked()
         {
+            _nodeRenderer.material = _hackedMaterial;
+            _beenHacked = true;
             //if its in the middle of rotating dont let the player change (to not
             //cause errors with rotation)
             if (isRotating)
@@ -58,6 +84,7 @@ namespace Malicious.Hackable
                 }
             }
         }
+
 
         //This is temp to make the lever rotate from one side to another
         //just for visuals (get the designers to make an animation for this

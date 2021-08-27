@@ -12,19 +12,31 @@ namespace Malicious.Hackable
     public class Wire : MonoBehaviour, IPlayerObject
     {
         [SerializeField] private WireValues _values = new WireValues();
-            
+        
+        
+        [SerializeField] private GameObject _nodeObject = null;
+        private MeshRenderer _nodeRenderer = null;
+        [SerializeField] private Material _defaultMaterial = null;
+        [SerializeField] private Material _hackValidMaterial = null;
+        [SerializeField] private Material _hackedMaterial = null;
+        
+        
+       
         private void Start()
         {
             //This will need to be changed to allow for saving the input
             _values._chargesLeft = _values._wireCharges;
+            _nodeRenderer = _nodeObject.GetComponent<MeshRenderer>();
         }
 
         public void OnHackEnter()
         {
+            _nodeRenderer.material = _hackedMaterial;
             _values._wireModel = PlayerController.PlayerControl._wireModel;
             _values._wireCameraOffset = PlayerController.PlayerControl._wireModelOffset;
             _values._wireModel.SetActive(true);
 
+            //THIS NEEDS TO CHANGE TO A DEFAULT PARAMETER SO IT CAN BE STARTED WITH 1 WIRE
             Vector3 directionToNode = (_values._wirePath[1] - _values._wirePath[0]).normalized;
             _values._startingDirection = directionToNode;
             Quaternion newRotation = Quaternion.LookRotation(directionToNode);
@@ -55,6 +67,7 @@ namespace Malicious.Hackable
             _values._takingInput = false;
             _values._moveToEnd = false;
             DisableInput();
+            _nodeRenderer.material = _defaultMaterial;
         }
 
         public void Tick()
@@ -309,16 +322,16 @@ namespace Malicious.Hackable
         {
             _values._wireCameraOffset = a_offset;
         }
-
         public void OnHackValid()
         {
-            //material change
+            _nodeRenderer.material = _hackValidMaterial;
         }
 
         public void OnHackFalse()
         {
-            //material change
+            _nodeRenderer.material = _defaultMaterial;
         }
+        
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {

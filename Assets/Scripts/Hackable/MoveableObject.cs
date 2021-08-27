@@ -12,9 +12,17 @@ namespace Malicious.Hackable
     {
     [SerializeField] private MoveObjValues _values = new MoveObjValues();
 
+    [SerializeField] private GameObject _nodeObject = null;
+    private MeshRenderer _nodeRenderer = null;
+    [SerializeField] private Material _defaultMaterial = null;
+    [SerializeField] private Material _hackValidMaterial = null;
+    [SerializeField] private Material _hackedMaterial = null;
+
+
     private void Start()
     {
         _values._rigidbody = GetComponent<Rigidbody>();
+        _nodeRenderer = _nodeObject.GetComponent<MeshRenderer>();
     }
 
     public void OnHackEnter()
@@ -22,6 +30,7 @@ namespace Malicious.Hackable
         EnableInput();
         if (_values._rigidbody.isKinematic)
             _values._rigidbody.isKinematic = false;
+        _nodeRenderer.material = _hackedMaterial;
 
     }
 
@@ -30,6 +39,8 @@ namespace Malicious.Hackable
         DisableInput();
         if (_values._rigidbody.isKinematic == false)
             _values._rigidbody.isKinematic = true;
+        
+        _nodeRenderer.material = _defaultMaterial;
     }
 
     public void Tick()
@@ -106,15 +117,14 @@ namespace Malicious.Hackable
 
     public void OnHackValid()
     {
-        //have material on node thing to change or play particle effect
-        //to indicate the player can now hack this object
+        _nodeRenderer.material = _hackValidMaterial;
     }
 
     public void OnHackFalse()
     {
-        //have material on node thing to change or play particle effect
-        //to tell the player they can no longer hack it
+        _nodeRenderer.material = _defaultMaterial;
     }
+
     public bool RequiresTruePlayerOffset() => true;
     public OffsetContainer GiveOffset()
     {
