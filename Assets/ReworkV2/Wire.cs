@@ -9,7 +9,7 @@ namespace Malicious.ReworkV2
     public class Wire : MonoBehaviour, IPlayerObject
     {
         [SerializeField] private WireValues _values = new WireValues();
-
+            
         private void Start()
         {
             //This will need to be changed to allow for saving the input
@@ -23,8 +23,9 @@ namespace Malicious.ReworkV2
             _values._wireModel.SetActive(true);
 
             Vector3 directionToNode = (_values._wirePath[1] - _values._wirePath[0]).normalized;
+            _values._startingDirection = directionToNode;
             Quaternion newRotation = Quaternion.LookRotation(directionToNode);
-
+            
             _values._wireModel.transform.rotation = newRotation;
             _values._wireModel.transform.position = _values._wirePath[0];
 
@@ -147,11 +148,34 @@ namespace Malicious.ReworkV2
             }
             if (Vector2.Dot(input, Vector2.down) > 0.8f)
             {
+                if (_values._pathIndex == 0)
+                    return;
                 _values._takingInput = false;
                 _values._chargesLeft++;
                 _values._moveToEnd = true;
                 _values._pathIndex--;
+                
                 _values._wirePath.RemoveAt(_values._wirePath.Count - 1);
+
+                if (_values._pathIndex > 0)
+                {
+                    Vector3 previousDirection = (_values._wirePath[_values._pathIndex] - _values._wirePath[_values._pathIndex - 1]).normalized;
+
+                    if (Vector3.Dot(previousDirection, Vector3.up) < _values._heightAngleAllowance &&
+                        Vector3.Dot(previousDirection, Vector3.down) < _values._heightAngleAllowance)
+                    {
+                        _values._rotationGoal = Quaternion.LookRotation(previousDirection,
+                            Vector3.up);
+                        _values._rotateObject = true;
+                    }
+                }
+                else
+                {
+                    _values._rotationGoal = Quaternion.LookRotation(
+                        (_values._startingDirection),
+                        Vector3.up);
+                    _values._rotateObject = true;
+                }
             }
             if (Vector2.Dot(input, Vector2.left) > 0.8f)
             {
@@ -169,9 +193,6 @@ namespace Malicious.ReworkV2
         {
             if (CheckDirection(a_direction))
             {
-                _values._takingInput = false;
-                _values._moveToEnd = true;
-                _values._chargesLeft--;
 
                 Vector3 newWirePoint = _values._wirePath[_values._wirePath.Count - 1];
                 Vector3 directionAdd = a_direction;
@@ -179,12 +200,34 @@ namespace Malicious.ReworkV2
                 directionAdd = directionAdd.normalized;
                 directionAdd *= _values._wireLength;
                 
-                
-                
+
                 newWirePoint += directionAdd;
-                _values._wirePath.Add(newWirePoint);
+
+                if (CheckPoint(newWirePoint))
+                {
+                    _values._takingInput = false;
+                    _values._moveToEnd = true;
+                    _values._chargesLeft--;
+                    
+                    _values._wirePath.Add(newWirePoint);
+                }
                 
             }
+        }
+
+        private bool CheckPoint(Vector3 a_position)
+        {
+            bool isValid = true;
+            foreach (var location in _values._wirePath)
+            {
+                if (Vector3.SqrMagnitude(location - a_position) < 2)
+                    isValid = false;
+            }
+
+            if (isValid)
+                return true;
+            
+            return false;
         }
         private bool CheckDirection(Vector3 a_direction)
         {
