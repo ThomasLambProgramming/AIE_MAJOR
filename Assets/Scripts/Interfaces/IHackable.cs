@@ -27,7 +27,9 @@ namespace Malicious.Interfaces
     public interface IHackable
     {
         public void Hacked();
-        public void PlayerExit();
-        public HackableInformation GiveInformation();
+        
+        //for all materials and other graphical changes when the player can hack
+        public void OnHackValid();
+        public void OnHackFalse();
     }
 }
