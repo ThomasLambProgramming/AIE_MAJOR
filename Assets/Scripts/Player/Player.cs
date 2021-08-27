@@ -43,6 +43,17 @@ namespace Malicious.Player
             HackValidCheck();
         }
 
+        public void FanLaunch(Vector3 a_force)
+        {
+            _values._canJump = false;
+            _values._hasDoubleJumped = false;
+            Vector3 newVel = _values._rigidbody.velocity;
+            newVel.x += a_force.x;
+            newVel.z += a_force.z;
+            //this is to ensure that the fan will always propel the player up (and reset the double jump)
+            newVel.y = a_force.y;
+            _values._rigidbody.velocity = newVel;
+        }
         private void Movement()
         {
             if (_values._moveInput != Vector2.zero)
