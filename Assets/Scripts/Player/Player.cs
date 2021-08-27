@@ -1,9 +1,10 @@
 ﻿using Malicious.Interfaces;
-using Malicious.Player;
+using Malicious.Core;
+
 using UnityEngine.InputSystem;
 using UnityEngine;
 
-namespace Malicious.ReworkV2
+namespace Malicious.Player
 {
     public class Player : MonoBehaviour, IPlayerObject
     {

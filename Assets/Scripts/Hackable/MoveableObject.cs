@@ -1,8 +1,11 @@
 ﻿using Malicious.Player;
+using Malicious.Core;
+using Malicious.Interfaces;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Malicious.ReworkV2
+namespace Malicious.Hackable
 {
     public class MoveableObject : MonoBehaviour, IPlayerObject
 

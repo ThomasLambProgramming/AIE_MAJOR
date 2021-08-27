@@ -3,9 +3,7 @@ using Cinemachine;
 using UnityEngine;
 
 using Malicious.Core;
-using Malicious.ReworkV2;
-using Unity.Mathematics;
-using UnityEditor;
+using Malicious.Interfaces;
 
 namespace Malicious.Player
 {

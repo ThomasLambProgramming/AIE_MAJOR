@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Malicious.ReworkV2
+namespace Malicious.Interfaces
 {
     /// <summary>
     /// All classes contracted are "Playable" for the player to control in some form

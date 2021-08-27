@@ -1,7 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Malicious.ReworkV2
+namespace Malicious.Core
 {
     /// <summary>
     /// This class is to avoid recreating MasterInput variables and etc

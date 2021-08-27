@@ -1,7 +1,5 @@
-using System;
 using Malicious.Core;
-using Malicious.Interfaces;
-using Malicious.Player;
+
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -60,9 +58,7 @@ namespace Malicious.Hackable
                 }
             }
         }
-        public HackableInformation GiveInformation() =>
-            new HackableInformation(gameObject, null, null, ObjectType.ControlPanel);
-        
+
         //This is temp to make the lever rotate from one side to another
         //just for visuals (get the designers to make an animation for this
         public void Rotating()

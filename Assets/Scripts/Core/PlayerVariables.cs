@@ -4,7 +4,7 @@ using Malicious.Interfaces;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace Malicious.ReworkV2
+namespace Malicious.Core
 {
     [Serializable]
     public class PlayerValues

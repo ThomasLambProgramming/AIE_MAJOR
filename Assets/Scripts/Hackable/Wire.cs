@@ -1,10 +1,13 @@
-﻿using System;
+﻿
+using Malicious.Core;
 using Malicious.Player;
+using Malicious.Interfaces;
+
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 
-namespace Malicious.ReworkV2
+namespace Malicious.Hackable
 {
     public class Wire : MonoBehaviour, IPlayerObject
     {
