@@ -40,7 +40,10 @@ namespace Malicious.Core
         /// </summary>
         public static event Action GeneralFixedUpdate;
 
-        
+                                                    
+        //This is to avoid references for the designers 
+        public static event Action UiHealthDown;
+        public static event Action UiHealthUp;
 
         void Update()
         {
