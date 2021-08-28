@@ -1,4 +1,5 @@
-﻿using Malicious.Interfaces;
+﻿using System;
+using Malicious.Interfaces;
 using Malicious.Core;
 
 using UnityEngine.InputSystem;
@@ -175,6 +176,14 @@ namespace Malicious.Player
         }
 
         public void SetOffset(Transform a_transform) => _values._cameraOffset = a_transform;
+
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.CompareTag("Hackable"))
+            {
+                PlayerController.PlayerControl.PlayerHit();
+            }
+        }
 
         private void OnTriggerEnter(Collider other)
         {

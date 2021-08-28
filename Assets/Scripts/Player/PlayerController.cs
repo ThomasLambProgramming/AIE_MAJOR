@@ -4,6 +4,7 @@ using UnityEngine;
 
 using Malicious.Core;
 using Malicious.Interfaces;
+using Malicious.UI;
 
 namespace Malicious.Player
 {
@@ -26,32 +27,54 @@ namespace Malicious.Player
         [SerializeField] private float _camMoveSpeed = 10f;
         [SerializeField] private float _rigTransitionSpeed = 5f;
         private Cinemachine3rdPersonFollow _cinemachineSettings = null;
+        private bool _cameraRepositioning = false;
+        //-------------------------------------------//
 
+        
+        //-----------Wire Variables------------------//
         //This is to have one globally used wire model to give to any wire asset
         //and not have to link it 
         public GameObject _wireModel = null;
         public Transform _wireModelOffset = null;
-
-        private bool _cameraRepositioning = false;
         //-------------------------------------------//
-
+        
+        
 
         //----------PLayer Variables-----------------//
+        [SerializeField] private GameObject _playerHudObject = null;
+        private PlayerHud _playerHud = null;
+        
+        [SerializeField] private int _playerHealth = 3;
+        
         private IPlayerObject _currentPlayer = null;
         [SerializeField] private GameObject _truePlayerObject = null;
 
         private IPlayerObject _truePlayer = null;
         //-------------------------------------------//
 
-
-        /// <summary>
-        /// This function is only to be called by the player class 
-        /// </summary>
+        
         public void PlayerDead()
         {
             
         }
-        
+
+        public void PlayerHit()
+        {
+            _playerHud.RemoveHealth();
+            if (_playerHealth <= 0)
+            {
+                PlayerDead();
+            }
+        }
+
+        //the amount has been added to allow for the use of multi healing in case that option is added later
+        public void PlayerHealed(int a_amount)
+        {
+            for (int i = 0; i < a_amount; i++)
+            {
+                _playerHud.AddHealth();
+            }
+        }
         
         void Awake()
         {
@@ -70,6 +93,7 @@ namespace Malicious.Player
             _mainCam.LookAt = container._offsetTransform;
             _cinemachineSettings.ShoulderOffset = container._rigOffset;
 
+            _playerHud = _playerHudObject.GetComponent<PlayerHud>();
 
             GameEventManager.PlayerFixedUpdate += FixedTick;
             GameEventManager.PlayerUpdate += PlayerTick;
