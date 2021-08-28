@@ -104,14 +104,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4263381948061557663}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd533b20248c3484593f5818d1c95c4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_moveSpeed: 0.2
-  m_stoppingDistance: 1
-  m_target: {fileID: 0}
+  _moveSpeed: 0.5
+  _stoppingDistance: 0.4
+  _targetLocation: {x: -20.181, y: 0.182, z: 8.441927}
+  _waitPlayer: 1
+  _waitForTime: 0
+  _waitTime: 3
 --- !u!65 &4263381948061557653
 BoxCollider:
   m_ObjectHideFlags: 0

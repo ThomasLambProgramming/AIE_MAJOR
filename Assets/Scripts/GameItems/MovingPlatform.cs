@@ -1,38 +1,67 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Malicious.GameItems
 {
     public class MovingPlatform : MonoBehaviour
     {
-        [SerializeField] private float m_moveSpeed = 0.5f;
-        [SerializeField] private float m_stoppingDistance = 0.4f;
-        [SerializeField] private Transform m_target = null;
-        private Vector3 m_targetLocation = Vector3.zero;
-        private Vector3 m_startLocation = Vector3.zero;
-        Vector3 m_movementAmount = Vector3.zero;
-
+        [SerializeField] private float _moveSpeed = 0.5f;
+        [SerializeField] private float _stoppingDistance = 0.4f;
+        
+        [SerializeField] private Vector3 _targetLocation = Vector3.zero;
+        private Vector3 _startLocation = Vector3.zero;
+        Vector3 _movementAmount = Vector3.zero;
+        
+        [SerializeField] private bool _waitPlayer = false;
+        
+        [SerializeField] private bool _waitForTime = false;
+        [SerializeField] private float _waitTime = 3f;
+        private bool waiting = false;
         void Start()
         {
-            m_startLocation = transform.position;
-            m_targetLocation = m_target.position;
-            m_movementAmount = m_targetLocation - m_startLocation;
+            _startLocation = transform.position;
+            _movementAmount = _targetLocation - _startLocation;
+            if (_waitPlayer)
+                waiting = true;
         }
 
+        IEnumerator WaitAtPoint()
+        {
+            yield return new WaitForSeconds(_waitTime);
+            SwapTarget();
+            waiting = false;
+        }
         void FixedUpdate()
         {
+            if (waiting)
+                return;
             //later add a timer for waiting at the position for a short time and a slow down as it gets closer to the platform
-            if (Vector3.SqrMagnitude(m_targetLocation - transform.position) < m_stoppingDistance)
+            if (Vector3.SqrMagnitude(_targetLocation - transform.position) < _stoppingDistance)
             {
-                Vector3 buffer = m_startLocation;
-                m_startLocation = m_targetLocation;
-                m_targetLocation = buffer;
-                
-                m_movementAmount = m_targetLocation - m_startLocation;
+                if (_waitForTime)
+                {
+                    StartCoroutine(WaitAtPoint());
+                    waiting = true;
+                }
+                else if (_waitPlayer)
+                {
+                    waiting = true;
+                }
+                else
+                    SwapTarget();
             }
             else
             {
-                transform.position += m_movementAmount * (Time.deltaTime * m_moveSpeed);
+                transform.position += _movementAmount * (Time.deltaTime * _moveSpeed);
             }
+        }
+
+        private void SwapTarget()
+        {
+            Vector3 buffer = _startLocation;
+            _startLocation = _targetLocation;
+            _targetLocation = buffer;
+            _movementAmount = _targetLocation - _startLocation;
         }
 
         private void OnTriggerEnter(Collider other)
@@ -40,6 +69,11 @@ namespace Malicious.GameItems
             if (other.gameObject.CompareTag("Player"))
             {
                 other.transform.parent = this.transform;
+                if (_waitPlayer && waiting)
+                {
+                    SwapTarget();
+                    waiting = false;
+                }
             }
         }
         private void OnTriggerExit(Collider other)
