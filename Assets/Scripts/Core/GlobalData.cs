@@ -8,6 +8,7 @@ namespace Malicious.Core
     public class GlobalData : MonoBehaviour
     {
         public static MasterInput InputManager;
+
         private void Awake()
         {
             InputManager = new MasterInput();

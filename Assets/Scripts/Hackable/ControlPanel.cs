@@ -1,9 +1,10 @@
+using Malicious.Interfaces;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Malicious.Hackable
 {
-    public class ControlPanel : MonoBehaviour
+    public class ControlPanel : MonoBehaviour, IHackable
     {
         [SerializeField] private bool reusable = true;
         [SerializeField] private UnityEvent onEvent;
@@ -23,7 +24,7 @@ namespace Malicious.Hackable
 
         public void OnHackFalse()   
         {
-            if (!_beenHacked)
+            if (!_beenHacked || reusable)
                 _nodeRenderer.material = _defaultMaterial;
         }
         private void Start()

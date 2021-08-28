@@ -39,7 +39,9 @@ namespace Malicious.Core
         /// outside of enemies and the player
         /// </summary>
         public static event Action GeneralFixedUpdate;
+
         
+
         void Update()
         {
             PlayerUpdate?.Invoke();
