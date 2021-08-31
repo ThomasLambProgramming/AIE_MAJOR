@@ -1,15 +1,36 @@
 using Malicious.Interfaces;
 using UnityEngine;
 using UnityEngine.Events;
-using Malicious.Core;
 
 namespace Malicious.Hackable
 {
-    public class ControlPanel : MonoBehaviour
+    public class ControlPanel : MonoBehaviour, IHackable
     {
         [SerializeField] private bool reusable = true;
         [SerializeField] private UnityEvent onEvent;
         [SerializeField] private UnityEvent offEvent;
+        
+        [SerializeField] private GameObject _nodeObject = null;
+        private MeshRenderer _nodeRenderer = null;
+        [SerializeField] private Material _defaultMaterial = null;
+        [SerializeField] private Material _hackValidMaterial = null;
+        [SerializeField] private Material _hackedMaterial = null;
+        private bool _beenHacked = false;
+        public void OnHackValid()
+        { 
+            if (!_beenHacked)
+                _nodeRenderer.material = _hackValidMaterial;
+        }
+
+        public void OnHackFalse()   
+        {
+            if (!_beenHacked || reusable)
+                _nodeRenderer.material = _defaultMaterial;
+        }
+        private void Start()
+        {
+            _nodeRenderer = _nodeObject.GetComponent<MeshRenderer>();
+        }
         
         private bool isOn = false;
         
@@ -28,6 +49,8 @@ namespace Malicious.Hackable
         
         public void Hacked()
         {
+            _beenHacked = true;
+            _nodeRenderer.material = _hackedMaterial;
             if (!isOn)
             {
                 onEvent?.Invoke();

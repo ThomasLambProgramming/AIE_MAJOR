@@ -1,5 +1,4 @@
 using UnityEngine;
-
 namespace Malicious.GameItems
 {
     public class Door : MonoBehaviour

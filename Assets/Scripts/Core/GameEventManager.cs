@@ -39,7 +39,12 @@ namespace Malicious.Core
         /// outside of enemies and the player
         /// </summary>
         public static event Action GeneralFixedUpdate;
-        
+
+                                                    
+        //This is to avoid references for the designers 
+        public static event Action UiHealthDown;
+        public static event Action UiHealthUp;
+
         void Update()
         {
             PlayerUpdate?.Invoke();
