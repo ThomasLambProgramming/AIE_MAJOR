@@ -302,29 +302,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c99087ce4119b0544aa8983bf01a0d24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_mainCam: {fileID: 0}
-  m_cameraOffset: {fileID: 0}
-  m_trueCameraOffset: {fileID: 0}
-  m_truePlayerObject: {fileID: 0}
-  m_trueRigidbody: {fileID: 0}
-  m_currentPlayerObject: {fileID: 0}
-  m_currentRigidbody: {fileID: 0}
-  m_currentPlayerType: 0
-  m_moveSpeed: 5
-  m_jumpForce: 10
-  m_spinSpeed: 5
-  m_canJump: 1
-  m_hasDoubleJumped: 0
-  m_holdingJump: 0
-  m_groundCheck: {fileID: 0}
-  m_wireModel: {fileID: 0}
-  m_wireCameraOffset: {fileID: 0}
-  m_inWire: 0
-  m_playerMoveInput: {x: 0, y: 0}
-  m_playerSpinInput: {x: 0, y: 0}
-  m_animationSwapSpeed: 3
-  m_playerAnimator: {fileID: 0}
-  m_currentAnimationVector: {x: 0, y: 0}
+  _mainCam: {fileID: 0}
+  _previousOffset: {fileID: 0}
+  _rotationSpeed: 5
+  _camMoveSpeed: 10
+  _rigTransitionSpeed: 5
+  _wireModel: {fileID: 0}
+  _wireModelOffset: {fileID: 0}
+  _playerHudObject: {fileID: 0}
+  _playerHealth: 3
+  _truePlayerObject: {fileID: 0}
 --- !u!136 &33991733
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -16045,7 +16032,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dc29c6c0535fa534ab5584298c959698, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.46
+      value: 6.99
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dc29c6c0535fa534ab5584298c959698, type: 3}
       propertyPath: m_LocalPosition.y
