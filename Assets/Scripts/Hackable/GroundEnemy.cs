@@ -109,6 +109,7 @@ namespace Malicious
         //this is so the pausing can set the object to be kinematic and non moving while keeping its velocity
         private Vector3 prevVelocityRigid = Vector3.zero;
         private Vector3 prevVelocityAgent = Vector3.zero;
+        private Vector3 prevPosition = Vector3.zero;
         private void OnPauseEnter()
         {
             _rigidbody.isKinematic = true;
@@ -117,6 +118,10 @@ namespace Malicious
             
             if (!_hacked)
             {
+                prevPosition = transform.position;
+                _agent.enabled = false;
+                transform.position = prevPosition;
+                
                 prevVelocityAgent = _agent.velocity;
                 _agent.velocity = Vector3.zero;
                 GameEventManager.EnemyUpdate -= NonHackedTick;
@@ -133,6 +138,7 @@ namespace Malicious
             
             if (!_hacked)
             {
+                _agent.enabled = true;
                 GameEventManager.EnemyUpdate += NonHackedTick;
                 _agent.velocity = prevVelocityAgent;
                 _agent.SetDestination(_PatrolPath[_pathIndex]);
