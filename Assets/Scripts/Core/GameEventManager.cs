@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Malicious.Core
 {
@@ -40,7 +41,12 @@ namespace Malicious.Core
         /// </summary>
         public static event Action GeneralFixedUpdate;
 
-                                                    
+
+        private static bool _paused = false;
+        //When pause is activated all gameobjects that need to will stop movement and etc
+        public static event Action GamePauseStart;
+        public static event Action GamePauseExit;
+
         //This is to avoid references for the designers 
         public static event Action UiHealthDown;
         public static event Action UiHealthUp;
@@ -58,6 +64,37 @@ namespace Malicious.Core
             EnemyFixedUpdate?.Invoke();
             GeneralFixedUpdate?.Invoke();
         }
+
+        private void Start()
+        {
+            GlobalData.InputManager.Enable();
+            GlobalData.InputManager.Player.Enable();
+            GlobalData.InputManager.Player.Pause.performed += PausePressed;
+        }
+
+        private void PausePressed(InputAction.CallbackContext a_context)
+        {
+            if (!_paused)
+            {
+                GamePauseStart?.Invoke();
+                _paused = true;
+            }
+            else
+            {
+                GamePauseExit?.Invoke();
+                _paused = false;
+            }
+        }
+
+        public static void ResumePlay()
+        {
+            if (_paused)
+            {
+                GamePauseExit?.Invoke();
+                _paused = false;
+            }
+        }
+        
 
         /// <summary>
         /// THIS IS ONLY TO BE USED WHEN ABSOLUTELY NEEDED

@@ -1,5 +1,4 @@
 using UnityEngine;
-using Malicious.Player;
 
 namespace Malicious.UI
 {

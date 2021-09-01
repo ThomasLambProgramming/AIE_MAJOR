@@ -209,14 +209,12 @@ namespace Malicious.Hackable
         {
             if (CheckDirection(a_direction))
             {
-
                 Vector3 newWirePoint = _values._wirePath[_values._wirePath.Count - 1];
                 Vector3 directionAdd = a_direction;
                 
                 directionAdd = directionAdd.normalized;
                 directionAdd *= _values._wireLength;
                 
-
                 newWirePoint += directionAdd;
 
                 if (CheckPoint(newWirePoint))
@@ -227,10 +225,10 @@ namespace Malicious.Hackable
                     
                     _values._wirePath.Add(newWirePoint);
                 }
-                
             }
         }
 
+        //Check all other points in the wire list to not allow overlap
         private bool CheckPoint(Vector3 a_position)
         {
             bool isValid = true;
@@ -245,10 +243,10 @@ namespace Malicious.Hackable
             
             return false;
         }
+        //if it collides with anything other than wire layer a new wire is not allowed 
         private bool CheckDirection(Vector3 a_direction)
         {
             RaycastHit hit;
-            //if it collides with anything other than wire layer a new wire is not allowed 
             if (Physics.Raycast(
                 _values._wireModel.transform.position, 
                 a_direction, 
@@ -260,27 +258,10 @@ namespace Malicious.Hackable
                     Debug.Log(hit.collider.gameObject.name);    
                 return false;
             }
-
             
             return true;
         }
         
-        private void UpDirection(InputAction.CallbackContext a_context)
-        {
-            if (_values._takingInput) 
-                AddPoint(_values._wireModel.transform.up);
-        }
-
-        private void DownDirection(InputAction.CallbackContext a_context)
-        {
-            if (_values._takingInput) 
-                AddPoint(-_values._wireModel.transform.up);
-        }
-
-        private void ExitWireInput(InputAction.CallbackContext a_context)
-        {
-            SetToPlayer();
-        }
 
         private void SetToPlayer()
         {
@@ -288,8 +269,7 @@ namespace Malicious.Hackable
                 _values._wireModel.transform.position,
                 _values._wireModel.transform.rotation);
         }
-
-
+        
         public OffsetContainer GiveOffset()
         {
             OffsetContainer temp = new OffsetContainer();
@@ -297,39 +277,44 @@ namespace Malicious.Hackable
             temp._rigOffset = _values._rigOffset;
             return temp;
         }
-
-        private void EnableInput()                          
+        
+        public bool RequiresTruePlayerOffset() => false;
+        public void SetOffset(Transform a_offset) => _values._wireCameraOffset = a_offset;
+        public void OnHackValid()
         {
-            GlobalData.InputManager.Player.Enable();
+            _nodeRenderer.material = _hackValidMaterial;
+        }
+        public void OnHackFalse()
+        {
+            _nodeRenderer.material = _defaultMaterial;
+        }
+        private void UpDirection(InputAction.CallbackContext a_context)
+        {
+            if (_values._takingInput) 
+                AddPoint(_values._wireModel.transform.up);
+        }
+        private void DownDirection(InputAction.CallbackContext a_context)
+        {
+            if (_values._takingInput) 
+                AddPoint(-_values._wireModel.transform.up);
+        }
+        private void ExitWireInput(InputAction.CallbackContext a_context)
+        {
+            SetToPlayer();
+        }
+        private void EnableInput()
+        {
             GlobalData.InputManager.Player.Movement.performed += InputProcessing;
             GlobalData.InputManager.Player.Jump.performed += UpDirection;
             GlobalData.InputManager.Player.Down.performed += DownDirection;
             GlobalData.InputManager.Player.Interaction.performed += ExitWireInput;
         }
-
         private void DisableInput()
         {
-            GlobalData.InputManager.Player.Disable();
             GlobalData.InputManager.Player.Movement.performed -= InputProcessing;
             GlobalData.InputManager.Player.Jump.performed -= UpDirection;
             GlobalData.InputManager.Player.Down.performed -= DownDirection;
             GlobalData.InputManager.Player.Interaction.performed -= ExitWireInput;
-        }
-        
-        public bool RequiresTruePlayerOffset() => false;
-        
-        public void SetOffset(Transform a_offset)
-        {
-            _values._wireCameraOffset = a_offset;
-        }
-        public void OnHackValid()
-        {
-            _nodeRenderer.material = _hackValidMaterial;
-        }
-
-        public void OnHackFalse()
-        {
-            _nodeRenderer.material = _defaultMaterial;
         }
         
 #if UNITY_EDITOR
