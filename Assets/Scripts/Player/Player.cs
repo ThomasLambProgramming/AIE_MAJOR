@@ -82,7 +82,11 @@ namespace Malicious.Player
             while (timer < _iframeTime)
             {
                 if (_paused)
+                {
+                    //just to make sure when paused its not in inactive state
+                    _ModelContainer.SetActive(true);   
                     yield return null;
+                }
                 
                 frameCount++;
                 if (frameCount >= 20)

@@ -515,6 +515,7 @@ GameObject:
   - component: {fileID: 593296769}
   - component: {fileID: 593296768}
   - component: {fileID: 593296767}
+  - component: {fileID: 593296771}
   m_Layer: 9
   m_Name: Ground
   m_TagString: Ground
@@ -599,6 +600,19 @@ Transform:
   m_Father: {fileID: 918097978}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &593296771
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593296766}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 2, z: 10}
+  m_Center: {x: 0, y: -1, z: 0}
 --- !u!1 &672443769
 GameObject:
   m_ObjectHideFlags: 0
