@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Malicious.Interfaces;
 using Malicious.Core;
 
@@ -10,11 +11,19 @@ namespace Malicious.Player
     public class Player : MonoBehaviour, IPlayerObject
     {
         [SerializeField] private PlayerValues _values = new PlayerValues();
-
+        [SerializeField] private float _iframeTime = 1.5f;
+        
+        [SerializeField] private GameObject _ModelContainer = null;
+        private bool _invincible = false;
+        
+        private bool _paused = false;
         private void Start()
         {
             _values._rigidbody = GetComponent<Rigidbody>();
             _values._playerAnimator = GetComponent<Animator>();
+            
+            GameEventManager.GamePauseStart += PauseEnter;
+            GameEventManager.GamePauseExit += PauseExit;
         }
 
         public void OnHackEnter()
@@ -42,6 +51,51 @@ namespace Malicious.Player
             //Movement and etc
             Movement();
             HackValidCheck();
+        }
+
+        private Vector3 _prevVelocity = Vector3.zero;
+        private void PauseEnter()
+        {
+            _values._playerAnimator.enabled = false;
+            _values._moveInput = Vector2.zero;
+            _values._spinInput = Vector2.zero;
+            DisableInput();
+            _paused = true;
+            _prevVelocity = _values._rigidbody.velocity;
+            _values._rigidbody.isKinematic = true;
+        }
+
+        private void PauseExit()
+        {
+            _values._playerAnimator.enabled = true;
+            EnableInput();
+            _paused = false;
+            _values._rigidbody.isKinematic = false;
+            _values._rigidbody.velocity = _prevVelocity;
+        }
+
+        private IEnumerator IFrame()
+        {
+                
+            float timer = 0;
+            int frameCount = 0;
+            while (timer < _iframeTime)
+            {
+                if (_paused)
+                    yield return null;
+                
+                frameCount++;
+                if (frameCount >= 20)
+                {
+                    frameCount = 0;
+                    _ModelContainer.SetActive(!_ModelContainer.activeInHierarchy);
+                }
+                timer += Time.deltaTime;
+                yield return null;
+            }
+
+            _ModelContainer.SetActive(true);
+            _invincible = false;
         }
 
         public void FanLaunch(Vector3 a_force)
@@ -101,7 +155,6 @@ namespace Malicious.Player
                 transform.Rotate(new Vector3(0, _values._spinInput.x * _values._spinSpeed * Time.deltaTime, 0));
             }
         }
-
         private void Jump()
         {
             _values._rigidbody.AddForce(_values._jumpForce * Vector3.up);
@@ -120,7 +173,6 @@ namespace Malicious.Player
             //    }
             //}
         }
-
         private void HackValidCheck()
         {
             if (_values._currentHackable != null)
@@ -165,8 +217,6 @@ namespace Malicious.Player
         //for all materials and other graphical changes when the player can hack
         public void OnHackValid(){}
         public void OnHackFalse(){}
-        
-        //CameraOffset
         public OffsetContainer GiveOffset()
         {
             OffsetContainer temp = new OffsetContainer();
@@ -174,17 +224,19 @@ namespace Malicious.Player
             temp._rigOffset = _values._rigOffset;
             return temp;
         }
-
         public void SetOffset(Transform a_transform) => _values._cameraOffset = a_transform;
-
         private void OnCollisionEnter(Collision other)
         {
             if (other.gameObject.CompareTag("Hackable"))
             {
-                PlayerController.PlayerControl.PlayerHit();
+                if (!_invincible)
+                {
+                    PlayerController.PlayerControl.PlayerHit();
+                    StartCoroutine(IFrame());
+                    _invincible = true;
+                }
             }
         }
-
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.CompareTag("Hackable"))
@@ -222,14 +274,6 @@ namespace Malicious.Player
             }
         }
 
-        public bool RequiresTruePlayerOffset() => false;
-        private void MoveInputEnter(InputAction.CallbackContext a_context) => _values._moveInput = a_context.ReadValue<Vector2>();
-        private void MoveInputExit(InputAction.CallbackContext a_context) => _values._moveInput = Vector2.zero;
-        private void SpinInputEnter(InputAction.CallbackContext a_context) => _values._spinInput = a_context.ReadValue<Vector2>();
-        private void SpinInputExit(InputAction.CallbackContext a_context) => _values._spinInput = Vector2.zero;
-        private void JumpInputEnter(InputAction.CallbackContext a_context) => Jump();
-        private void JumpInputExit(InputAction.CallbackContext a_context) => _values._holdingJump = false;
-            
         private void Interact(InputAction.CallbackContext a_context)
         {
             if (_values._currentInteract != null && _values._canInteract)
@@ -239,13 +283,19 @@ namespace Malicious.Player
             else if (_values._currentHackable != null && _values._canHackable)
             {
                 _values._currentHackable.Hacked();
-                   
             }
         }
+        public bool RequiresTruePlayerOffset() => false;
+        private void MoveInputEnter(InputAction.CallbackContext a_context) => _values._moveInput = a_context.ReadValue<Vector2>();
+        private void MoveInputExit(InputAction.CallbackContext a_context) => _values._moveInput = Vector2.zero;
+        private void SpinInputEnter(InputAction.CallbackContext a_context) => _values._spinInput = a_context.ReadValue<Vector2>();
+        private void SpinInputExit(InputAction.CallbackContext a_context) => _values._spinInput = Vector2.zero;
+        private void JumpInputEnter(InputAction.CallbackContext a_context) => Jump();
+        private void JumpInputExit(InputAction.CallbackContext a_context) => _values._holdingJump = false;
+            
 
         private void EnableInput()
         {
-            GlobalData.InputManager.Player.Enable();
             GlobalData.InputManager.Player.Movement.performed += MoveInputEnter;
             GlobalData.InputManager.Player.Movement.canceled += MoveInputExit;
             GlobalData.InputManager.Player.Jump.performed += JumpInputEnter;
@@ -257,7 +307,6 @@ namespace Malicious.Player
 
         private void DisableInput()
         {
-            GlobalData.InputManager.Player.Disable();
             GlobalData.InputManager.Player.Movement.performed -= MoveInputEnter;
             GlobalData.InputManager.Player.Movement.canceled -= MoveInputExit;
             GlobalData.InputManager.Player.Jump.performed -= JumpInputEnter;

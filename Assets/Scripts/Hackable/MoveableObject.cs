@@ -157,7 +157,6 @@ namespace Malicious.Hackable
     }
     private void EnableInput()                          
     {
-        GlobalData.InputManager.Player.Enable();
         GlobalData.InputManager.Player.Movement.performed += MoveInputStart;
         GlobalData.InputManager.Player.Movement.canceled += MoveInputEnd;
         GlobalData.InputManager.Player.Camera.performed += SpinInputStart;
@@ -167,7 +166,6 @@ namespace Malicious.Hackable
 
     private void DisableInput()
     {
-        GlobalData.InputManager.Player.Disable();
         GlobalData.InputManager.Player.Movement.performed -= MoveInputStart;
         GlobalData.InputManager.Player.Movement.canceled -= MoveInputEnd;
         GlobalData.InputManager.Player.Camera.performed -= SpinInputStart;
