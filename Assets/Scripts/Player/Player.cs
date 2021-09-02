@@ -117,12 +117,28 @@ namespace Malicious.Player
         {
             if (_values._moveInput != Vector2.zero)
             {
+                //For controller users this will change the max movespeed according to how small their inputs are
+                float scaleAmount = _values._moveInput.magnitude;
+                
                 float currentYAmount = _values._rigidbody.velocity.y;
+                
                 Vector3 newVel =
                     transform.forward * (_values._moveInput.y * _values._moveSpeed * Time.deltaTime) +
                     transform.right * (_values._moveInput.x * _values._moveSpeed * Time.deltaTime);
-                newVel.y = currentYAmount;
-                _values._rigidbody.velocity = newVel;
+                
+                //We are checking if the horizontal speed is too great 
+                Vector3 tempVelocity = _values._rigidbody.velocity + newVel;
+                tempVelocity.y = 0;
+
+                float scaledMaxSpeed = _values._maxSpeed * scaleAmount;
+                if (tempVelocity.magnitude > scaledMaxSpeed)
+                {
+                    tempVelocity = tempVelocity.normalized * scaledMaxSpeed;
+                    
+                }
+
+                tempVelocity.y = currentYAmount;
+                _values._rigidbody.velocity = tempVelocity;
             }
             
             if (Mathf.Abs(_values._moveInput.magnitude) < 0.1f)
@@ -133,8 +149,8 @@ namespace Malicious.Player
                     Vector3 newVel = _values._rigidbody.velocity;
                     //takes off 5% of the current vel every physics update so the player can land on a platform without overshooting
                     //because the velocity doesnt stop
-                    newVel.z = newVel.z * 0.95f;
-                    newVel.x = newVel.x * 0.95f;
+                    newVel.z = newVel.z * 0.90f;
+                    newVel.x = newVel.x * 0.90f;
                     _values._rigidbody.velocity = newVel;
                 }
             }

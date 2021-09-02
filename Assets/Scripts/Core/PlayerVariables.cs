@@ -27,6 +27,7 @@ namespace Malicious.Core
         
         //------Speed Variables----------------//
         [SerializeField] public float _moveSpeed = 5f;
+        [SerializeField] public float _maxSpeed = 4f;
         [SerializeField] public float _jumpForce = 10f;
         [SerializeField] public float _spinSpeed = 5f;
         
