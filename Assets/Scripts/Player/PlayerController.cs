@@ -39,7 +39,6 @@ namespace Malicious.Player
         //-------------------------------------------//
         
         
-
         //----------PLayer Variables-----------------//
         [SerializeField] private GameObject _playerHudObject = null;
         private PlayerHud _playerHud = null;
@@ -52,7 +51,53 @@ namespace Malicious.Player
         private IPlayerObject _truePlayer = null;
         //-------------------------------------------//
 
+        private bool _paused = false;
+        private void PlayerTick()
+        {
+            if (_paused)
+                return;
+            //Update Current Player
+            _currentPlayer.Tick();
+        }
+
+        private void FixedTick()
+        {
+            if (_paused)
+                return;
+            //Update Current Player
+            _currentPlayer.FixedTick();
+        }
         
+        void Awake()
+        {
+            PlayerControl = this;
+        }
+
+        void Start()
+        {
+            
+            _truePlayer = _truePlayerObject.GetComponent<IPlayerObject>();
+            _currentPlayer = _truePlayer;
+            _currentPlayer.OnHackEnter();
+            _cinemachineSettings = _mainCam.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+
+            OffsetContainer container = _currentPlayer.GiveOffset();
+            _mainCam.Follow = container._offsetTransform;
+            _mainCam.LookAt = container._offsetTransform;
+            _cinemachineSettings.ShoulderOffset = container._rigOffset;
+
+            _playerHud = _playerHudObject.GetComponent<PlayerHud>();
+
+            GameEventManager.PlayerFixedUpdate += FixedTick;
+            GameEventManager.PlayerUpdate += PlayerTick;
+
+            GameEventManager.GamePauseStart += PauseEnter;
+            GameEventManager.GamePauseExit += PauseExit;
+        }
+
+        private void PauseEnter() => _paused = true;
+        private void PauseExit() => _paused = false;
+
         public void PlayerDead()
         {
             
@@ -74,41 +119,6 @@ namespace Malicious.Player
             {
                 _playerHud.AddHealth();
             }
-        }
-        
-        void Awake()
-        {
-            PlayerControl = this;
-        }
-
-        void Start()
-        {
-            _truePlayer = _truePlayerObject.GetComponent<IPlayerObject>();
-            _currentPlayer = _truePlayer;
-            _currentPlayer.OnHackEnter();
-            _cinemachineSettings = _mainCam.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
-
-            OffsetContainer container = _currentPlayer.GiveOffset();
-            _mainCam.Follow = container._offsetTransform;
-            _mainCam.LookAt = container._offsetTransform;
-            _cinemachineSettings.ShoulderOffset = container._rigOffset;
-
-            _playerHud = _playerHudObject.GetComponent<PlayerHud>();
-
-            GameEventManager.PlayerFixedUpdate += FixedTick;
-            GameEventManager.PlayerUpdate += PlayerTick;
-        }
-
-        private void PlayerTick()
-        {
-            //Update Current Player
-            _currentPlayer.Tick();
-        }
-
-        private void FixedTick()
-        {
-            //Update Current Player
-            _currentPlayer.FixedTick();
         }
 
         public void SwapPlayer(IPlayerObject a_interactable)
@@ -143,7 +153,6 @@ namespace Malicious.Player
 
             StartCoroutine(TransitionCamera());
         }
-
         
         public void ResetToPlayer(Vector3 a_playerPos, Quaternion a_playerRot)
         {
@@ -156,11 +165,11 @@ namespace Malicious.Player
             _truePlayerObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             SwapPlayer(_truePlayer);
         }
-
         
-        Vector3 rigMoveAmount = Vector3.zero;
         IEnumerator TransitionCamera()
         {
+            Vector3 rigMoveAmount = Vector3.zero;
+            
             bool transitionFinished = false;
             
             bool donePosition = false;

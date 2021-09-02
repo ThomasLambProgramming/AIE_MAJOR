@@ -17,12 +17,13 @@ namespace Malicious
         [SerializeField] private float _turningSpeed = 10f;
 
         [SerializeField] private List<Vector3> _PatrolPath = new List<Vector3>();
-        private int _pathIndex = 0;
         [SerializeField] private float _goNextPointDistance = 1f;
+        private int _pathIndex = 0;
         //true direction = path++ false = path--;
         private bool _pathDirection = true;
-        [SerializeField] private GameObject _nodeObject = null;
+        
         private MeshRenderer _nodeRenderer = null;
+        [SerializeField] private GameObject _nodeObject = null;
         [SerializeField] private Material _defaultMaterial = null;
         [SerializeField] private Material _hackValidMaterial = null;
         [SerializeField] private Material _hackedMaterial = null;
@@ -30,11 +31,14 @@ namespace Malicious
         [SerializeField] private Transform _cameraOffset = null;
         [SerializeField] private Vector3 _rigOffset = Vector3.zero;
 
+        private Vector3 _prevPosition = Vector3.zero;
         private Vector2 _moveInput = Vector2.zero;
         private Vector2 _spinInput = Vector2.zero;
         private Rigidbody _rigidbody = null;
         
         private NavMeshAgent _agent = null;
+        
+        private bool _hacked = false;
         void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
@@ -42,6 +46,9 @@ namespace Malicious
             _nodeRenderer = _nodeObject.GetComponent<MeshRenderer>();
             _agent.SetDestination(_PatrolPath[_pathIndex]);
             GameEventManager.EnemyUpdate += NonHackedTick;
+
+            GameEventManager.GamePauseStart += OnPauseEnter;
+            GameEventManager.GamePauseExit += OnPauseExit;
         }
 
         // Update is called once per frame
@@ -76,25 +83,15 @@ namespace Malicious
                 _agent.SetDestination(_PatrolPath[_pathIndex]);
             }
         }
-#if UNITY_EDITOR
-        [SerializeField] private bool showPatrolPath = true;
-        private void OnDrawGizmos()
-        {
-            if (!showPatrolPath)
-                return;
-            
-            foreach (var VARIABLE in _PatrolPath)
-            {
-                Gizmos.DrawCube(VARIABLE, Vector3.one);
-            }
-        }
-#endif
         public void OnHackEnter()
         {
+            _prevPosition = transform.position;
             GameEventManager.EnemyUpdate -= NonHackedTick;
             _agent.enabled = false;
+            transform.position = _prevPosition;
             _nodeRenderer.material = _hackedMaterial;
             EnableInput();
+            _hacked = true;
         }
 
         public void OnHackExit()
@@ -104,11 +101,55 @@ namespace Malicious
             _agent.SetDestination(_PatrolPath[_pathIndex]);
             _nodeRenderer.material = _defaultMaterial;
             DisableInput();
+            _hacked = false;
         }
 
         public void Tick()
         {
             //player version of movement
+        }
+
+        //this is so the pausing can set the object to be kinematic and non moving while keeping its velocity
+        private Vector3 _prevVelocityRigid = Vector3.zero;
+        private Vector3 _prevVelocityAgent = Vector3.zero;
+        private void OnPauseEnter()
+        {
+            _rigidbody.isKinematic = true;
+            _prevVelocityRigid = _rigidbody.velocity;
+            _rigidbody.velocity = Vector3.zero;
+            
+            if (!_hacked)
+            {
+                _prevPosition = transform.position;
+                _agent.enabled = false;
+                transform.position = _prevPosition;
+                
+                _prevVelocityAgent = _agent.velocity;
+                _agent.velocity = Vector3.zero;
+                GameEventManager.EnemyUpdate -= NonHackedTick;
+            }
+            else
+            {
+                DisableInput();
+            }
+        }
+        private void OnPauseExit()
+        {
+            _rigidbody.isKinematic = false;
+            _rigidbody.velocity = _prevVelocityRigid;
+            
+            if (!_hacked)
+            {
+                _agent.enabled = true;
+                GameEventManager.EnemyUpdate += NonHackedTick;
+                _agent.velocity = _prevVelocityAgent;
+                _agent.SetDestination(_PatrolPath[_pathIndex]);
+            }
+            else
+            {
+                EnableInput();
+            }
+            
         }
 
         public void FixedTick()
@@ -178,6 +219,20 @@ namespace Malicious
         {
             _nodeRenderer.material = _defaultMaterial;
         }
+        
+#if UNITY_EDITOR
+        [SerializeField] private bool showPatrolPath = true;
+        private void OnDrawGizmos()
+        {
+            if (!showPatrolPath)
+                return;
+            
+            foreach (var VARIABLE in _PatrolPath)
+            {
+                Gizmos.DrawCube(VARIABLE, Vector3.one);
+            }
+        }
+#endif
 
         private void MoveInputEnter(InputAction.CallbackContext a_context) => _moveInput = a_context.ReadValue<Vector2>();
         private void MoveInputExit(InputAction.CallbackContext a_context) => _moveInput = Vector2.zero;
@@ -191,7 +246,6 @@ namespace Malicious
 
         private void EnableInput()
         {
-            GlobalData.InputManager.Player.Enable();
             GlobalData.InputManager.Player.Movement.performed += MoveInputEnter;
             GlobalData.InputManager.Player.Movement.canceled += MoveInputExit;
             GlobalData.InputManager.Player.Camera.performed += SpinInputEnter;
@@ -201,7 +255,6 @@ namespace Malicious
 
         private void DisableInput()
         {
-            GlobalData.InputManager.Player.Disable();
             GlobalData.InputManager.Player.Movement.performed -= MoveInputEnter;
             GlobalData.InputManager.Player.Movement.canceled -= MoveInputExit;
             GlobalData.InputManager.Player.Camera.performed -= SpinInputEnter;
