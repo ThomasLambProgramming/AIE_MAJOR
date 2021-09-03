@@ -288,6 +288,10 @@ namespace Malicious.Hackable
         {
             _nodeRenderer.material = _defaultMaterial;
         }
+
+        public ObjectType ReturnType() => ObjectType.Wire;
+        
+
         private void UpDirection(InputAction.CallbackContext a_context)
         {
             if (_values._takingInput) 

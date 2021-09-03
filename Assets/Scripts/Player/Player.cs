@@ -237,6 +237,8 @@ namespace Malicious.Player
         //for all materials and other graphical changes when the player can hack
         public void OnHackValid(){}
         public void OnHackFalse(){}
+        public ObjectType ReturnType() => ObjectType.Player;
+
         public OffsetContainer GiveOffset()
         {
             OffsetContainer temp = new OffsetContainer();
