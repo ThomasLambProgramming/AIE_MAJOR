@@ -92,7 +92,7 @@ namespace Malicious.Hackable
     {
         if (_values._spinInput != Vector2.zero)
         {
-            _values._cameraOffset.RotateAround(_values._cameraOffset.position, Vector3.up,
+            _values._cameraOffset.RotateAround(transform.position, Vector3.up,
                 _values._spinInput.x * _values._spinSpeed * Time.deltaTime);
         }
     }
@@ -124,6 +124,8 @@ namespace Malicious.Hackable
     {
         _nodeRenderer.material = _defaultMaterial;
     }
+
+    public ObjectType ReturnType() => ObjectType.Moveable;
 
     public bool RequiresTruePlayerOffset() => true;
     public OffsetContainer GiveOffset()
