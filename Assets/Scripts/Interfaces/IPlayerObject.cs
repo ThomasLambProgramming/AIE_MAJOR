@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Malicious.Core;
 
 namespace Malicious.Interfaces
 {
@@ -24,6 +25,7 @@ namespace Malicious.Interfaces
         public void OnHackValid();
         public void OnHackFalse();
 
+        public ObjectType ReturnType();
         //Controlled Game Object functions
         //public GameObject GiveObject();
         //public void SetObject(GameObject a_gameObject);

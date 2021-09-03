@@ -13,23 +13,6 @@ namespace Malicious.Player
     {
         public static PlayerController PlayerControl = null;
 
-        //----------Camera Variables-----------------//
-        public CinemachineVirtualCamera _mainCam = null;
-        private Vector3 _currentRigOffset = Vector3.zero;
-        private Vector3 _targetRigOffset = Vector3.zero;
-
-        private Transform _currentOffset = null;
-
-        //This is too store the original value of the transform to reset when moving
-        [SerializeField] private Transform _previousOffset = null;
-        private Transform _targetOffset = null;
-        [SerializeField] private float _rotationSpeed = 5f;
-        [SerializeField] private float _camMoveSpeed = 10f;
-        [SerializeField] private float _rigTransitionSpeed = 5f;
-        private Cinemachine3rdPersonFollow _cinemachineSettings = null;
-        private bool _cameraRepositioning = false;
-        //-------------------------------------------//
-
         
         //-----------Wire Variables------------------//
         //This is to have one globally used wire model to give to any wire asset
@@ -75,17 +58,10 @@ namespace Malicious.Player
 
         void Start()
         {
-            
             _truePlayer = _truePlayerObject.GetComponent<IPlayerObject>();
             _currentPlayer = _truePlayer;
             _currentPlayer.OnHackEnter();
-            _cinemachineSettings = _mainCam.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
-
-            OffsetContainer container = _currentPlayer.GiveOffset();
-            _mainCam.Follow = container._offsetTransform;
-            _mainCam.LookAt = container._offsetTransform;
-            _cinemachineSettings.ShoulderOffset = container._rigOffset;
-
+            
             _playerHud = _playerHudObject.GetComponent<PlayerHud>();
 
             GameEventManager.PlayerFixedUpdate += FixedTick;
@@ -123,41 +99,25 @@ namespace Malicious.Player
 
         public void SwapPlayer(IPlayerObject a_interactable)
         {
-            if (_cameraRepositioning)
-                return;
-
             _currentPlayer.OnHackExit();
-
-            Transform temp = _currentPlayer.GiveOffset()._offsetTransform;
-            _previousOffset.position = temp.position;
-            _previousOffset.rotation = temp.rotation;
             
-            _mainCam.Follow = _previousOffset;
-            _mainCam.LookAt = _previousOffset;
-
             _currentPlayer = a_interactable;
             _currentPlayer.OnHackEnter();
-            _currentOffset = null;
-
+            
             //Only for moveable object but adding redundancy for future hackable objects
             if (_currentPlayer.RequiresTruePlayerOffset())
                 _currentPlayer.SetOffset(_truePlayer.GiveOffset()._offsetTransform);
-
-
             
-            _targetOffset = _currentPlayer.GiveOffset()._offsetTransform;
-            _targetRigOffset = a_interactable.GiveOffset()._rigOffset;
-            //Dont allow player input till after camera is finished moving
-            GameEventManager.PlayerFixedUpdate -= FixedTick;
-            GameEventManager.PlayerUpdate -= PlayerTick;
-
-            StartCoroutine(TransitionCamera());
+            CameraController.ChangeCamera(
+                _currentPlayer.ReturnType(),
+                true,
+                _currentPlayer.GiveOffset()._offsetTransform);
+            
+            StartCoroutine(WaitForBlend());
         }
         
         public void ResetToPlayer(Vector3 a_playerPos, Quaternion a_playerRot)
         {
-            if (_cameraRepositioning)
-                return;
             //  Animation / check for where is valid for exit
             _truePlayerObject.transform.rotation = 
                 Quaternion.Euler(0, a_playerRot.eulerAngles.y, 0);
@@ -165,87 +125,20 @@ namespace Malicious.Player
             _truePlayerObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             SwapPlayer(_truePlayer);
         }
-        
-        IEnumerator TransitionCamera()
+
+        IEnumerator WaitForBlend()
         {
-            Vector3 rigMoveAmount = Vector3.zero;
+            GameEventManager.PlayerFixedUpdate -= FixedTick;
+            GameEventManager.PlayerUpdate -= PlayerTick;
             
-            bool transitionFinished = false;
-            
-            bool donePosition = false;
-            bool doneRotation = false;
-            bool doneRig = false;
-
-            
-            rigMoveAmount = _targetRigOffset - _currentRigOffset;
-            float rotationAmount = 
-                Mathf.Abs(
-                    _targetOffset.rotation.eulerAngles.y - 
-                    _previousOffset.rotation.eulerAngles.y) + 
-                Mathf.Abs(
-                    _targetOffset.rotation.eulerAngles.x - 
-                    _previousOffset.rotation.eulerAngles.x);
-
-            while (transitionFinished == false)
+            while (CameraController._cameraBrain.IsBlending)
             {
-                if (donePosition != true)
-                {
-                    Vector3 moveAmount = _targetOffset.position - _previousOffset.position;
-                    if (moveAmount.sqrMagnitude > 1)
-                    {
-                        _previousOffset.position += moveAmount.normalized * (_camMoveSpeed * Time.deltaTime);
-                    }
-                    else if (moveAmount.sqrMagnitude > 0.0001f)
-                    {
-                        _previousOffset.position += moveAmount * (_camMoveSpeed * Time.deltaTime);
-                    }
-                    else
-                        donePosition = true;
-                }
-
-                if (doneRig != true)
-                {
-                    if (Vector3.SqrMagnitude(_targetRigOffset - _currentRigOffset) > 0.01f)
-                    {
-                        _currentRigOffset += rigMoveAmount * (_rigTransitionSpeed * Time.deltaTime);
-                        _cinemachineSettings.ShoulderOffset = _currentRigOffset;
-                    }
-                    else
-                        doneRig = true;
-                }
-
-                if (doneRotation != true)
-                {
-                    
-                    if (_previousOffset.rotation != _targetOffset.rotation)
-                    {
-                        
-                        _previousOffset.rotation =
-                            Quaternion.RotateTowards(
-                                _previousOffset.rotation,
-                                _targetOffset.rotation,
-                                rotationAmount * _rotationSpeed * Time.deltaTime);
-                        
-                        
-                    }
-                    else
-                        doneRotation = true;
-                }
-                
-                if (donePosition && doneRig && doneRotation)
-                    transitionFinished = true;
-                
                 yield return null;
-                /*
-                 * Whatever other animations and etc can be played around now
-                 */
             }
+            //Settings return
             GameEventManager.PlayerFixedUpdate += FixedTick;
             GameEventManager.PlayerUpdate += PlayerTick;
-            _currentOffset = _targetOffset;
-            _mainCam.Follow = _currentOffset;
-            _mainCam.LookAt = _currentOffset;
-            _cameraRepositioning = false;
         }
+        
     }
 }
