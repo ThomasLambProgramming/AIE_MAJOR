@@ -1,57 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cinemachine;
 using Malicious.Interfaces;
 using Unity.Mathematics;
 using UnityEngine;
 
 namespace Malicious.Core
 {
-    [Serializable]
-    public class PlayerValues
-    {
-        [SerializeField] public Transform _cameraOffset = null;
-        [SerializeField] public Vector3 _rigOffset = Vector3.zero;
-        [HideInInspector] public Rigidbody _rigidbody = null;
 
-        //------Hacking Variables--------------//
-            //Current hackable movement
-        [HideInInspector] public IPlayerObject _currentInteract = null;
-        [HideInInspector] public GameObject _currentInteractObj = null;
-            //Current hackable control panel/lever
-        [HideInInspector] public IHackable _currentHackable = null;
-        [HideInInspector] public GameObject _currentHackableObj = null;
-        
-        [HideInInspector] public bool _canInteract = false;
-        [HideInInspector] public bool _canHackable = false;
-        [SerializeField] public float _dotAllowance = 0.8f;
-        
-        //------Speed Variables----------------//
-        [SerializeField] public float _moveSpeed = 5f;
-        [SerializeField] public float _maxSpeed = 4f;
-        [SerializeField] public float _jumpForce = 10f;
-        [SerializeField] public float _spinSpeed = 5f;
-        
-        
-        //------Jumping Variables--------------//
-        [HideInInspector] public bool _canJump = true;
-        [HideInInspector] public bool _hasDoubleJumped = false;
-        [HideInInspector] public bool _holdingJump = false;
-        public Transform _groundCheck = null;
-        
-        
-        //------Animator Variables-------------//
-        [SerializeField] public float _animationSwapSpeed = 3f;
-        [HideInInspector] public Animator _playerAnimator = null;
-        [HideInInspector] public Vector2 _currentAnimationVector = Vector2.zero;
-        public readonly int _xPos = Animator.StringToHash("XPos");
-        public readonly int _yPos = Animator.StringToHash("YPos");
-        public readonly int _jumping = Animator.StringToHash("Jumping");
-        
-        //------Input Variables----------------//
-        [HideInInspector] public Vector2 _moveInput = Vector2.zero;
-        [HideInInspector] public Vector2 _spinInput = Vector2.zero;
-    }
-    
     [Serializable]
     public class WireValues
     {

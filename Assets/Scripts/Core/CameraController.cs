@@ -11,22 +11,21 @@ namespace Malicious.Core
         private static int _resetPrio = 0;
         private static int _activePrio = 10;
 
-        //named init to not accidently use in functions
-        [SerializeField] private CinemachineVirtualCamera starting_Camera = null;
-        [SerializeField] private CinemachineVirtualCamera init_player = null;
+        //named init to not accidentally use in functions
+        [SerializeField] private CinemachineFreeLook init_player = null;
         [SerializeField] private CinemachineVirtualCamera init_moveable = null;
         [SerializeField] private CinemachineVirtualCamera init_pointOfInterest = null;
         [SerializeField] private CinemachineVirtualCamera init_wire = null;
         [SerializeField] private CinemachineVirtualCamera init_groundEnemy = null;
         [SerializeField] private CinemachineVirtualCamera init_flyingEnemy = null;
         
-        private static CinemachineVirtualCamera _player = null;
+        private static CinemachineFreeLook _player = null;
         private static CinemachineVirtualCamera _moveable = null;
         private static CinemachineVirtualCamera _pointOfInterest = null;
         private static CinemachineVirtualCamera _wire = null;
         private static CinemachineVirtualCamera _groundEnemy = null;
         private static CinemachineVirtualCamera _flyingEnemy = null;
-        private static CinemachineVirtualCamera _currentCamera = null;
+        private static CinemachineVirtualCamera _currentHackableCamera = null;
 
         [SerializeField] private CinemachineBrain init_BrainCamera = null;
         public static CinemachineBrain _cameraBrain = null;
@@ -34,9 +33,6 @@ namespace Malicious.Core
         {
             _resetPrio = init_resetPrio;
             _activePrio = init_activePrio;
-            
-            _currentCamera = starting_Camera;
-            _currentCamera.Priority = _activePrio;
             
             _player = init_player;
             _moveable = init_moveable;
@@ -54,37 +50,59 @@ namespace Malicious.Core
             bool a_requireOffset = false, 
             Transform a_offset = null)
         {
-            _currentCamera.Priority = _resetPrio;
+            //we know its the current if the prio is above the reset amount
+            if (_player.Priority > _resetPrio)
+            {
+                _player.Priority = 0;
+            }
 
+            float newRotationY = 0f;
+            
+            if (_currentHackableCamera != null)
+            {
+                _currentHackableCamera.Priority = _resetPrio;
+                newRotationY = _currentHackableCamera.transform.rotation.eulerAngles.y;
+            }
+
+            
             switch (a_type)
             {
                 case ObjectType.Player:
-                    _currentCamera = _player;
+                    //The player has to be different as it is not the same type
+                    _player.Priority = 20;
                     break;
                 case ObjectType.Moveable:
-                    _currentCamera = _moveable;
+                    _currentHackableCamera = _moveable;
                     break;
                 case ObjectType.PointOfInterest:
-                    _currentCamera = _pointOfInterest;
+                    _currentHackableCamera = _pointOfInterest;
                     break;
                 case ObjectType.Wire:
-                    _currentCamera = _wire;
+                    _currentHackableCamera = _wire;
                     break;
                 case ObjectType.GroundEnemy:
-                    _currentCamera = _groundEnemy;
+                    _currentHackableCamera = _groundEnemy;
                     break;
                 case ObjectType.FlyingEnemy:
-                    _currentCamera = _flyingEnemy;
+                    _currentHackableCamera = _flyingEnemy;
                     break;
             }
 
-            //This prio is for which camera is currently the active one
+            if (_player.Priority > 0)
+            {
+                Vector3 prevRotation = _player.transform.rotation.eulerAngles;
+                if (newRotationY != 0)
+                    _player.transform.rotation = Quaternion.Euler(prevRotation.x, newRotationY, prevRotation.z);
+                //Lookat and follow + prio doesnt need to be changed if its the player
+                return;
+            }
+            
             if (a_requireOffset)
             {
-                _currentCamera.LookAt = a_offset;
-                _currentCamera.Follow = a_offset;
+                _currentHackableCamera.LookAt = a_offset;
+                _currentHackableCamera.Follow = a_offset;
             }
-            _currentCamera.Priority = _activePrio;
+            _currentHackableCamera.Priority = _activePrio;
         }
     }
 }
