@@ -10,6 +10,7 @@ namespace Malicious.Player
 {
     public class Player : MonoBehaviour, IPlayerObject
     {
+        #region Variables
         //------Standard Variables-------------//
         //I didnt know what to name these
         private Rigidbody _rigidbody = null;
@@ -70,7 +71,7 @@ namespace Malicious.Player
         //------Input Variables----------------//
         [HideInInspector] public Vector2 _moveInput = Vector2.zero;
         //-------------------------------------//
-        
+        #endregion
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
@@ -82,18 +83,6 @@ namespace Malicious.Player
             _playerCamera = Camera.main.transform;
         }
 
-        public void OnHackEnter()
-        {
-            EnableInput();
-            _currentAnimationVector = Vector2.zero;
-            gameObject.SetActive(true);
-        }
-
-        public void OnHackExit()
-        {
-            DisableInput();
-            gameObject.SetActive(false);
-        }
 
         public void Tick()
         {
@@ -107,6 +96,18 @@ namespace Malicious.Player
             //Movement and etc
             Movement();
             HackValidCheck();
+        }
+        public void OnHackEnter()
+        {
+            EnableInput();
+            _currentAnimationVector = Vector2.zero;
+            gameObject.SetActive(true);
+        }
+
+        public void OnHackExit()
+        {
+            DisableInput();
+            gameObject.SetActive(false);
         }
 
         private Vector3 _prevVelocity = Vector3.zero;
@@ -170,7 +171,7 @@ namespace Malicious.Player
         }
         private void Movement()
         {
-            if (_values._moveInput != Vector2.zero)
+            if (_moveInput != Vector2.zero)
             {
                 /*
                  * 
@@ -314,7 +315,6 @@ namespace Malicious.Player
         {
             OffsetContainer temp = new OffsetContainer();
             temp._offsetTransform = _cameraOffset;
-            temp._rigOffset = _rigOffset;
             return temp;
         }
         public void SetOffset(Transform a_transform) => _cameraOffset = a_transform;

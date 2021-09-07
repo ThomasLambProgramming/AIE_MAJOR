@@ -1991,7 +1991,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 956282334}
-  m_LocalRotation: {x: 0.055905215, y: 0.70489335, z: -0.055905204, w: 0.70489335}
+  m_LocalRotation: {x: 0.055905215, y: 0.70489335, z: -0.0559052, w: 0.70489335}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3228,7 +3228,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1716974659}
-  m_LocalRotation: {x: 0.121367544, y: 0.7075963, z: -0.12542169, w: 0.6847239}
+  m_LocalRotation: {x: 0.12136754, y: 0.70759624, z: -0.1254217, w: 0.684724}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4044,15 +4044,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 324795434887874827, guid: a51584e039cd1b94eb9364f105bd0d61, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.68472385
+      value: 0.684724
       objectReference: {fileID: 0}
     - target: {fileID: 324795434887874827, guid: a51584e039cd1b94eb9364f105bd0d61, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.12136754
+      value: 0.12136757
       objectReference: {fileID: 0}
     - target: {fileID: 324795434887874827, guid: a51584e039cd1b94eb9364f105bd0d61, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.70759636
+      value: 0.70759624
       objectReference: {fileID: 0}
     - target: {fileID: 324795434887874827, guid: a51584e039cd1b94eb9364f105bd0d61, type: 3}
       propertyPath: m_LocalRotation.z
@@ -4188,6 +4188,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 4294967295
       objectReference: {fileID: 0}
+    - target: {fileID: 4888643453630504321, guid: f082632a9a8871246a14bae521fd19be, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9b46e7094812f9e40864745e331d1b20, type: 2}
     - target: {fileID: 4978098367990459860, guid: f082632a9a8871246a14bae521fd19be, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 4294967295
@@ -4196,6 +4200,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 4294967295
       objectReference: {fileID: 0}
+    - target: {fileID: 9097051204635157385, guid: f082632a9a8871246a14bae521fd19be, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9b46e7094812f9e40864745e331d1b20, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f082632a9a8871246a14bae521fd19be, type: 3}
 --- !u!1001 &2626718071249649472
@@ -4409,30 +4417,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47eab926f2e64968a8601c426c5b7175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _values:
-    _playerCamera: {fileID: 0}
-    _cameraOffset: {fileID: 1274523758}
-    _rigOffset: {x: 0.3, y: 0.9, z: -0.3}
-    _rigidbody: {fileID: 0}
-    _currentInteractObj: {fileID: 0}
-    _currentHackableObj: {fileID: 0}
-    _canInteract: 0
-    _canHackable: 0
-    _dotAllowance: 0.8
-    _moveSpeed: 300
-    _maxSpeed: 4
-    _jumpForce: 200
-    _spinSpeed: 4
-    _canJump: 1
-    _hasDoubleJumped: 0
-    _holdingJump: 0
-    _groundCheck: {fileID: 27276494}
-    _animationSwapSpeed: 3
-    _playerAnimator: {fileID: 0}
-    _currentAnimationVector: {x: 0, y: 0}
-    _moveInput: {x: 0, y: 0}
-  _iframeTime: 1.5
   _ModelContainer: {fileID: 287645796}
+  _iframeTime: 1.5
+  _cameraOffset: {fileID: 0}
+  _dotAllowance: 0.8
+  _moveSpeed: 5
+  _maxSpeed: 4
+  _jumpForce: 10
+  _spinSpeed: 5
+  _groundCheck: {fileID: 0}
+  _animationSwapSpeed: 3
+  _moveInput: {x: 0, y: 0}
 --- !u!1001 &3626312663068213300
 PrefabInstance:
   m_ObjectHideFlags: 0
