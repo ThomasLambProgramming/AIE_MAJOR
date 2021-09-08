@@ -62,8 +62,7 @@ namespace Malicious.Player
         [SerializeField] private float _animationSwapSpeed = 3f;
         private Animator _playerAnimator = null;
         private Vector2 _currentAnimationVector = Vector2.zero;
-        private readonly int _xPos = Animator.StringToHash("XPos");
-        private readonly int _yPos = Animator.StringToHash("YPos");
+        private readonly int _animatorRunAmount = Animator.StringToHash("RunAmount");
         private readonly int _jumping = Animator.StringToHash("Jumping");
         //-------------------------------------//
         
@@ -88,14 +87,13 @@ namespace Malicious.Player
         {
             //Logic
             UpdateAnimator();
-            Debug.Log("Test");
+            HackValidCheck();
         }
 
         public void FixedTick()
         {
             //Movement and etc
             Movement();
-            HackValidCheck();
         }
         public void OnHackEnter()
         {
@@ -236,16 +234,8 @@ namespace Malicious.Player
         }
         private void UpdateAnimator()
         {
-            _currentAnimationVector = new Vector2(
-                Mathf.Lerp(_currentAnimationVector.x, 
-                    _moveInput.x, 
-                    _animationSwapSpeed * Time.deltaTime),
-                Mathf.Lerp(_currentAnimationVector.y, 
-                    _moveInput.y, 
-                    _animationSwapSpeed * Time.deltaTime));
-        
-            _playerAnimator.SetFloat(_xPos, _currentAnimationVector.x);
-            _playerAnimator.SetFloat(_yPos, _currentAnimationVector.y);
+            float animatorAmount = _rigidbody.velocity.magnitude / _maxSpeed;
+            _playerAnimator.SetFloat(_animatorRunAmount, animatorAmount);
         }
         private void Jump()
         {

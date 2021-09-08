@@ -289,9 +289,7 @@ namespace Malicious.Hackable
 
         private void SetToPlayer()
         {
-            PlayerController.PlayerControl.ResetToPlayer(
-                _wireModel.transform.position,
-                _wireModel.transform.rotation);
+            PlayerController.PlayerControl.ResetToPlayer();
         }
         
         public OffsetContainer GiveOffset()

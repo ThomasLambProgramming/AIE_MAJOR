@@ -243,7 +243,7 @@ namespace Malicious
         
         private void Interact(InputAction.CallbackContext a_context)
         {
-            PlayerController.PlayerControl.ResetToPlayer(transform.position, transform.rotation);
+            PlayerController.PlayerControl.ResetToPlayer();
         }
 
         private void EnableInput()

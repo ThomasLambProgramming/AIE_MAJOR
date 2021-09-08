@@ -160,13 +160,7 @@ namespace Malicious.Hackable
 
         private void ExitObject(InputAction.CallbackContext a_context)
         {
-            //Place the player half way between the moveable object and the camera offset
-            //this will need edge cases to make sure player cannot be placed out of bounds
-            PlayerController.PlayerControl.ResetToPlayer(
-                new Vector3(transform.position.x,
-                    transform.position.y + 2,
-                    transform.position.z),
-                _cameraOffset.rotation);
+            PlayerController.PlayerControl.ResetToPlayer();
         }
 
         private void EnableInput()

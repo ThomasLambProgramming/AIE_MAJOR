@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Cinemachine;
+using Unity.Mathematics;
 
 namespace Malicious.Core
 {
@@ -26,7 +27,7 @@ namespace Malicious.Core
         private static CinemachineVirtualCamera _groundEnemy = null;
         private static CinemachineVirtualCamera _flyingEnemy = null;
         private static CinemachineVirtualCamera _currentHackableCamera = null;
-
+        
         [SerializeField] private CinemachineBrain init_BrainCamera = null;
         public static CinemachineBrain _cameraBrain = null;
         private void Start()
@@ -70,9 +71,13 @@ namespace Malicious.Core
                 case ObjectType.Player:
                     //The player has to be different as it is not the same type
                     _player.Priority = 20;
-                    break;
+                    _player.m_XAxis.Value = newRotationY;
+                    return;
                 case ObjectType.Moveable:
                     _currentHackableCamera = _moveable;
+                    Vector3 newRot = _currentHackableCamera.transform.rotation.eulerAngles;
+                    newRot.y = _player.m_XAxis.Value;
+                    _currentHackableCamera.transform.rotation = Quaternion.Euler(newRot);
                     break;
                 case ObjectType.PointOfInterest:
                     _currentHackableCamera = _pointOfInterest;
@@ -87,15 +92,7 @@ namespace Malicious.Core
                     _currentHackableCamera = _flyingEnemy;
                     break;
             }
-
-            if (_player.Priority > 0)
-            {
-                Vector3 prevRotation = _player.transform.rotation.eulerAngles;
-                if (newRotationY != 0)
-                    _player.transform.rotation = Quaternion.Euler(prevRotation.x, newRotationY, prevRotation.z);
-                //Lookat and follow + prio doesnt need to be changed if its the player
-                return;
-            }
+            
             
             if (a_requireOffset)
             {

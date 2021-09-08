@@ -104,41 +104,18 @@ namespace Malicious.Player
             _currentPlayer = a_interactable;
             _currentPlayer.OnHackEnter();
             
-            //Only for moveable object but adding redundancy for future hackable objects
-            if (_currentPlayer.RequiresTruePlayerOffset())
-                _currentPlayer.SetOffset(_truePlayer.GiveOffset()._offsetTransform);
             
             CameraController.ChangeCamera(
                 _currentPlayer.ReturnType(),
                 true,
                 _currentPlayer.GiveOffset()._offsetTransform);
             
-            StartCoroutine(WaitForBlend());
         }
         
-        public void ResetToPlayer(Vector3 a_playerPos, Quaternion a_playerRot)
+        public void ResetToPlayer()
         {
-            //  Animation / check for where is valid for exit
-            _truePlayerObject.transform.rotation = 
-                Quaternion.Euler(0, a_playerRot.eulerAngles.y, 0);
-            _truePlayerObject.transform.position = a_playerPos;
             _truePlayerObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             SwapPlayer(_truePlayer);
         }
-
-        IEnumerator WaitForBlend()
-        {
-            GameEventManager.PlayerFixedUpdate -= FixedTick;
-            GameEventManager.PlayerUpdate -= PlayerTick;
-            
-            while (CameraController._cameraBrain.IsBlending)
-            {
-                yield return null;
-            }
-            //Settings return
-            GameEventManager.PlayerFixedUpdate += FixedTick;
-            GameEventManager.PlayerUpdate += PlayerTick;
-        }
-        
     }
 }
