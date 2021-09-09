@@ -11,48 +11,72 @@ namespace Malicious.Hackable
 {
     public class Wire : MonoBehaviour, IPlayerObject
     {
-        [SerializeField] private WireValues _values = new WireValues();
-        
-        
         [SerializeField] private GameObject _nodeObject = null;
         private MeshRenderer _nodeRenderer = null;
         [SerializeField] private Material _defaultMaterial = null;
         [SerializeField] private Material _hackValidMaterial = null;
         [SerializeField] private Material _hackedMaterial = null;
         
+        //------Wire Variables-----------------//
+        [SerializeField] private GameObject _wireModel = null;
+        [SerializeField] private Transform _wireCameraOffset = null;
+        [SerializeField] private List<Vector3> _wirePath = new List<Vector3>();
         
+        //------Other Variables----------------//
+        private int _pathIndex = 0;
+        
+        private Quaternion _rotationGoal = Quaternion.identity;
+        private bool _rotateObject = false;
+        private Vector3 _startingDirection = Vector3.zero;
+        
+        [SerializeField] private float _heightAngleAllowance = 0.6f;
+        [SerializeField] private float _wireLength = 5f;
+        [SerializeField] private int _wireCharges = 4;
+        private int _chargesLeft = 0;
+        
+        private Vector3 _rigOffset = Vector3.zero;
+        private bool _moveToEnd = false;
+        private bool _takingInput = false;
+        
+        //------Speed Variables----------------//
+        [SerializeField] private float _goNextWire = 0.2f;
+        [SerializeField] private float _wireSpeed = 10f;
+        [SerializeField] private float _rotateSpeed = 10f;
+        
+        //------Debug Variables----------------//
+        [SerializeField] private bool _showPath = true;
        
         private void Start()
         {
             //This will need to be changed to allow for saving the input
-            _values._chargesLeft = _values._wireCharges;
+            _chargesLeft = _wireCharges;
             _nodeRenderer = _nodeObject.GetComponent<MeshRenderer>();
         }
 
         public void OnHackEnter()
         {
             _nodeRenderer.material = _hackedMaterial;
-            _values._wireModel = PlayerController.PlayerControl._wireModel;
-            _values._wireCameraOffset = PlayerController.PlayerControl._wireModelOffset;
-            _values._wireModel.SetActive(true);
+            _wireModel = PlayerController.PlayerControl._wireModel;
+            _wireCameraOffset = PlayerController.PlayerControl._wireModelOffset;
+            _wireModel.SetActive(true);
 
             //THIS NEEDS TO CHANGE TO A DEFAULT PARAMETER SO IT CAN BE STARTED WITH 1 WIRE
-            Vector3 directionToNode = (_values._wirePath[1] - _values._wirePath[0]).normalized;
-            _values._startingDirection = directionToNode;
+            Vector3 directionToNode = (_wirePath[1] - _wirePath[0]).normalized;
+            _startingDirection = directionToNode;
             Quaternion newRotation = Quaternion.LookRotation(directionToNode);
             
-            _values._wireModel.transform.rotation = newRotation;
-            _values._wireModel.transform.position = _values._wirePath[0];
+            _wireModel.transform.rotation = newRotation;
+            _wireModel.transform.position = _wirePath[0];
 
-            if (_values._wirePath.Count > 0)
+            if (_wirePath.Count > 0)
             {
-                _values._takingInput = false;
-                _values._moveToEnd = true;
+                _takingInput = false;
+                _moveToEnd = true;
             }
             else
             {
-                _values._takingInput = true;
-                _values._moveToEnd = false;
+                _takingInput = true;
+                _moveToEnd = false;
             }
 
             EnableInput();
@@ -60,12 +84,12 @@ namespace Malicious.Hackable
 
         public void OnHackExit()
         {
-            _values._pathIndex = 0;
-            _values._rotationGoal = Quaternion.identity;
-            _values._wireModel.SetActive(false);
+            _pathIndex = 0;
+            _rotationGoal = Quaternion.identity;
+            _wireModel.SetActive(false);
 
-            _values._takingInput = false;
-            _values._moveToEnd = false;
+            _takingInput = false;
+            _moveToEnd = false;
             DisableInput();
             _nodeRenderer.material = _defaultMaterial;
         }
@@ -76,9 +100,9 @@ namespace Malicious.Hackable
         }
         public void FixedTick()
         {
-            if (_values._takingInput)
+            if (_takingInput)
                 return;
-            if (_values._moveToEnd)
+            if (_moveToEnd)
                 MoveToEndOfWire();
             else
             {
@@ -89,56 +113,56 @@ namespace Malicious.Hackable
         private void MoveToEndOfWire()
         {
             bool moveRotOccuring = false;
-            if (Vector3.SqrMagnitude(_values._wirePath[_values._pathIndex] - _values._wireModel.transform.position) >
-                _values._goNextWire)
+            if (Vector3.SqrMagnitude(_wirePath[_pathIndex] - _wireModel.transform.position) >
+                _goNextWire)
             {
                 moveRotOccuring = true;
-                Vector3 currentWirePos = _values._wireModel.transform.position;
+                Vector3 currentWirePos = _wireModel.transform.position;
                 currentWirePos = currentWirePos +
-                                 (_values._wirePath[_values._pathIndex] - _values._wireModel.transform.position)
+                                 (_wirePath[_pathIndex] - _wireModel.transform.position)
                                  .normalized *
-                                 (Time.deltaTime * (_values._wireSpeed));
-                _values._wireModel.transform.position = currentWirePos;
+                                 (Time.deltaTime * (_wireSpeed));
+                _wireModel.transform.position = currentWirePos;
             }
-            if (_values._rotateObject)
+            if (_rotateObject)
             {
                 moveRotOccuring = true;
-                _values._wireModel.transform.rotation = Quaternion.RotateTowards(
-                    _values._wireModel.transform.rotation,
-                    _values._rotationGoal,
-                    _values._rotateSpeed);
-                if (_values._wireModel.transform.rotation == _values._rotationGoal)
-                    _values._rotateObject = false;
+                _wireModel.transform.rotation = Quaternion.RotateTowards(
+                    _wireModel.transform.rotation,
+                    _rotationGoal,
+                    _rotateSpeed);
+                if (_wireModel.transform.rotation == _rotationGoal)
+                    _rotateObject = false;
                 
             }
 
             if (moveRotOccuring == false) 
             {
-                if (_values._pathIndex < _values._wirePath.Count - 1)
+                if (_pathIndex < _wirePath.Count - 1)
                 {
-                    _values._pathIndex++;
-                    Vector3 newDirection = (_values._wirePath[_values._pathIndex] - _values._wirePath[_values._pathIndex - 1]).normalized;
+                    _pathIndex++;
+                    Vector3 newDirection = (_wirePath[_pathIndex] - _wirePath[_pathIndex - 1]).normalized;
 
-                    if (Vector3.Dot(newDirection, Vector3.up) < _values._heightAngleAllowance &&
-                        Vector3.Dot(newDirection, Vector3.down) < _values._heightAngleAllowance)
+                    if (Vector3.Dot(newDirection, Vector3.up) < _heightAngleAllowance &&
+                        Vector3.Dot(newDirection, Vector3.down) < _heightAngleAllowance)
                     {
-                        _values._rotationGoal = Quaternion.LookRotation(
+                        _rotationGoal = Quaternion.LookRotation(
                             newDirection, Vector3.up);
-                        _values._rotateObject = true;
+                        _rotateObject = true;
                     }
                 }
                 else
                 {
-                    if (_values._chargesLeft > 0)
+                    if (_chargesLeft > 0)
                     {
-                        _values._takingInput = true;
-                        _values._moveToEnd = false;
+                        _takingInput = true;
+                        _moveToEnd = false;
                     }
                     else
                     {
                         //we want to exit
-                        _values._moveToEnd = false;
-                        _values._takingInput = false;
+                        _moveToEnd = false;
+                        _takingInput = false;
                     }
                 }
             }
@@ -146,7 +170,7 @@ namespace Malicious.Hackable
 
         private void InputProcessing(InputAction.CallbackContext a_context)
         {
-            if (!_values._takingInput)
+            if (!_takingInput)
                 return;
             
             Vector2 input = a_context.ReadValue<Vector2>();
@@ -155,8 +179,8 @@ namespace Malicious.Hackable
             if (input.magnitude < 0.4f)
                 return;
 
-            Vector3 forwardDirection = _values._wireModel.transform.forward;
-            Vector3 rightDirection = _values._wireModel.transform.right;
+            Vector3 forwardDirection = _wireModel.transform.forward;
+            Vector3 rightDirection = _wireModel.transform.right;
 
             if (Vector2.Dot(input, Vector2.up) > 0.8f)
             {
@@ -164,44 +188,44 @@ namespace Malicious.Hackable
             }
             if (Vector2.Dot(input, Vector2.down) > 0.8f)
             {
-                if (_values._pathIndex == 0)
+                if (_pathIndex == 0)
                     return;
-                _values._takingInput = false;
-                _values._chargesLeft++;
-                _values._moveToEnd = true;
-                _values._pathIndex--;
+                _takingInput = false;
+                _chargesLeft++;
+                _moveToEnd = true;
+                _pathIndex--;
                 
-                _values._wirePath.RemoveAt(_values._wirePath.Count - 1);
+                _wirePath.RemoveAt(_wirePath.Count - 1);
 
-                if (_values._pathIndex > 0)
+                if (_pathIndex > 0)
                 {
-                    Vector3 previousDirection = (_values._wirePath[_values._pathIndex] - _values._wirePath[_values._pathIndex - 1]).normalized;
+                    Vector3 previousDirection = (_wirePath[_pathIndex] - _wirePath[_pathIndex - 1]).normalized;
 
-                    if (Vector3.Dot(previousDirection, Vector3.up) < _values._heightAngleAllowance &&
-                        Vector3.Dot(previousDirection, Vector3.down) < _values._heightAngleAllowance)
+                    if (Vector3.Dot(previousDirection, Vector3.up) < _heightAngleAllowance &&
+                        Vector3.Dot(previousDirection, Vector3.down) < _heightAngleAllowance)
                     {
-                        _values._rotationGoal = Quaternion.LookRotation(previousDirection,
+                        _rotationGoal = Quaternion.LookRotation(previousDirection,
                             Vector3.up);
-                        _values._rotateObject = true;
+                        _rotateObject = true;
                     }
                 }
                 else
                 {
-                    _values._rotationGoal = Quaternion.LookRotation(
-                        (_values._startingDirection),
+                    _rotationGoal = Quaternion.LookRotation(
+                        (_startingDirection),
                         Vector3.up);
-                    _values._rotateObject = true;
+                    _rotateObject = true;
                 }
             }
             if (Vector2.Dot(input, Vector2.left) > 0.8f)
             {
                 AddPoint(-rightDirection);
-                _values._rotateObject = true;
+                _rotateObject = true;
             }
             if (Vector2.Dot(input, Vector2.right) > 0.8f)
             {
                 AddPoint(rightDirection);
-                _values._rotateObject = true;
+                _rotateObject = true;
             }
         }
 
@@ -209,21 +233,21 @@ namespace Malicious.Hackable
         {
             if (CheckDirection(a_direction))
             {
-                Vector3 newWirePoint = _values._wirePath[_values._wirePath.Count - 1];
+                Vector3 newWirePoint = _wirePath[_wirePath.Count - 1];
                 Vector3 directionAdd = a_direction;
                 
                 directionAdd = directionAdd.normalized;
-                directionAdd *= _values._wireLength;
+                directionAdd *= _wireLength;
                 
                 newWirePoint += directionAdd;
 
                 if (CheckPoint(newWirePoint))
                 {
-                    _values._takingInput = false;
-                    _values._moveToEnd = true;
-                    _values._chargesLeft--;
+                    _takingInput = false;
+                    _moveToEnd = true;
+                    _chargesLeft--;
                     
-                    _values._wirePath.Add(newWirePoint);
+                    _wirePath.Add(newWirePoint);
                 }
             }
         }
@@ -232,7 +256,7 @@ namespace Malicious.Hackable
         private bool CheckPoint(Vector3 a_position)
         {
             bool isValid = true;
-            foreach (var location in _values._wirePath)
+            foreach (var location in _wirePath)
             {
                 if (Vector3.SqrMagnitude(location - a_position) < 2)
                     isValid = false;
@@ -248,10 +272,10 @@ namespace Malicious.Hackable
         {
             RaycastHit hit;
             if (Physics.Raycast(
-                _values._wireModel.transform.position, 
+                _wireModel.transform.position, 
                 a_direction, 
                 out hit, 
-                _values._wireLength,
+                _wireLength,
                 ~(1 << 8)))
             {
                 if (hit.collider != null)
@@ -266,20 +290,20 @@ namespace Malicious.Hackable
         private void SetToPlayer()
         {
             PlayerController.PlayerControl.ResetToPlayer(
-                _values._wireModel.transform.position,
-                _values._wireModel.transform.rotation);
+                _wireModel.transform.position,
+                _wireModel.transform.rotation);
         }
         
         public OffsetContainer GiveOffset()
         {
             OffsetContainer temp = new OffsetContainer();
-            temp._offsetTransform = _values._wireCameraOffset;
-            temp._rigOffset = _values._rigOffset;
+            temp._offsetTransform = _wireCameraOffset;
+            temp._rigOffset = _rigOffset;
             return temp;
         }
         
         public bool RequiresTruePlayerOffset() => false;
-        public void SetOffset(Transform a_offset) => _values._wireCameraOffset = a_offset;
+        public void SetOffset(Transform a_offset) => _wireCameraOffset = a_offset;
         public void OnHackValid()
         {
             _nodeRenderer.material = _hackValidMaterial;
@@ -294,13 +318,13 @@ namespace Malicious.Hackable
 
         private void UpDirection(InputAction.CallbackContext a_context)
         {
-            if (_values._takingInput) 
-                AddPoint(_values._wireModel.transform.up);
+            if (_takingInput) 
+                AddPoint(_wireModel.transform.up);
         }
         private void DownDirection(InputAction.CallbackContext a_context)
         {
-            if (_values._takingInput) 
-                AddPoint(-_values._wireModel.transform.up);
+            if (_takingInput) 
+                AddPoint(-_wireModel.transform.up);
         }
         private void ExitWireInput(InputAction.CallbackContext a_context)
         {
@@ -324,9 +348,9 @@ namespace Malicious.Hackable
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            if (_values._showPath)
+            if (_showPath)
             {
-                foreach (var point in _values._wirePath)
+                foreach (var point in _wirePath)
                 {
                     Gizmos.DrawSphere(point, 1);
                 }
@@ -337,15 +361,15 @@ namespace Malicious.Hackable
         [ContextMenu("AddPathPoint")]
         public void AddPathPoint()
         {
-            if (_values._wirePath.Count > 0)
+            if (_wirePath.Count > 0)
             {
-                Vector3 newPoint = _values._wirePath[_values._wirePath.Count - 1];
-                _values._wirePath.Add(newPoint);
+                Vector3 newPoint = _wirePath[_wirePath.Count - 1];
+                _wirePath.Add(newPoint);
             }
             else
             {
-                _values._wirePath = new List<Vector3>();
-                _values._wirePath.Add(gameObject.transform.position);
+                _wirePath = new List<Vector3>();
+                _wirePath.Add(gameObject.transform.position);
             }
         }
 #endif

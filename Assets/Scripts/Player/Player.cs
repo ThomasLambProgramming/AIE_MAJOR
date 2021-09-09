@@ -10,26 +10,97 @@ namespace Malicious.Player
 {
     public class Player : MonoBehaviour, IPlayerObject
     {
-        [SerializeField] private PlayerValues _values = new PlayerValues();
-        [SerializeField] private float _iframeTime = 1.5f;
+        #region Variables
+        //------Standard Variables-------------//
+        //I didnt know what to name these
+        private Rigidbody _rigidbody = null;
+        //-------------------------------------//
         
+        
+        //------IFrame Variables---------------//
         [SerializeField] private GameObject _ModelContainer = null;
-        private bool _invincible = false;
+        [SerializeField] private float _iframeTime = 1.5f;
+        private bool _iFrameActive = false;
+        private bool _isPaused = false;
+        //-------------------------------------//
         
-        private bool _paused = false;
+        
+        //------Camera Variables---------------//
+        private Transform _playerCamera = null;
+        [SerializeField] private Transform _cameraOffset = null;
+        //-------------------------------------//
+        
+        
+        //------Hacking Variables--------------//
+        [SerializeField] private float _dotAllowance = 0.8f;
+        private IPlayerObject _currentInteract = null;
+        private GameObject _currentInteractObj = null;
+        private IHackable _currentHackable = null;
+        private GameObject _currentHackableObj = null;
+        private bool _canInteract = false;
+        private bool _canHackable = false;
+        //-------------------------------------//
+        
+        
+        //------Speed Variables----------------//
+        [SerializeField] private float _moveSpeed = 5f;
+        [SerializeField] private float _maxSpeed = 4f;
+        [SerializeField] private float _jumpForce = 10f;
+        [SerializeField] private float _spinSpeed = 5f;
+        //-------------------------------------//
+        
+        
+        //------Jumping Variables--------------//
+        private bool _canJump = true;
+        private bool _hasDoubleJumped = false;
+        private bool _holdingJump = false;
+        [SerializeField] private Transform _groundCheck = null;
+        //-------------------------------------//
+        
+        
+        //------Animator Variables-------------//
+        [SerializeField] private float _animationSwapSpeed = 3f;
+        private Animator _playerAnimator = null;
+        private Vector2 _currentAnimationVector = Vector2.zero;
+        private readonly int _xPos = Animator.StringToHash("XPos");
+        private readonly int _yPos = Animator.StringToHash("YPos");
+        private readonly int _jumping = Animator.StringToHash("Jumping");
+        //-------------------------------------//
+        
+        
+        //------Input Variables----------------//
+        [HideInInspector] public Vector2 _moveInput = Vector2.zero;
+        //-------------------------------------//
+        #endregion
         private void Start()
         {
-            _values._rigidbody = GetComponent<Rigidbody>();
-            _values._playerAnimator = GetComponent<Animator>();
+            _rigidbody = GetComponent<Rigidbody>();
+            _playerAnimator = GetComponent<Animator>();
             
             GameEventManager.GamePauseStart += PauseEnter;
             GameEventManager.GamePauseExit += PauseExit;
+
+            _playerCamera = Camera.main.transform;
         }
 
+
+        public void Tick()
+        {
+            //Logic
+            UpdateAnimator();
+            Debug.Log("Test");
+        }
+
+        public void FixedTick()
+        {
+            //Movement and etc
+            Movement();
+            HackValidCheck();
+        }
         public void OnHackEnter()
         {
             EnableInput();
-            _values._currentAnimationVector = Vector2.zero;
+            _currentAnimationVector = Vector2.zero;
             gameObject.SetActive(true);
         }
 
@@ -39,39 +110,24 @@ namespace Malicious.Player
             gameObject.SetActive(false);
         }
 
-        public void Tick()
-        {
-            //Logic
-            UpdateAnimator();
-            SpinMovement();
-        }
-
-        public void FixedTick()
-        {
-            //Movement and etc
-            Movement();
-            HackValidCheck();
-        }
-
         private Vector3 _prevVelocity = Vector3.zero;
         private void PauseEnter()
         {
-            _values._playerAnimator.enabled = false;
-            _values._moveInput = Vector2.zero;
-            _values._spinInput = Vector2.zero;
+            _playerAnimator.enabled = false;
+            _moveInput = Vector2.zero;
             DisableInput();
-            _paused = true;
-            _prevVelocity = _values._rigidbody.velocity;
-            _values._rigidbody.isKinematic = true;
+            _isPaused = true;
+            _prevVelocity = _rigidbody.velocity;
+            _rigidbody.isKinematic = true;
         }
 
         private void PauseExit()
         {
-            _values._playerAnimator.enabled = true;
+            _playerAnimator.enabled = true;
             EnableInput();
-            _paused = false;
-            _values._rigidbody.isKinematic = false;
-            _values._rigidbody.velocity = _prevVelocity;
+            _isPaused = false;
+            _rigidbody.isKinematic = false;
+            _rigidbody.velocity = _prevVelocity;
         }
 
         private IEnumerator IFrame()
@@ -81,7 +137,7 @@ namespace Malicious.Player
             int frameCount = 0;
             while (timer < _iframeTime)
             {
-                if (_paused)
+                if (_isPaused)
                 {
                     //just to make sure when paused its not in inactive state
                     _ModelContainer.SetActive(true);   
@@ -99,85 +155,101 @@ namespace Malicious.Player
             }
 
             _ModelContainer.SetActive(true);
-            _invincible = false;
+            _iFrameActive = false;
         }
 
         public void FanLaunch(Vector3 a_force)
         {
-            _values._canJump = false;
-            _values._hasDoubleJumped = false;
-            Vector3 newVel = _values._rigidbody.velocity;
+            _canJump = false;
+            _hasDoubleJumped = false;
+            Vector3 newVel = _rigidbody.velocity;
             newVel.x += a_force.x;
             newVel.z += a_force.z;
             //this is to ensure that the fan will always propel the player up (and reset the double jump)
             newVel.y = a_force.y;
-            _values._rigidbody.velocity = newVel;
+            _rigidbody.velocity = newVel;
         }
         private void Movement()
         {
-            if (_values._moveInput != Vector2.zero)
+            if (_moveInput != Vector2.zero)
             {
-                //For controller users this will change the max movespeed according to how small their inputs are
-                float scaleAmount = _values._moveInput.magnitude;
+                /*
+                 * 
+                 */
                 
-                float currentYAmount = _values._rigidbody.velocity.y;
+                
+                
+                
+                //For controller users this will change the max movespeed according to how small their inputs are
+                float targetAngle = Mathf.Atan2(_moveInput.x, _moveInput.y) * Mathf.Rad2Deg +
+                                    _playerCamera.transform.rotation.eulerAngles.y;
+                
+                //Rotate player towards current input
+                Quaternion targetRotation = Quaternion.Euler(0, targetAngle, 0);
+                transform.rotation =
+                    Quaternion.Lerp(transform.rotation, targetRotation, _spinSpeed * Time.deltaTime);
+                
+                
+                float scaleAmount = _moveInput.magnitude;
+                
+                float currentYAmount = _rigidbody.velocity.y;
                 
                 Vector3 newVel =
-                    transform.forward * (_values._moveInput.y * _values._moveSpeed * Time.deltaTime) +
-                    transform.right * (_values._moveInput.x * _values._moveSpeed * Time.deltaTime);
+                    _playerCamera.transform.forward * (_moveInput.y * _moveSpeed * Time.deltaTime) +
+                    _playerCamera.transform.right * (_moveInput.x * _moveSpeed * Time.deltaTime);
                 
                 //We are checking if the horizontal speed is too great 
-                Vector3 tempVelocity = _values._rigidbody.velocity + newVel;
+                Vector3 tempVelocity = _rigidbody.velocity + newVel;
                 tempVelocity.y = 0;
 
-                float scaledMaxSpeed = _values._maxSpeed * scaleAmount;
+                float scaledMaxSpeed = _maxSpeed * scaleAmount;
                 if (tempVelocity.magnitude > scaledMaxSpeed)
                 {
                     tempVelocity = tempVelocity.normalized * scaledMaxSpeed;
-                    
                 }
 
                 tempVelocity.y = currentYAmount;
-                _values._rigidbody.velocity = tempVelocity;
+                _rigidbody.velocity = tempVelocity;
+                
             }
             
-            if (Mathf.Abs(_values._moveInput.magnitude) < 0.1f)
+            if (Mathf.Abs(_moveInput.magnitude) < 0.1f)
             {
                 //if we are actually moving 
-                if (Mathf.Abs(_values._rigidbody.velocity.x) > 0.2f || Mathf.Abs(_values._rigidbody.velocity.z) > 0.2f)
+                if (Mathf.Abs(_rigidbody.velocity.x) > 0.2f || Mathf.Abs(_rigidbody.velocity.z) > 0.2f)
                 {
-                    Vector3 newVel = _values._rigidbody.velocity;
+                    Vector3 newVel = _rigidbody.velocity;
                     //takes off 5% of the current vel every physics update so the player can land on a platform without overshooting
                     //because the velocity doesnt stop
                     newVel.z = newVel.z * 0.90f;
                     newVel.x = newVel.x * 0.90f;
-                    _values._rigidbody.velocity = newVel;
+                    _rigidbody.velocity = newVel;
                 }
+            }
+
+            Vector3 tempVel = _rigidbody.velocity;
+            tempVel.y = 0;
+            if (tempVel.sqrMagnitude < 0.1f)
+            {
+                _rigidbody.velocity = new Vector3(0, _rigidbody.velocity.y, 0);
             }
         }
         private void UpdateAnimator()
         {
-            _values._currentAnimationVector = new Vector2(
-                Mathf.Lerp(_values._currentAnimationVector.x, 
-                    _values._moveInput.x, 
-                    _values._animationSwapSpeed * Time.deltaTime),
-                Mathf.Lerp(_values._currentAnimationVector.y, 
-                    _values._moveInput.y, 
-                    _values._animationSwapSpeed * Time.deltaTime));
+            _currentAnimationVector = new Vector2(
+                Mathf.Lerp(_currentAnimationVector.x, 
+                    _moveInput.x, 
+                    _animationSwapSpeed * Time.deltaTime),
+                Mathf.Lerp(_currentAnimationVector.y, 
+                    _moveInput.y, 
+                    _animationSwapSpeed * Time.deltaTime));
         
-            _values._playerAnimator.SetFloat(_values._xPos, _values._currentAnimationVector.x);
-            _values._playerAnimator.SetFloat(_values._yPos, _values._currentAnimationVector.y);
-        }
-        private void SpinMovement()
-        {
-            if (_values._spinInput != Vector2.zero)
-            {
-                transform.Rotate(new Vector3(0, _values._spinInput.x * _values._spinSpeed * Time.deltaTime, 0));
-            }
+            _playerAnimator.SetFloat(_xPos, _currentAnimationVector.x);
+            _playerAnimator.SetFloat(_yPos, _currentAnimationVector.y);
         }
         private void Jump()
         {
-            _values._rigidbody.AddForce(_values._jumpForce * Vector3.up);
+            _rigidbody.AddForce(_jumpForce * Vector3.up);
         }
         public void GroundCheck()
         {
@@ -195,38 +267,38 @@ namespace Malicious.Player
         }
         private void HackValidCheck()
         {
-            if (_values._currentHackable != null)
+            if (_currentHackable != null)
             {
-                if (DotCheck(transform, _values._currentHackableObj.transform))
+                if (DotCheck(transform, _currentHackableObj.transform))
                 {
-                    _values._canHackable = true;
-                    _values._currentHackable.OnHackValid();
+                    _canHackable = true;
+                    _currentHackable.OnHackValid();
                 }
                 else
                 {
-                    _values._canHackable = false;
-                    _values._currentHackable.OnHackFalse();
+                    _canHackable = false;
+                    _currentHackable.OnHackFalse();
                 }
             }
 
-            if (_values._currentInteract != null)
+            if (_currentInteract != null)
             {
-                if (DotCheck(transform, _values._currentInteractObj.transform))
+                if (DotCheck(transform, _currentInteractObj.transform))
                 {
-                    _values._canInteract = true;
-                    _values._currentInteract.OnHackValid();
+                    _canInteract = true;
+                    _currentInteract.OnHackValid();
                 }
                 else
                 {
-                    _values._canInteract = false;
-                    _values._currentInteract.OnHackFalse();
+                    _canInteract = false;
+                    _currentInteract.OnHackFalse();
                 }
             }
         }
         private bool DotCheck(Transform a_transform, Transform b_transform)
         {
             Vector3 direction = (b_transform.position - a_transform.position).normalized;
-            if (Vector3.Dot(direction, a_transform.forward) > _values._dotAllowance)
+            if (Vector3.Dot(direction, a_transform.forward) > _dotAllowance)
             {
                 return true;
             }
@@ -242,20 +314,19 @@ namespace Malicious.Player
         public OffsetContainer GiveOffset()
         {
             OffsetContainer temp = new OffsetContainer();
-            temp._offsetTransform = _values._cameraOffset;
-            temp._rigOffset = _values._rigOffset;
+            temp._offsetTransform = _cameraOffset;
             return temp;
         }
-        public void SetOffset(Transform a_transform) => _values._cameraOffset = a_transform;
+        public void SetOffset(Transform a_transform) => _cameraOffset = a_transform;
         private void OnCollisionEnter(Collision other)
         {
             if (other.gameObject.CompareTag("Hackable"))
             {
-                if (!_invincible)
+                if (!_iFrameActive)
                 {
                     PlayerController.PlayerControl.PlayerHit();
                     StartCoroutine(IFrame());
-                    _invincible = true;
+                    _iFrameActive = true;
                 }
             }
         }
@@ -263,13 +334,13 @@ namespace Malicious.Player
         {
             if (other.gameObject.CompareTag("Hackable"))
             {
-                _values._currentInteract = other.GetComponent<IPlayerObject>();
-                _values._currentInteractObj = other.gameObject;
+                _currentInteract = other.GetComponent<IPlayerObject>();
+                _currentInteractObj = other.gameObject;
             }
             else if (other.gameObject.CompareTag("Interactable"))
             {
-                _values._currentHackable = other.GetComponent<IHackable>();
-                _values._currentHackableObj = other.gameObject;
+                _currentHackable = other.GetComponent<IHackable>();
+                _currentHackableObj = other.gameObject;
             }
         }
         private void OnTriggerExit(Collider other)
@@ -277,43 +348,41 @@ namespace Malicious.Player
             if (other.gameObject.CompareTag("Hackable"))
             {
                 //Double check that the object gets set back to original state
-                if (_values._currentInteract != null)
-                    _values._currentInteract.OnHackFalse();
+                if (_currentInteract != null)
+                    _currentInteract.OnHackFalse();
                 
-                _values._currentInteract = null;
-                _values._currentInteractObj = null;
-                _values._canInteract = false;
+                _currentInteract = null;
+                _currentInteractObj = null;
+                _canInteract = false;
             }
             else if (other.gameObject.CompareTag("Interactable"))
             {
                 //Double check that the object gets set back to original state
-                if (_values._currentHackable != null)
-                    _values._currentHackable.OnHackFalse();
+                if (_currentHackable != null)
+                    _currentHackable.OnHackFalse();
                 
-                _values._currentHackable = null;
-                _values._currentHackableObj = null;
-                _values._canHackable = false;
+                _currentHackable = null;
+                _currentHackableObj = null;
+                _canHackable = false;
             }
         }
 
         private void Interact(InputAction.CallbackContext a_context)
         {
-            if (_values._currentInteract != null && _values._canInteract)
+            if (_currentInteract != null && _canInteract)
             {
-                PlayerController.PlayerControl.SwapPlayer(_values._currentInteract);
+                PlayerController.PlayerControl.SwapPlayer(_currentInteract);
             }
-            else if (_values._currentHackable != null && _values._canHackable)
+            else if (_currentHackable != null && _canHackable)
             {
-                _values._currentHackable.Hacked();
+                _currentHackable.Hacked();
             }
         }
         public bool RequiresTruePlayerOffset() => false;
-        private void MoveInputEnter(InputAction.CallbackContext a_context) => _values._moveInput = a_context.ReadValue<Vector2>();
-        private void MoveInputExit(InputAction.CallbackContext a_context) => _values._moveInput = Vector2.zero;
-        private void SpinInputEnter(InputAction.CallbackContext a_context) => _values._spinInput = a_context.ReadValue<Vector2>();
-        private void SpinInputExit(InputAction.CallbackContext a_context) => _values._spinInput = Vector2.zero;
+        private void MoveInputEnter(InputAction.CallbackContext a_context) => _moveInput = a_context.ReadValue<Vector2>();
+        private void MoveInputExit(InputAction.CallbackContext a_context) => _moveInput = Vector2.zero;
         private void JumpInputEnter(InputAction.CallbackContext a_context) => Jump();
-        private void JumpInputExit(InputAction.CallbackContext a_context) => _values._holdingJump = false;
+        private void JumpInputExit(InputAction.CallbackContext a_context) => _holdingJump = false;
             
 
         private void EnableInput()
@@ -322,8 +391,6 @@ namespace Malicious.Player
             GlobalData.InputManager.Player.Movement.canceled += MoveInputExit;
             GlobalData.InputManager.Player.Jump.performed += JumpInputEnter;
             GlobalData.InputManager.Player.Jump.canceled += JumpInputExit;
-            GlobalData.InputManager.Player.Camera.performed += SpinInputEnter;
-            GlobalData.InputManager.Player.Camera.canceled += SpinInputExit;
             GlobalData.InputManager.Player.Interaction.performed += Interact;
         }
 
@@ -333,8 +400,6 @@ namespace Malicious.Player
             GlobalData.InputManager.Player.Movement.canceled -= MoveInputExit;
             GlobalData.InputManager.Player.Jump.performed -= JumpInputEnter;
             GlobalData.InputManager.Player.Jump.canceled -= JumpInputExit;
-            GlobalData.InputManager.Player.Camera.performed -= SpinInputEnter;
-            GlobalData.InputManager.Player.Camera.canceled -= SpinInputExit;
             GlobalData.InputManager.Player.Interaction.performed -= Interact;
         }
         
