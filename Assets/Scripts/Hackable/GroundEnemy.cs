@@ -219,7 +219,9 @@ namespace Malicious
         {
             _nodeRenderer.material = _defaultMaterial;
         }
-        
+
+        public ObjectType ReturnType() => ObjectType.GroundEnemy;
+
 #if UNITY_EDITOR
         [SerializeField] private bool showPatrolPath = true;
         private void OnDrawGizmos()
