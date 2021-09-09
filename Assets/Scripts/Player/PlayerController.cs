@@ -56,46 +56,7 @@ namespace Malicious.Player
             PlayerControl = this;
         }
 
-        void Start()
-        {
-            _truePlayer = _truePlayerObject.GetComponent<IPlayerObject>();
-            _currentPlayer = _truePlayer;
-            _currentPlayer.OnHackEnter();
-            
-            _playerHud = _playerHudObject.GetComponent<PlayerHud>();
-
-            GameEventManager.PlayerFixedUpdate += FixedTick;
-            GameEventManager.PlayerUpdate += PlayerTick;
-
-            GameEventManager.GamePauseStart += PauseEnter;
-            GameEventManager.GamePauseExit += PauseExit;
-        }
-
-        private void PauseEnter() => _paused = true;
-        private void PauseExit() => _paused = false;
-
-        public void PlayerDead()
-        {
-            
-        }
-
-        public void PlayerHit()
-        {
-            _playerHud.RemoveHealth();
-            if (_playerHealth <= 0)
-            {
-                PlayerDead();
-            }
-        }
-
-        //the amount has been added to allow for the use of multi healing in case that option is added later
-        public void PlayerHealed(int a_amount)
-        {
-            for (int i = 0; i < a_amount; i++)
-            {
-                _playerHud.AddHealth();
-            }
-        }
+        
 
         public void SwapPlayer(IPlayerObject a_interactable)
         {
@@ -105,10 +66,7 @@ namespace Malicious.Player
             _currentPlayer.OnHackEnter();
             
             
-            CameraController.ChangeCamera(
-                _currentPlayer.ReturnType(),
-                true,
-                _currentPlayer.GiveOffset()._offsetTransform);
+            
             
         }
         

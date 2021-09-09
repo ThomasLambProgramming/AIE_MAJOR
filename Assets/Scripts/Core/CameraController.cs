@@ -47,8 +47,7 @@ namespace Malicious.Core
 
 
         public static void ChangeCamera(
-            ObjectType a_type, 
-            bool a_requireOffset = false, 
+            ObjectType a_type,
             Transform a_offset = null)
         {
             //we know its the current if the prio is above the reset amount
@@ -94,7 +93,7 @@ namespace Malicious.Core
             }
             
             
-            if (a_requireOffset)
+            if (a_offset != null)
             {
                 _currentHackableCamera.LookAt = a_offset;
                 _currentHackableCamera.Follow = a_offset;

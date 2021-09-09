@@ -1,0 +1,284 @@
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using Malicious.Core;
+
+namespace Malicious.ReworkMk3
+{
+    public class Player : BasePlayer
+    {
+        //Animator Variables//
+        [SerializeField] private float _animationSwapSpeed = 3f;
+        private Animator _playerAnimator = null;
+        private readonly int _animatorRunVariable = Animator.StringToHash("RunAmount");
+        private readonly int _jumpingVariable = Animator.StringToHash("Jumping");
+        private float _currentRunAmount = 0f;
+        //--------------------------------//
+        public HackableField _currentHackableField
+        {
+            get => _currentHackableField;
+            set
+            {
+                if (_currentHackableField != null)
+                {
+                    float distanceToCurrent =
+                        Vector3.SqrMagnitude(transform.position - _currentHackableField.transform.position);
+                    float distanceToNew =
+                        Vector3.SqrMagnitude(transform.position - value.transform.position);
+                    if (distanceToNew < distanceToCurrent)
+                        _currentHackableField = value;
+                }
+                else
+                    _currentHackableField = value;
+            }
+        }
+
+        private bool _isPaused = false;
+        private bool _iFrameActive = false;
+        [SerializeField] private float _iframeTime = 1.5f;
+        [SerializeField] private GameObject _modelContainer = null;
+
+        [SerializeField] private LayerMask _groundMask = ~0;
+
+        public Transform GiveOffset() => _cameraTransform;
+        
+        private void Start()
+        {
+            _rigidbody = GetComponent<Rigidbody>();
+            _playerAnimator = GetComponent<Animator>();
+            
+            GameEventManager.GamePauseStart += PauseEnter;
+            GameEventManager.GamePauseExit += PauseExit;
+
+            _cameraTransform = Camera.main.transform;
+
+            GameEventManager.PlayerUpdate += Tick;
+            GameEventManager.PlayerFixedUpdate += FixedTick;
+            
+            EnableInput();
+        }
+
+        protected override void Tick()
+        {
+            UpdateAnimator();
+        }
+        protected override void FixedTick()
+        {
+            Movement();
+            
+        }
+
+        /// <summary>
+        /// This is for when the player is hit or launched out of hacked object
+        /// </summary>
+        /// <param name="a_force"></param>
+        public void LaunchPlayer(Vector3 a_force)
+        {
+            _rigidbody.velocity = a_force;
+        }
+        public override void OnHackEnter()
+        {
+            EnableInput();
+            _currentRunAmount = 0;
+            gameObject.SetActive(true);
+
+            Vector3 forwardDirection = _cameraTransform.forward;
+            forwardDirection.y = 0;
+            transform.rotation = Quaternion.Euler(forwardDirection);
+            
+            CameraController.ChangeCamera(ObjectType.Player);
+        }
+        
+        public override void OnHackExit()
+        {
+            DisableInput();
+            gameObject.SetActive(false);
+        }
+        
+        private void Movement()
+        {
+            if (_moveInput != Vector2.zero)
+            {
+                //For controller users this will change the max movespeed according to how small their inputs are
+                float targetAngle = Mathf.Atan2(_moveInput.x, _moveInput.y) * Mathf.Rad2Deg +
+                                    _cameraTransform.rotation.eulerAngles.y;
+                
+                //Rotate player towards current input
+                Quaternion targetRotation = Quaternion.Euler(0, targetAngle, 0);
+                transform.rotation =
+                    Quaternion.Lerp(transform.rotation, targetRotation, _spinSpeed * Time.deltaTime);
+                
+                
+                float scaleAmount = _moveInput.magnitude;
+                
+                float currentYAmount = _rigidbody.velocity.y;
+                
+                Vector3 newVel =
+                    _cameraTransform.forward * (_moveInput.y * _moveSpeed * Time.deltaTime) +
+                    _cameraTransform.right * (_moveInput.x * _moveSpeed * Time.deltaTime);
+                
+                //We are checking if the horizontal speed is too great 
+                Vector3 tempVelocity = _rigidbody.velocity + newVel;
+                tempVelocity.y = 0;
+
+                float scaledMaxSpeed = _maxSpeed * scaleAmount;
+                if (tempVelocity.magnitude > scaledMaxSpeed)
+                {
+                    tempVelocity = tempVelocity.normalized * scaledMaxSpeed;
+                }
+
+                tempVelocity.y = currentYAmount;
+                _rigidbody.velocity = tempVelocity;
+                
+            }
+            
+            if (Mathf.Abs(_moveInput.magnitude) < 0.1f)
+            {
+                //if we are actually moving 
+                if (Mathf.Abs(_rigidbody.velocity.x) > 0.2f || Mathf.Abs(_rigidbody.velocity.z) > 0.2f)
+                {
+                    Vector3 newVel = _rigidbody.velocity;
+                    //takes off 5% of the current vel every physics update so the player can land on a platform without overshooting
+                    //because the velocity doesnt stop
+                    newVel.z = newVel.z * 0.90f;
+                    newVel.x = newVel.x * 0.90f;
+                    _rigidbody.velocity = newVel;
+                }
+            }
+
+            Vector3 tempVel = _rigidbody.velocity;
+            tempVel.y = 0;
+            if (tempVel.sqrMagnitude < 0.1f)
+            {
+                _rigidbody.velocity = new Vector3(0, _rigidbody.velocity.y, 0);
+            }
+        }
+        #region Pausing
+        
+        private Vector3 _prevVelocity = Vector3.zero;
+        private void PauseEnter()
+        {
+            _playerAnimator.enabled = false;
+            _moveInput = Vector2.zero;
+            DisableInput();
+            _isPaused = true;
+            _prevVelocity = _rigidbody.velocity;
+            _rigidbody.isKinematic = true;
+        }
+
+        private void PauseExit()
+        {
+            _playerAnimator.enabled = true;
+            EnableInput();
+            _isPaused = false;
+            _rigidbody.isKinematic = false;
+            _rigidbody.velocity = _prevVelocity;
+        }
+        #endregion
+        #region Jumping
+
+        //Jumping Variables//
+        [SerializeField] private Transform _groundCheck = null;
+        [SerializeField] private float _jumpForce = 10f;
+        private bool _canJump = true;
+        private bool _hasDoubleJumped = false;
+        private bool _holdingJump = false;
+        //--------------------------------//
+
+        private void Jump()
+        {
+            _holdingJump = true;
+        }
+        private void GroundCheck()
+        {
+            //Collider[] collisions = Physics.OverlapSphere(groundCheck.position, 0.5f, _groundMask);
+            //if (collisions.Length > 0)
+            //{
+            //    foreach (var collider in collisions)
+            //    {
+            //        if (collider.transform.CompareTag("Ground"))
+            //        {
+            //            ResetJump();
+            //        }
+            //    }
+            //}
+        }
+        #endregion
+        private void UpdateAnimator()
+        {
+            float animatorAmount = _rigidbody.velocity.magnitude / _maxSpeed;
+            _playerAnimator.SetFloat(_animatorRunVariable, animatorAmount);
+        }
+        #region Collisions
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.CompareTag("Enemy") && _iFrameActive == false)
+            {
+                //player hit
+                StartCoroutine(IFrame());
+            }
+        }
+        #endregion
+        #region Input
+        protected override void InteractionInputEnter(InputAction.CallbackContext a_context)
+        {
+            if (_currentHackableField != null)
+            {
+                if (_currentHackableField.HackIntoObject())
+                {
+                    OnHackExit();
+                }
+            }
+        }
+        protected override void JumpInputEnter(InputAction.CallbackContext a_context) => Jump();
+        protected override void JumpInputExit(InputAction.CallbackContext a_context) => _holdingJump = false;
+
+        protected override void PauseInputEnter(InputAction.CallbackContext a_context)
+        {
+            DisableInput();
+            _playerAnimator.enabled = false;
+            _moveInput = Vector2.zero;
+            _isPaused = true;
+            _prevVelocity = _rigidbody.velocity;
+            _rigidbody.isKinematic = true;
+        }
+
+        protected override void PauseInputExit(InputAction.CallbackContext a_context)
+        {
+            EnableInput();
+            _playerAnimator.enabled = true;
+            _isPaused = false;
+            _rigidbody.isKinematic = false;
+            _rigidbody.velocity = _prevVelocity;
+        }
+        #endregion
+        
+        private IEnumerator IFrame()
+        {
+            _iFrameActive = true;
+            float timer = 0;
+            int frameCount = 0;
+            while (timer < _iframeTime)
+            {
+                if (_isPaused)
+                {
+                    //just to make sure when paused its not in inactive state
+                    _modelContainer.SetActive(true);   
+                    yield return null;
+                }
+                
+                frameCount++;
+                if (frameCount >= 20)
+                {
+                    frameCount = 0;
+                    _modelContainer.SetActive(!_modelContainer.activeInHierarchy);
+                }
+                timer += Time.deltaTime;
+                yield return null;
+            }
+
+            _modelContainer.SetActive(true);
+            _iFrameActive = false;
+        }
+    }
+}

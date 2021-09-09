@@ -130,7 +130,7 @@ namespace Malicious.Player
 
         private IEnumerator IFrame()
         {
-                
+            _iFrameActive = true;
             float timer = 0;
             int frameCount = 0;
             while (timer < _iframeTime)
@@ -314,7 +314,7 @@ namespace Malicious.Player
             {
                 if (!_iFrameActive)
                 {
-                    PlayerController.PlayerControl.PlayerHit();
+                    //PlayerController.PlayerControl.PlayerHit();
                     StartCoroutine(IFrame());
                     _iFrameActive = true;
                 }
