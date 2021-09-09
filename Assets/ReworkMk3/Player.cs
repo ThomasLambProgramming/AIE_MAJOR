@@ -14,25 +14,32 @@ namespace Malicious.ReworkMk3
         private readonly int _jumpingVariable = Animator.StringToHash("Jumping");
         private float _currentRunAmount = 0f;
         //--------------------------------//
-        public HackableField _currentHackableField
+        
+        private HackableField _currentHackableField = null;
+        
+        public void SetHackableField(HackableField a_field)
         {
-            get => _currentHackableField;
-            set
+            if (a_field == null)
             {
-                if (_currentHackableField != null)
-                {
-                    float distanceToCurrent =
-                        Vector3.SqrMagnitude(transform.position - _currentHackableField.transform.position);
-                    float distanceToNew =
-                        Vector3.SqrMagnitude(transform.position - value.transform.position);
-                    if (distanceToNew < distanceToCurrent)
-                        _currentHackableField = value;
-                }
-                else
-                    _currentHackableField = value;
+                _currentHackableField = null;
+                return;
             }
+            if (_currentHackableField != null)
+            {
+                float distanceToCurrent =
+                    Vector3.SqrMagnitude(transform.position - _currentHackableField.transform.position);
+                float distanceToNew =
+                    Vector3.SqrMagnitude(transform.position - a_field.transform.position);
+                if (distanceToNew < distanceToCurrent)
+                    _currentHackableField = a_field;
+            }
+            else
+                _currentHackableField = a_field;
         }
 
+        public HackableField CurrentHackableField() => _currentHackableField;
+        
+        
         private bool _isPaused = false;
         private bool _iFrameActive = false;
         [SerializeField] private float _iframeTime = 1.5f;
@@ -65,7 +72,7 @@ namespace Malicious.ReworkMk3
         protected override void FixedTick()
         {
             Movement();
-            
+            GroundCheck();
         }
 
         /// <summary>
@@ -78,20 +85,15 @@ namespace Malicious.ReworkMk3
         }
         public override void OnHackEnter()
         {
-            EnableInput();
+            base.OnHackEnter();
             _currentRunAmount = 0;
             gameObject.SetActive(true);
-
-            Vector3 forwardDirection = _cameraTransform.forward;
-            forwardDirection.y = 0;
-            transform.rotation = Quaternion.Euler(forwardDirection);
-            
             CameraController.ChangeCamera(ObjectType.Player);
         }
         
         public override void OnHackExit()
         {
-            DisableInput();
+            base.OnHackExit();
             gameObject.SetActive(false);
         }
         
@@ -152,6 +154,14 @@ namespace Malicious.ReworkMk3
             {
                 _rigidbody.velocity = new Vector3(0, _rigidbody.velocity.y, 0);
             }
+
+            if (!_holdingJump)
+            {
+                _rigidbody.velocity = new Vector3(
+                    _rigidbody.velocity.x,
+                    _rigidbody.velocity.y - _additionalGravity * Time.deltaTime,
+                    _rigidbody.velocity.z);
+            }
         }
         #region Pausing
         
@@ -180,6 +190,7 @@ namespace Malicious.ReworkMk3
         //Jumping Variables//
         [SerializeField] private Transform _groundCheck = null;
         [SerializeField] private float _jumpForce = 10f;
+        [SerializeField] private float _additionalGravity = -9.81f;
         private bool _canJump = true;
         private bool _hasDoubleJumped = false;
         private bool _holdingJump = false;
@@ -187,7 +198,12 @@ namespace Malicious.ReworkMk3
 
         private void Jump()
         {
-            _holdingJump = true;
+            //the 2 y velocity check is so the player can jump just before the arc of their jump
+            if (_canJump || _hasDoubleJumped == false && _rigidbody.velocity.y < 2)
+            {
+                Vector3 prevVel = _rigidbody.velocity;
+                prevVel.y = _jumpForce;
+            }
         }
         private void GroundCheck()
         {
@@ -206,7 +222,9 @@ namespace Malicious.ReworkMk3
         #endregion
         private void UpdateAnimator()
         {
-            float animatorAmount = _rigidbody.velocity.magnitude / _maxSpeed;
+            Vector3 vel = _rigidbody.velocity;
+            vel.y = 0;
+            float animatorAmount = vel.magnitude / _maxSpeed;
             _playerAnimator.SetFloat(_animatorRunVariable, animatorAmount);
         }
         #region Collisions
@@ -230,7 +248,16 @@ namespace Malicious.ReworkMk3
                 }
             }
         }
-        protected override void JumpInputEnter(InputAction.CallbackContext a_context) => Jump();
+
+        protected override void JumpInputEnter(InputAction.CallbackContext a_context)
+        {
+            if (!_holdingJump)
+            {
+                Jump();
+                _holdingJump = true;
+            }
+        }
+
         protected override void JumpInputExit(InputAction.CallbackContext a_context) => _holdingJump = false;
 
         protected override void PauseInputEnter(InputAction.CallbackContext a_context)

@@ -44,10 +44,18 @@ namespace Malicious.ReworkMk3
 
         public virtual void OnHackEnter()
         {
+            EnableInput();
+            GameEventManager.PlayerUpdate += Tick;
+            GameEventManager.PlayerFixedUpdate += FixedTick;
         }
 
         public virtual void OnHackExit()
         {
+            DisableInput();
+            _moveInput = Vector2.zero;
+            _spinInput = Vector2.zero;
+            GameEventManager.PlayerUpdate -= Tick;
+            GameEventManager.PlayerFixedUpdate -= FixedTick;
         }
 
         protected virtual void OnPauseEnter()

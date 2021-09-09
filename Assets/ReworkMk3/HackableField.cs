@@ -28,7 +28,11 @@ namespace Malicious.ReworkMk3
 
         [SerializeField] private UnityEvent _onHackValidEvent = null;
         [SerializeField] private UnityEvent _onHackFalseEvent = null;
+
         
+        [Tooltip("Only use if there is a option for holding and tapping")]
+        [SerializeField] private bool _hasHoldOption = false;
+        [SerializeField] private float _holdTime = 2f;
         private void Start()
         {
             _hackable = GetComponent<BasePlayer>();
@@ -37,14 +41,14 @@ namespace Malicious.ReworkMk3
         public void OnHackValid()
         {
             _hackValid = true;
-            //_onHackValidEvent?.Invoke();
+            _onHackValidEvent?.Invoke();
             _nodeRenderer.material = _hackValidMaterial;
         }
 
         public void OnHackFalse()
         {
             _hackValid = false;
-            //_onHackFalseEvent?.Invoke();
+            _onHackFalseEvent?.Invoke();
             _nodeRenderer.material = _defaultMaterial;
         }
 
@@ -68,6 +72,7 @@ namespace Malicious.ReworkMk3
                 //run hack interface
                 _hackable._player = _player;
                 _hackable.OnHackEnter();
+                _player = null;
                 return true;
             }
 
@@ -75,7 +80,8 @@ namespace Malicious.ReworkMk3
         }
         private void OnTriggerEnter(Collider other)
         {
-            _player = other.GetComponent<Player>();
+            if (other.gameObject.CompareTag("Player"))
+                _player = other.gameObject.GetComponent<Player>();
         }
 
         private void OnTriggerStay(Collider other)
@@ -83,7 +89,7 @@ namespace Malicious.ReworkMk3
             if (_player == null)
                 return;
                 
-            _player._currentHackableField = this;
+            _player.SetHackableField(this); 
             
             if (DotCheck())
                 OnHackValid();
@@ -93,7 +99,10 @@ namespace Malicious.ReworkMk3
 
         private void OnTriggerExit(Collider other)
         {
-            _player._currentHackableField = null;
+            //There were alot of added nulls that are needed
+            //as the player gets setactived alot
+            if (_player != null)
+                _player.SetHackableField(null);
             OnHackFalse();
             _player = null;
         }

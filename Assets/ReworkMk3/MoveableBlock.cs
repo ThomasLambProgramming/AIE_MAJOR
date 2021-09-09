@@ -94,24 +94,22 @@ namespace Malicious.ReworkMk3
 
         public override void OnHackEnter()
         {
-            EnableInput();
             _onHackEnterEvent?.Invoke();
             if (_rigidbody.isKinematic)
                 _rigidbody.isKinematic = false;
             _exitBox.enabled = true;
-
+            base.OnHackEnter();
+            
             CameraController.ChangeCamera(ObjectType.Moveable, _cameraOffset);
             //Check the materials as well for hack indication
         }
         public override void OnHackExit()
         {
-            DisableInput();
             _onHackExitEvent?.Invoke();
             if (_rigidbody.isKinematic == false)
                 _rigidbody.isKinematic = true;
-
+            base.OnHackExit();
             _exitBox.enabled = false;
-            //_nodeRenderer.material = _defaultMaterial;
         }
 #if UNITY_EDITOR
         private void OnDrawGizmos()
