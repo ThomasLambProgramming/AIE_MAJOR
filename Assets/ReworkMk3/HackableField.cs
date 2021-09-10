@@ -13,6 +13,7 @@ namespace Malicious.ReworkMk3
         //Other Variables//
         [SerializeField] private float _dotAllowance = 0.8f;
         private BasePlayer _hackable = null;
+        //private InteractInterface _interactable = null;
         private Player _player = null;
         private bool _hackValid = false;
         
@@ -28,7 +29,7 @@ namespace Malicious.ReworkMk3
 
         [SerializeField] private UnityEvent _onHackValidEvent = null;
         [SerializeField] private UnityEvent _onHackFalseEvent = null;
-
+        
         
         [Tooltip("Only use if there is a option for holding and tapping")]
         [SerializeField] private bool _hasHoldOption = false;
@@ -72,6 +73,7 @@ namespace Malicious.ReworkMk3
                 //run hack interface
                 _hackable._player = _player;
                 _hackable.OnHackEnter();
+                _nodeRenderer.material = _hackedMaterial;
                 _player = null;
                 return true;
             }

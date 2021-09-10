@@ -53,6 +53,8 @@ namespace Malicious.ReworkMk3
         {
             _rigidbody = GetComponent<Rigidbody>();
             _playerAnimator = GetComponent<Animator>();
+            _playerAnimator.SetFloat(_animatorRunVariable, 0);
+            EnableInput();
             
             GameEventManager.GamePauseStart += PauseEnter;
             GameEventManager.GamePauseExit += PauseExit;
@@ -61,8 +63,8 @@ namespace Malicious.ReworkMk3
 
             GameEventManager.PlayerUpdate += Tick;
             GameEventManager.PlayerFixedUpdate += FixedTick;
-            
-            EnableInput();
+            _currentRunAmount = 0;
+
         }
 
         protected override void Tick()
@@ -87,6 +89,7 @@ namespace Malicious.ReworkMk3
         {
             base.OnHackEnter();
             _currentRunAmount = 0;
+            _currentHackableField = null;
             gameObject.SetActive(true);
             CameraController.ChangeCamera(ObjectType.Player);
         }
@@ -159,7 +162,7 @@ namespace Malicious.ReworkMk3
             {
                 _rigidbody.velocity = new Vector3(
                     _rigidbody.velocity.x,
-                    _rigidbody.velocity.y - _additionalGravity * Time.deltaTime,
+                    _rigidbody.velocity.y + _additionalGravity * Time.deltaTime,
                     _rigidbody.velocity.z);
             }
         }
@@ -224,7 +227,11 @@ namespace Malicious.ReworkMk3
         {
             Vector3 vel = _rigidbody.velocity;
             vel.y = 0;
-            float animatorAmount = vel.magnitude / _maxSpeed;
+
+            float animatorAmount = 0;
+            if (vel.magnitude > 0)
+                animatorAmount = vel.magnitude / _maxSpeed;
+            
             _playerAnimator.SetFloat(_animatorRunVariable, animatorAmount);
         }
         #region Collisions

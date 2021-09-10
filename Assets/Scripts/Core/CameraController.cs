@@ -30,7 +30,7 @@ namespace Malicious.Core
         private static CinemachineVirtualCamera _flyingEnemy = null;
         private static CinemachineVirtualCamera _currentHackableCamera = null;
         [SerializeField] private CinemachineBrain init_BrainCamera = null;
-        public static CinemachineBrain _cameraBrain = null;
+        private static CinemachineBrain _cameraBrain = null;
         private void Start()
         {
             _mainCamTransform = init_mainCamTransform;

@@ -28,6 +28,10 @@ namespace Malicious.ReworkMk3
         //without needing any additional references and etc
         [HideInInspector] public Player _player = null;
         
+        [SerializeField] protected bool _hasHoldOption = false;
+        [SerializeField] public float _holdChargeTime = 2f;
+        
+        
         //Input Variables//
         protected Vector2 _moveInput = Vector2.zero;
         protected Vector2 _spinInput = Vector2.zero;
@@ -45,6 +49,8 @@ namespace Malicious.ReworkMk3
         public virtual void OnHackEnter()
         {
             EnableInput();
+            _moveInput = Vector2.zero;
+            _spinInput = Vector2.zero;
             GameEventManager.PlayerUpdate += Tick;
             GameEventManager.PlayerFixedUpdate += FixedTick;
         }
@@ -76,6 +82,10 @@ namespace Malicious.ReworkMk3
             return _cameraTransform.rotation;
         }
 
+        public virtual void HoldOptionActivate()
+        {
+            
+        }
         //By default this does nothing so that the player rotation
         //can be set without any specific isPlayer check
         public virtual void SetRotation(Quaternion a_rotation)
