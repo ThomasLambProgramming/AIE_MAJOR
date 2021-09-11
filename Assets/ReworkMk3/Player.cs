@@ -158,7 +158,7 @@ namespace Malicious.ReworkMk3
                 _rigidbody.velocity = new Vector3(0, _rigidbody.velocity.y, 0);
             }
 
-            if (!_holdingJump)
+            if (!_holdingJump && _canJump == false)
             {
                 _rigidbody.velocity = new Vector3(
                     _rigidbody.velocity.x,
@@ -202,37 +202,46 @@ namespace Malicious.ReworkMk3
         private void Jump()
         {
             //the 2 y velocity check is so the player can jump just before the arc of their jump
-            if (_canJump || _hasDoubleJumped == false && _rigidbody.velocity.y < 2)
+            if ((_canJump || _hasDoubleJumped == false) && _rigidbody.velocity.y < 2)
             {
                 Vector3 prevVel = _rigidbody.velocity;
                 prevVel.y = _jumpForce;
+                _rigidbody.velocity = prevVel;
+                if (_canJump == false)
+                    _hasDoubleJumped = true;
+                _canJump = false;
             }
         }
         private void GroundCheck()
         {
-            //Collider[] collisions = Physics.OverlapSphere(groundCheck.position, 0.5f, _groundMask);
-            //if (collisions.Length > 0)
-            //{
-            //    foreach (var collider in collisions)
-            //    {
-            //        if (collider.transform.CompareTag("Ground"))
-            //        {
-            //            ResetJump();
-            //        }
-            //    }
-            //}
+            //We only want to check when the player is actually falling (slight grace amount for when the player
+            //is on the ground)
+            if (_rigidbody.velocity.y <= 0.3f)
+            {
+                Collider[] collisions = Physics.OverlapSphere(_groundCheck.position, 0.5f, _groundMask);
+                if (collisions.Length > 0)
+                {
+                    _canJump = true; 
+                    _hasDoubleJumped = false;
+                    Debug.Log("GroundCheck");
+                }
+            }
         }
         #endregion
+
+        private float _prevRunAnimAmount = 0;
         private void UpdateAnimator()
         {
             Vector3 vel = _rigidbody.velocity;
             vel.y = 0;
-
+            
             float animatorAmount = 0;
             if (vel.magnitude > 0)
                 animatorAmount = vel.magnitude / _maxSpeed;
+
+            _prevRunAnimAmount = Mathf.Lerp(_prevRunAnimAmount, animatorAmount, Time.deltaTime * _animationSwapSpeed);
             
-            _playerAnimator.SetFloat(_animatorRunVariable, animatorAmount);
+            _playerAnimator.SetFloat(_animatorRunVariable, _prevRunAnimAmount);
         }
         #region Collisions
         private void OnCollisionEnter(Collision other)
