@@ -216,14 +216,27 @@ namespace Malicious.ReworkMk3
         {
             //We only want to check when the player is actually falling (slight grace amount for when the player
             //is on the ground)
+            if (_canJump)
+                return;
+            
             if (_rigidbody.velocity.y <= 0.3f)
             {
                 Collider[] collisions = Physics.OverlapSphere(_groundCheck.position, 0.5f, _groundMask);
                 if (collisions.Length > 0)
                 {
-                    _canJump = true; 
-                    _hasDoubleJumped = false;
-                    Debug.Log("GroundCheck");
+                    bool collisionValid = false;
+                    for (int i = 0; i < collisions.Length - 1; i++)
+                    {
+                        if (collisions[i].isTrigger == false)
+                            collisionValid = true;
+                    }
+
+                    if (collisionValid)
+                    {
+                        _canJump = true; 
+                        _hasDoubleJumped = false;
+                        Debug.Log("GroundCheck");
+                    }
                 }
             }
         }
