@@ -4,18 +4,59 @@ using UnityEngine.InputSystem;
 
 namespace Malicious.Core
 {
-    public class Player : BasePlayer
+    public class Player : MonoBehaviour
     {
+        #region Variables
+        //Speed Variables//
+        [SerializeField] private float _moveSpeed = 100f;
+        [SerializeField] private float _maxSpeed = 4f;
+        [SerializeField] private float _spinSpeed = 5f;
+        //-------------------------------------//
+        
+        
         //Animator Variables//
         [SerializeField] private float _animationSwapSpeed = 3f;
         [SerializeField] private Animator _playerAnimator = null;
         private readonly int _animatorRunVariable = Animator.StringToHash("RunAmount");
         private readonly int _jumpingVariable = Animator.StringToHash("Jumping");
         private float _currentRunAmount = 0f;
+        private float _prevRunAnimAmount = 0;
         //--------------------------------//
         
-        private HackableField _currentHackableField = null;
         
+        //Input Variables//
+        private Vector2 _moveInput = Vector2.zero;
+        private Vector2 _spinInput = Vector2.zero;
+        //-------------------------------------//
+        
+        
+        //Jumping Variables//
+        [SerializeField] private float _jumpForce = 10f;
+        [SerializeField] private float _additionalGravity = -9.81f;
+        [SerializeField] private LayerMask _groundMask = ~0;
+        [SerializeField] private Transform _groundCheck = null;
+        private bool _canJump = true;
+        private bool _hasDoubleJumped = false;
+        private bool _holdingJump = false;
+        //--------------------------------//
+        
+        
+        //IFrame Variables//
+        private bool _isPaused = false;
+        private bool _iFrameActive = false;
+        [SerializeField] private float _iframeTime = 1.5f;
+        [SerializeField] private GameObject _modelContainer = null;
+        //--------------------------------//
+        
+        
+        //Misc Variables That couldnt be grouped
+        [SerializeField] private Transform _cameraTransform = null;
+        private Rigidbody _rigidbody = null;
+        private Vector3 _pauseEnterVelocity = Vector3.zero;
+        private HackableField _currentHackableField = null;
+        //--------------------------------//
+        #endregion
+
         public void SetHackableField(HackableField a_field)
         {
             if (a_field == null)
@@ -35,17 +76,7 @@ namespace Malicious.Core
             else
                 _currentHackableField = a_field;
         }
-
         public HackableField CurrentHackableField() => _currentHackableField;
-        
-        
-        private bool _isPaused = false;
-        private bool _iFrameActive = false;
-        [SerializeField] private float _iframeTime = 1.5f;
-        [SerializeField] private GameObject _modelContainer = null;
-
-        [SerializeField] private LayerMask _groundMask = ~0;
-
         public Transform GiveOffset() => _cameraTransform;
         
         private void Start()
@@ -66,39 +97,40 @@ namespace Malicious.Core
 
         }
 
-        protected override void Tick()
+        private void Tick()
         {
             UpdateAnimator();
         }
-        protected override void FixedTick()
+        private void FixedTick()
         {
             Movement();
             GroundCheck();
         }
-
-        /// <summary>
-        /// This is for when the player is hit or launched out of hacked object
-        /// </summary>
-        /// <param name="a_force"></param>
         public void LaunchPlayer(Vector3 a_force)
         {
             _rigidbody.velocity = a_force;
         }
-        public override void OnHackEnter()
+        public void OnHackEnter()
         {
-            base.OnHackEnter();
+            EnableInput();
+            _moveInput = Vector2.zero;
+            _spinInput = Vector2.zero;
+            GameEventManager.PlayerUpdate += Tick;
+            GameEventManager.PlayerFixedUpdate += FixedTick;
             _currentRunAmount = 0;
             _currentHackableField = null;
             gameObject.SetActive(true);
             CameraController.ChangeCamera(ObjectType.Player);
         }
-        
-        public override void OnHackExit()
+        public void OnHackExit()
         {
-            base.OnHackExit();
+            DisableInput();
+            _moveInput = Vector2.zero;
+            _spinInput = Vector2.zero;
+            GameEventManager.PlayerUpdate -= Tick;
+            GameEventManager.PlayerFixedUpdate -= FixedTick;
             gameObject.SetActive(false);
         }
-        
         private void Movement()
         {
             if (_moveInput != Vector2.zero)
@@ -165,39 +197,38 @@ namespace Malicious.Core
                     _rigidbody.velocity.z);
             }
         }
+        public Quaternion GiveRotation()
+        {
+            return transform.rotation;
+        }
+        public Quaternion GiveCameraRotation()
+        {
+            return _cameraTransform.rotation;
+        }
         #region Pausing
-        
-        private Vector3 _prevVelocity = Vector3.zero;
         private void PauseEnter()
         {
             _playerAnimator.enabled = false;
             _moveInput = Vector2.zero;
             DisableInput();
             _isPaused = true;
-            _prevVelocity = _rigidbody.velocity;
+            _pauseEnterVelocity = _rigidbody.velocity;
             _rigidbody.isKinematic = true;
         }
-
+        public void SetCameraTransform(Transform a_cameraTransform)
+        {
+            _cameraTransform = a_cameraTransform;
+        }
         private void PauseExit()
         {
             _playerAnimator.enabled = true;
             EnableInput();
             _isPaused = false;
             _rigidbody.isKinematic = false;
-            _rigidbody.velocity = _prevVelocity;
+            _rigidbody.velocity = _pauseEnterVelocity;
         }
         #endregion
         #region Jumping
-
-        //Jumping Variables//
-        [SerializeField] private Transform _groundCheck = null;
-        [SerializeField] private float _jumpForce = 10f;
-        [SerializeField] private float _additionalGravity = -9.81f;
-        private bool _canJump = true;
-        private bool _hasDoubleJumped = false;
-        private bool _holdingJump = false;
-        //--------------------------------//
-
         private void Jump()
         {
             //the 2 y velocity check is so the player can jump just before the arc of their jump
@@ -220,28 +251,31 @@ namespace Malicious.Core
             
             if (_rigidbody.velocity.y <= 0.3f)
             {
-                Collider[] collisions = Physics.OverlapSphere(_groundCheck.position, 0.5f, _groundMask);
+                Collider[] collisions = Physics.OverlapSphere(_groundCheck.position, 1f, _groundMask);
                 if (collisions.Length > 0)
                 {
                     bool collisionValid = false;
+                    
                     for (int i = 0; i < collisions.Length - 1; i++)
                     {
+                        Debug.Log(collisions[i].isTrigger);
                         if (collisions[i].isTrigger == false)
+                        {
                             collisionValid = true;
+                            
+                            
+                        }
                     }
 
                     if (collisionValid)
                     {
                         _canJump = true; 
                         _hasDoubleJumped = false;
-                        Debug.Log("GroundCheck");
                     }
                 }
             }
         }
         #endregion
-
-        private float _prevRunAnimAmount = 0;
         private void UpdateAnimator()
         {
             Vector3 vel = _rigidbody.velocity;
@@ -266,7 +300,7 @@ namespace Malicious.Core
         }
         #endregion
         #region Input
-        protected override void InteractionInputEnter(InputAction.CallbackContext a_context)
+        private void InteractionInputEnter(InputAction.CallbackContext a_context)
         {
             if (_currentHackableField != null)
             {
@@ -277,7 +311,7 @@ namespace Malicious.Core
             }
         }
 
-        protected override void JumpInputEnter(InputAction.CallbackContext a_context)
+        private void JumpInputEnter(InputAction.CallbackContext a_context)
         {
             if (!_holdingJump)
             {
@@ -286,25 +320,25 @@ namespace Malicious.Core
             }
         }
 
-        protected override void JumpInputExit(InputAction.CallbackContext a_context) => _holdingJump = false;
+        private void JumpInputExit(InputAction.CallbackContext a_context) => _holdingJump = false;
 
-        protected override void PauseInputEnter(InputAction.CallbackContext a_context)
+        private void PauseInputEnter(InputAction.CallbackContext a_context)
         {
             DisableInput();
             _playerAnimator.enabled = false;
             _moveInput = Vector2.zero;
             _isPaused = true;
-            _prevVelocity = _rigidbody.velocity;
+            _pauseEnterVelocity = _rigidbody.velocity;
             _rigidbody.isKinematic = true;
         }
 
-        protected override void PauseInputExit(InputAction.CallbackContext a_context)
+        private void PauseInputExit(InputAction.CallbackContext a_context)
         {
             EnableInput();
             _playerAnimator.enabled = true;
             _isPaused = false;
             _rigidbody.isKinematic = false;
-            _rigidbody.velocity = _prevVelocity;
+            _rigidbody.velocity = _pauseEnterVelocity;
         }
         #endregion
         
@@ -334,6 +368,48 @@ namespace Malicious.Core
 
             _modelContainer.SetActive(true);
             _iFrameActive = false;
+        }
+        private void MoveInputEnter(InputAction.CallbackContext a_context)
+        {
+            _moveInput = a_context.ReadValue<Vector2>();
+        }
+        private void MoveInputExit(InputAction.CallbackContext a_context)
+        {
+            _moveInput = Vector2.zero;
+        }
+        private void CameraInputEnter(InputAction.CallbackContext a_context)
+        {
+            _spinInput = a_context.ReadValue<Vector2>();
+        }
+        private void CameraInputExit(InputAction.CallbackContext a_context)
+        {
+            _spinInput = Vector2.zero;
+        }
+        private void EnableInput()
+        {
+            GlobalData.InputManager.Player.Movement.performed += MoveInputEnter;
+            GlobalData.InputManager.Player.Movement.canceled += MoveInputExit;
+            GlobalData.InputManager.Player.Jump.performed += JumpInputEnter;
+            GlobalData.InputManager.Player.Jump.canceled += JumpInputExit;
+            GlobalData.InputManager.Player.Camera.performed += CameraInputEnter;
+            GlobalData.InputManager.Player.Camera.canceled += CameraInputExit;
+            GlobalData.InputManager.Player.Interaction.performed += InteractionInputEnter;
+            //GlobalData.InputManager.Player.Interaction.canceled += InteractionInputExit;
+            //GlobalData.InputManager.Player.Down.performed += DownInputEnter;
+            //GlobalData.InputManager.Player.Down.canceled += DownInputExit;
+        }
+        private void DisableInput()
+        {
+            GlobalData.InputManager.Player.Movement.performed -= MoveInputEnter;
+            GlobalData.InputManager.Player.Movement.canceled -= MoveInputExit;
+            GlobalData.InputManager.Player.Jump.performed -= JumpInputEnter;
+            GlobalData.InputManager.Player.Jump.canceled -= JumpInputExit;
+            GlobalData.InputManager.Player.Camera.performed -= CameraInputEnter;
+            GlobalData.InputManager.Player.Camera.canceled -= CameraInputExit;
+            GlobalData.InputManager.Player.Interaction.performed -= InteractionInputEnter;
+            //GlobalData.InputManager.Player.Interaction.canceled -= InteractionInputExit;
+            //GlobalData.InputManager.Player.Down.performed -= DownInputEnter;
+            //GlobalData.InputManager.Player.Down.canceled -= DownInputExit;
         }
     }
 }

@@ -14,24 +14,19 @@ namespace Malicious.Core
         [SerializeField] protected float _spinSpeed = 5f;
         //-------------------------------------//
 
-        //Component variables//
-        protected Rigidbody _rigidbody = null;
-        //-------------------------------------//
-
         //Camera Variables//
         [SerializeField] protected Transform _cameraTransform = null;
         //-------------------------------------//
 
-        
-        //I know this isnt good to have a player reference itself 
-        //but its for every other hackable object to be able to exit out to the player
-        //without needing any additional references and etc
+        //Reference to the player that hacked into it
         [HideInInspector] public Player _player = null;
+        
+        //HackableRigidbody
+        protected Rigidbody _rigidbody = null;
         
         [SerializeField] protected bool _hasHoldOption = false;
         [SerializeField] public float _holdChargeTime = 2f;
-        
-        
+
         //Input Variables//
         protected Vector2 _moveInput = Vector2.zero;
         protected Vector2 _spinInput = Vector2.zero;
@@ -86,8 +81,6 @@ namespace Malicious.Core
         {
             
         }
-        //By default this does nothing so that the player rotation
-        //can be set without any specific isPlayer check
         public virtual void SetRotation(Quaternion a_rotation)
         {
         }
@@ -96,35 +89,7 @@ namespace Malicious.Core
         {
             _cameraTransform = a_cameraTransform;
         }
-
-        protected virtual void EnableInput()
-        {
-            GlobalData.InputManager.Player.Movement.performed += MoveInputEnter;
-            GlobalData.InputManager.Player.Movement.canceled += MoveInputExit;
-            GlobalData.InputManager.Player.Jump.performed += JumpInputEnter;
-            GlobalData.InputManager.Player.Jump.canceled += JumpInputExit;
-            GlobalData.InputManager.Player.Camera.performed += CameraInputEnter;
-            GlobalData.InputManager.Player.Camera.canceled += CameraInputExit;
-            GlobalData.InputManager.Player.Interaction.performed += InteractionInputEnter;
-            GlobalData.InputManager.Player.Interaction.canceled += InteractionInputExit;
-            GlobalData.InputManager.Player.Down.performed += DownInputEnter;
-            GlobalData.InputManager.Player.Down.canceled += DownInputExit;
-        }
-
-        protected virtual void DisableInput()
-        {
-            GlobalData.InputManager.Player.Movement.performed -= MoveInputEnter;
-            GlobalData.InputManager.Player.Movement.canceled -= MoveInputExit;
-            GlobalData.InputManager.Player.Jump.performed -= JumpInputEnter;
-            GlobalData.InputManager.Player.Jump.canceled -= JumpInputExit;
-            GlobalData.InputManager.Player.Camera.performed -= CameraInputEnter;
-            GlobalData.InputManager.Player.Camera.canceled -= CameraInputExit;
-            GlobalData.InputManager.Player.Interaction.performed -= InteractionInputEnter;
-            GlobalData.InputManager.Player.Interaction.canceled -= InteractionInputExit;
-            GlobalData.InputManager.Player.Down.performed -= DownInputEnter;
-            GlobalData.InputManager.Player.Down.canceled -= DownInputExit;
-        }
-
+        
         protected virtual void MoveInputEnter(InputAction.CallbackContext a_context)
         {
             _moveInput = a_context.ReadValue<Vector2>();
@@ -174,6 +139,33 @@ namespace Malicious.Core
         }
         protected virtual void PauseInputExit(InputAction.CallbackContext a_context)
         {
+        }
+        protected void EnableInput()
+        {
+            GlobalData.InputManager.Player.Movement.performed += MoveInputEnter;
+            GlobalData.InputManager.Player.Movement.canceled += MoveInputExit;
+            GlobalData.InputManager.Player.Jump.performed += JumpInputEnter;
+            GlobalData.InputManager.Player.Jump.canceled += JumpInputExit;
+            GlobalData.InputManager.Player.Camera.performed += CameraInputEnter;
+            GlobalData.InputManager.Player.Camera.canceled += CameraInputExit;
+            GlobalData.InputManager.Player.Interaction.performed += InteractionInputEnter;
+            GlobalData.InputManager.Player.Interaction.canceled += InteractionInputExit;
+            GlobalData.InputManager.Player.Down.performed += DownInputEnter;
+            GlobalData.InputManager.Player.Down.canceled += DownInputExit;
+        }
+
+        protected void DisableInput()
+        {
+            GlobalData.InputManager.Player.Movement.performed -= MoveInputEnter;
+            GlobalData.InputManager.Player.Movement.canceled -= MoveInputExit;
+            GlobalData.InputManager.Player.Jump.performed -= JumpInputEnter;
+            GlobalData.InputManager.Player.Jump.canceled -= JumpInputExit;
+            GlobalData.InputManager.Player.Camera.performed -= CameraInputEnter;
+            GlobalData.InputManager.Player.Camera.canceled -= CameraInputExit;
+            GlobalData.InputManager.Player.Interaction.performed -= InteractionInputEnter;
+            GlobalData.InputManager.Player.Interaction.canceled -= InteractionInputExit;
+            GlobalData.InputManager.Player.Down.performed -= DownInputEnter;
+            GlobalData.InputManager.Player.Down.canceled -= DownInputExit;
         }
     }
 }
