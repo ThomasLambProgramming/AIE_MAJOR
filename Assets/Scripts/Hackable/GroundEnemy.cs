@@ -1,17 +1,13 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Malicious.Interfaces;
 using UnityEngine;
 using Malicious.Core;
-using Malicious.Player;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
-namespace Malicious
+namespace Malicious.Hackable
 {
     [SelectionBase]
-    public class GroundEnemy : MonoBehaviour, IPlayerObject
+    public class GroundEnemy : MonoBehaviour
     {
         [SerializeField] private float _moveSpeed = 100f;
         [SerializeField] private float _turningSpeed = 10f;
@@ -193,15 +189,7 @@ namespace Malicious
                 transform.Rotate(new Vector3(0, _spinInput.x * _turningSpeed * Time.deltaTime, 0));
             }
         }
-
-        public OffsetContainer GiveOffset()
-        {
-            OffsetContainer temp = new OffsetContainer();
-            temp._offsetTransform = _cameraOffset;
-            temp._rigOffset = _rigOffset;
-            return temp;
-        }
-
+        
         public bool RequiresTruePlayerOffset() => false;
         
 
@@ -243,7 +231,7 @@ namespace Malicious
         
         private void Interact(InputAction.CallbackContext a_context)
         {
-            PlayerController.PlayerControl.ResetToPlayer();
+            //PlayerController.PlayerControl.ResetToPlayer();
         }
 
         private void EnableInput()

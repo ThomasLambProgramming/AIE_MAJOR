@@ -39,7 +39,7 @@ namespace Malicious.GameItems
                 //acc at lower but more hover on end of height
                 //float yDifference = Mathf.Abs(rigidbody.gameObject.transform.position.y - transform.position.y) / _fanHeight;
 
-                float posDifference = (rigidbody.gameObject.transform.position - transform.position).magnitude / _fanHeight;
+                float posDifference = Mathf.Abs((rigidbody.gameObject.transform.position - transform.position).magnitude / _fanHeight);
                 
                 float maxVelocity = Mathf.Lerp(_velocityLimitAtBottom, _velocityLimitAtPeak, posDifference);
                 float maxSqrVelocity = maxVelocity * maxVelocity;
