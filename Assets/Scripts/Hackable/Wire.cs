@@ -1,115 +1,133 @@
-﻿
-using Malicious.Core;
-using Malicious.Player;
-using Malicious.Interfaces;
-
-using UnityEngine;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Malicious.Core;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Malicious.Hackable
 {
-    public class Wire : MonoBehaviour, IPlayerObject
+    [RequireComponent(typeof(HackableField))]
+    public class Wire : BasePlayer
     {
-        [SerializeField] private GameObject _nodeObject = null;
-        private MeshRenderer _nodeRenderer = null;
-        [SerializeField] private Material _defaultMaterial = null;
-        [SerializeField] private Material _hackValidMaterial = null;
-        [SerializeField] private Material _hackedMaterial = null;
-        
-        //------Wire Variables-----------------//
         [SerializeField] private GameObject _wireModel = null;
         [SerializeField] private Transform _wireCameraOffset = null;
         [SerializeField] private List<Vector3> _wirePath = new List<Vector3>();
         
         //------Other Variables----------------//
-        private int _pathIndex = 0;
-        
-        private Quaternion _rotationGoal = Quaternion.identity;
-        private bool _rotateObject = false;
-        private Vector3 _startingDirection = Vector3.zero;
-        
+        [SerializeField] private Vector3 _startingDirection = Vector3.zero;
         [SerializeField] private float _heightAngleAllowance = 0.6f;
         [SerializeField] private float _wireLength = 5f;
         [SerializeField] private int _wireCharges = 4;
-        private int _chargesLeft = 0;
+        [SerializeField] private float _goNextWire = 0.2f;
+        [SerializeField] private LayerMask _wireStopMask = ~0;
+        [SerializeField] private float _maxTimeForExit = 0.4f;
+        [SerializeField] private Vector3 _launchDirection = Vector3.zero;
+        [SerializeField] private float _launchForce = 0;
+        [SerializeField] private float _resetSpeed = 2f;
+
+        private Vector3 _resetAmount = Vector3.zero;
+        private bool _resetting = false;
+        private bool _holdingInteractButton = false;
+        private float _holdTimer = 0;
         
-        private Vector3 _rigOffset = Vector3.zero;
+        private Quaternion _rotationGoal = Quaternion.identity;
+        private bool _rotateObject = false;
         private bool _moveToEnd = false;
         private bool _takingInput = false;
+        private int _pathIndex = 0;
+        private int _chargesLeft = 0;
         
-        //------Speed Variables----------------//
-        [SerializeField] private float _goNextWire = 0.2f;
-        [SerializeField] private float _wireSpeed = 10f;
-        [SerializeField] private float _rotateSpeed = 10f;
         
         //------Debug Variables----------------//
         [SerializeField] private bool _showPath = true;
-       
+        [SerializeField] private Vector3 _pointSize = new Vector3(0.4f, 0.4f, 0.4f);
+        [SerializeField] private bool _showDirection = true;
+        [SerializeField] private bool _showLaunchDirection = true;
         private void Start()
         {
-            //This will need to be changed to allow for saving the input
             _chargesLeft = _wireCharges;
-            _nodeRenderer = _nodeObject.GetComponent<MeshRenderer>();
-        }
-
-        public void OnHackEnter()
-        {
-            _nodeRenderer.material = _hackedMaterial;
-            _wireModel = PlayerController.PlayerControl._wireModel;
-            _wireCameraOffset = PlayerController.PlayerControl._wireModelOffset;
-            _wireModel.SetActive(true);
-
-            //THIS NEEDS TO CHANGE TO A DEFAULT PARAMETER SO IT CAN BE STARTED WITH 1 WIRE
-            Vector3 directionToNode = (_wirePath[1] - _wirePath[0]).normalized;
-            _startingDirection = directionToNode;
-            Quaternion newRotation = Quaternion.LookRotation(directionToNode);
-            
-            _wireModel.transform.rotation = newRotation;
-            _wireModel.transform.position = _wirePath[0];
-
-            if (_wirePath.Count > 0)
-            {
-                _takingInput = false;
-                _moveToEnd = true;
-            }
-            else
-            {
-                _takingInput = true;
-                _moveToEnd = false;
-            }
-
-            EnableInput();
-        }
-
-        public void OnHackExit()
-        {
             _pathIndex = 0;
-            _rotationGoal = Quaternion.identity;
-            _wireModel.SetActive(false);
-
-            _takingInput = false;
-            _moveToEnd = false;
-            DisableInput();
-            _nodeRenderer.material = _defaultMaterial;
-        }
-
-        public void Tick()
-        {
             
         }
-        public void FixedTick()
+
+        protected override void Tick()
         {
-            if (_takingInput)
+            if (_holdingInteractButton)
+                HoldInputTimer();
+        }
+
+        protected override void FixedTick()
+        {
+            if (_resetting)
+            {
+                Vector3 direction = (_wirePath[0] - _wireModel.transform.position);
+                if (direction.sqrMagnitude < 0.005f)
+                {
+                    _wireModel.transform.position = _wirePath[0];
+                    _resetting = false;
+                    _wireModel.SetActive(true);
+                    _chargesLeft = _wireCharges;
+                    _takingInput = true;
+                    _moveToEnd = false;
+                    _pathIndex = 0;
+                    return;
+                }
+                
+                _wireModel.transform.position += _resetAmount * (Time.deltaTime * _resetSpeed);
+                
+            }
+            else if (_takingInput)
                 return;
             if (_moveToEnd)
                 MoveToEndOfWire();
+        }
+
+        public override void OnHackEnter()
+        {
+            CameraController.ChangeCamera(ObjectType.Wire, _wireCameraOffset);
+            base.OnHackEnter();
+            _wireModel.SetActive(true);
+            _wireModel.transform.rotation = Quaternion.LookRotation(_startingDirection);
+            _wireModel.transform.position = _wirePath[0];
+            if (_wirePath.Count > 1)
+            {
+                _moveToEnd = true;
+                _takingInput = false;
+            }
             else
             {
-                SetToPlayer();
+                _moveToEnd = false;
+                _takingInput = true;
             }
         }
 
+        public override void OnHackExit()
+        {
+            base.OnHackExit();
+            _pathIndex = 0;
+            _rotationGoal = Quaternion.identity;
+            _wireModel.SetActive(false);
+            _takingInput = false;
+            _moveToEnd = false;
+        }
+
+        public override void HoldOptionActivate()
+        {
+            ResetPath();
+            _wireModel.SetActive(false);
+        }
+
+        private void ResetPath()
+        {
+            Vector3 startingPos = _wirePath[0];
+            _wirePath.Clear();
+            _wirePath = new List<Vector3>();
+            _wirePath.Add(startingPos);
+            _wireModel.transform.rotation = Quaternion.LookRotation(_startingDirection);
+            _resetAmount = _wirePath[0] - _wireModel.transform.position;
+            _resetting = true;
+        }
         private void MoveToEndOfWire()
         {
             bool moveRotOccuring = false;
@@ -121,7 +139,7 @@ namespace Malicious.Hackable
                 currentWirePos = currentWirePos +
                                  (_wirePath[_pathIndex] - _wireModel.transform.position)
                                  .normalized *
-                                 (Time.deltaTime * (_wireSpeed));
+                                 (Time.deltaTime * (_moveSpeed));
                 _wireModel.transform.position = currentWirePos;
             }
             if (_rotateObject)
@@ -130,7 +148,7 @@ namespace Malicious.Hackable
                 _wireModel.transform.rotation = Quaternion.RotateTowards(
                     _wireModel.transform.rotation,
                     _rotationGoal,
-                    _rotateSpeed);
+                    _spinSpeed);
                 if (_wireModel.transform.rotation == _rotationGoal)
                     _rotateObject = false;
                 
@@ -167,10 +185,65 @@ namespace Malicious.Hackable
                 }
             }
         }
-
-        private void InputProcessing(InputAction.CallbackContext a_context)
+        private void AddPoint(Vector3 a_direction)
         {
-            if (!_takingInput)
+            if (CheckDirection(a_direction))
+            {
+                Vector3 newWirePoint = _wirePath[_wirePath.Count - 1];
+                Vector3 directionAdd = a_direction;
+                
+                directionAdd = directionAdd.normalized;
+                directionAdd *= _wireLength;
+                
+                newWirePoint += directionAdd;
+
+                if (CheckPoint(newWirePoint))
+                {
+                    _takingInput = false;
+                    _moveToEnd = true;
+                    _chargesLeft--;
+                    
+                    _wirePath.Add(newWirePoint);
+                }
+            }
+        }
+        //Check all other points in the wire list to not allow overlap
+        private bool CheckPoint(Vector3 a_position)
+        {
+            bool isValid = true;
+            foreach (var location in _wirePath)
+            {
+                if (Vector3.SqrMagnitude(location - a_position) < 2)
+                    isValid = false;
+            }
+
+            if (isValid)
+                return true;
+            
+            return false;
+        }
+        //if it collides with anything other than wire layer a new wire is not allowed 
+        private bool CheckDirection(Vector3 a_direction)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(
+                _wireModel.transform.position, 
+                a_direction, 
+                out hit, 
+                _wireLength,
+                _wireStopMask))
+            {
+                if (hit.collider != null)
+                    Debug.Log(hit.collider.gameObject.name);    
+                return false;
+            }
+            
+            return true;
+        }
+        protected override void MoveInputEnter(InputAction.CallbackContext a_context)
+        {
+            //if we are moving then we dont want to be able to take in input
+            if (_moveToEnd)
                 return;
             
             Vector2 input = a_context.ReadValue<Vector2>();
@@ -182,10 +255,7 @@ namespace Malicious.Hackable
             Vector3 forwardDirection = _wireModel.transform.forward;
             Vector3 rightDirection = _wireModel.transform.right;
 
-            if (Vector2.Dot(input, Vector2.up) > 0.8f)
-            {
-                AddPoint(forwardDirection);
-            }
+            
             if (Vector2.Dot(input, Vector2.down) > 0.8f)
             {
                 if (_pathIndex == 0)
@@ -216,143 +286,118 @@ namespace Malicious.Hackable
                         Vector3.up);
                     _rotateObject = true;
                 }
+
+                return;
             }
-            if (Vector2.Dot(input, Vector2.left) > 0.8f)
+            //We always want to be able to go backwards
+            if (!_takingInput)
+                return;
+            
+            if (Vector2.Dot(input, Vector2.up) > 0.8f)
+                AddPoint(forwardDirection);
+            else if (Vector2.Dot(input, Vector2.left) > 0.8f)
             {
                 AddPoint(-rightDirection);
                 _rotateObject = true;
             }
-            if (Vector2.Dot(input, Vector2.right) > 0.8f)
+            else if (Vector2.Dot(input, Vector2.right) > 0.8f)
             {
                 AddPoint(rightDirection);
                 _rotateObject = true;
             }
         }
-
-        private void AddPoint(Vector3 a_direction)
+        protected override void JumpInputEnter(InputAction.CallbackContext a_context)
         {
-            if (CheckDirection(a_direction))
+            if (_chargesLeft == 0)
             {
-                Vector3 newWirePoint = _wirePath[_wirePath.Count - 1];
-                Vector3 directionAdd = a_direction;
-                
-                directionAdd = directionAdd.normalized;
-                directionAdd *= _wireLength;
-                
-                newWirePoint += directionAdd;
-
-                if (CheckPoint(newWirePoint))
-                {
-                    _takingInput = false;
-                    _moveToEnd = true;
-                    _chargesLeft--;
-                    
-                    _wirePath.Add(newWirePoint);
-                }
+                ReturnToPlayer();
             }
-        }
-
-        //Check all other points in the wire list to not allow overlap
-        private bool CheckPoint(Vector3 a_position)
-        {
-            bool isValid = true;
-            foreach (var location in _wirePath)
-            {
-                if (Vector3.SqrMagnitude(location - a_position) < 2)
-                    isValid = false;
-            }
-
-            if (isValid)
-                return true;
-            
-            return false;
-        }
-        //if it collides with anything other than wire layer a new wire is not allowed 
-        private bool CheckDirection(Vector3 a_direction)
-        {
-            RaycastHit hit;
-            if (Physics.Raycast(
-                _wireModel.transform.position, 
-                a_direction, 
-                out hit, 
-                _wireLength,
-                ~(1 << 8)))
-            {
-                if (hit.collider != null)
-                    Debug.Log(hit.collider.gameObject.name);    
-                return false;
-            }
-            
-            return true;
-        }
-        
-
-        private void SetToPlayer()
-        {
-            PlayerController.PlayerControl.ResetToPlayer(
-                _wireModel.transform.position,
-                _wireModel.transform.rotation);
-        }
-        
-        public OffsetContainer GiveOffset()
-        {
-            OffsetContainer temp = new OffsetContainer();
-            temp._offsetTransform = _wireCameraOffset;
-            temp._rigOffset = _rigOffset;
-            return temp;
-        }
-        
-        public bool RequiresTruePlayerOffset() => false;
-        public void SetOffset(Transform a_offset) => _wireCameraOffset = a_offset;
-        public void OnHackValid()
-        {
-            _nodeRenderer.material = _hackValidMaterial;
-        }
-        public void OnHackFalse()
-        {
-            _nodeRenderer.material = _defaultMaterial;
-        }
-
-        public ObjectType ReturnType() => ObjectType.Wire;
-        
-
-        private void UpDirection(InputAction.CallbackContext a_context)
-        {
-            if (_takingInput) 
+            else if (_takingInput) 
                 AddPoint(_wireModel.transform.up);
         }
-        private void DownDirection(InputAction.CallbackContext a_context)
+        protected override void DownInputEnter(InputAction.CallbackContext a_context)
         {
             if (_takingInput) 
                 AddPoint(-_wireModel.transform.up);
         }
-        private void ExitWireInput(InputAction.CallbackContext a_context)
+
+        private bool _interactionEntered = false;
+        protected override void InteractionInputEnter(InputAction.CallbackContext a_context)
         {
-            SetToPlayer();
+            _interactionEntered = true;
+            //Set to player
+            _holdingInteractButton = true;
+            _holdTimer = 0;
         }
-        private void EnableInput()
+        protected override void InteractionInputExit(InputAction.CallbackContext a_context)
         {
-            GlobalData.InputManager.Player.Movement.performed += InputProcessing;
-            GlobalData.InputManager.Player.Jump.performed += UpDirection;
-            GlobalData.InputManager.Player.Down.performed += DownDirection;
-            GlobalData.InputManager.Player.Interaction.performed += ExitWireInput;
+            //Since the e key will enter to begin with the player can hold and use the exit before starting
+            //so its possible to enter and be forced to hold the input key
+            if (!_interactionEntered)
+                return;
+            _interactionEntered = false;
+            //Set to player
+            _holdingInteractButton = false;
+
+            if (_holdTimer < _maxTimeForExit)
+            {
+                ReturnToPlayer();
+            }
+            _holdTimer = 0;
         }
-        private void DisableInput()
+
+        private void ReturnToPlayer()
         {
-            GlobalData.InputManager.Player.Movement.performed -= InputProcessing;
-            GlobalData.InputManager.Player.Jump.performed -= UpDirection;
-            GlobalData.InputManager.Player.Down.performed -= DownDirection;
-            GlobalData.InputManager.Player.Interaction.performed -= ExitWireInput;
+            Vector3 shootDirection = Vector3.zero;
+            if (_wirePath.Count == 1)
+            {
+                shootDirection = _startingDirection;
+                shootDirection.y = _launchDirection.y;
+                shootDirection = shootDirection.normalized;
+            }
+            else
+            {
+                shootDirection = _wirePath[_pathIndex] - _wirePath[_pathIndex - 1];
+                shootDirection.y = _launchDirection.y;
+                shootDirection = shootDirection.normalized;
+            }
+
+            _player.transform.position = _wireModel.transform.position + _wireModel.transform.forward;
+            Vector3 wireModelEular = _wireModel.transform.rotation.eulerAngles;
+            Vector3 playerEular = _player.transform.rotation.eulerAngles;
+
+            playerEular.y = wireModelEular.y;
+            _player.transform.rotation = Quaternion.Euler(playerEular);
+            
+            _player.LaunchPlayer(shootDirection * _launchForce);
+            _player.OnHackEnter();
+            OnHackExit();
         }
         
-#if UNITY_EDITOR
+        private void HoldInputTimer()
+        {
+            _holdTimer += Time.deltaTime;
+
+            if (_holdTimer >= _holdChargeTime)
+            {
+                _holdingInteractButton = false;
+                HoldOptionActivate();
+            }
+        }
+        #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            if (_showPath)
+            if (_wirePath.Count > 0)
             {
-                foreach (var point in _wirePath)
+                if (_showDirection)
+                    Gizmos.DrawLine(_wirePath[0], _wirePath[0] + _startingDirection.normalized * 4f);
+
+                if (_showPath)
                 {
-                    Gizmos.DrawSphere(point, 1);
+                    foreach (var VARIABLE in _wirePath)
+                    {
+                        Gizmos.DrawCube(VARIABLE, _pointSize);
+                    }
                 }
             }
         }
@@ -372,6 +417,12 @@ namespace Malicious.Hackable
                 _wirePath.Add(gameObject.transform.position);
             }
         }
-#endif
+        [ContextMenu("CalculateDirection")]
+        public void CalculateDirection()
+        {
+            _startingDirection = (_wirePath[0] - transform.position).normalized;
+        }
+        #endif
     }
+    
 }

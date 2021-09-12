@@ -1,13 +1,11 @@
-using System;
 using Malicious.Core;
-using Malicious.Interfaces;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Malicious.Hackable
 {
     [SelectionBase]
-    public class Lever : MonoBehaviour, IHackable
+    public class Lever : MonoBehaviour
     {
         [SerializeField] private bool reusable = true;
         [SerializeField] private UnityEvent onEvent;

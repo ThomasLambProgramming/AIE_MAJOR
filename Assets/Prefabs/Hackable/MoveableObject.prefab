@@ -1,5 +1,79 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &128263178
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 128263179}
+  m_Layer: 0
+  m_Name: PlayerExitLocation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &128263179
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128263178}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.616, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8138682415422236340}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2072196526
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2072196527}
+  - component: {fileID: 2072196528}
+  m_Layer: 0
+  m_Name: ExitLocationObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2072196527
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072196526}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.7, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8138682415422236340}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2072196528
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072196526}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.5, y: 1, z: 1}
+  m_Center: {x: -0.55, y: 0, z: 0}
 --- !u!1 &8138682415420339009
 GameObject:
   m_ObjectHideFlags: 0
@@ -27,7 +101,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8138682415420339009}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.653, z: 0}
+  m_LocalPosition: {x: -0.508, y: 0.484, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 8138682415422236340}
@@ -91,7 +165,7 @@ BoxCollider:
   m_GameObject: {fileID: 8138682415420339009}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -109,7 +183,8 @@ GameObject:
   - component: {fileID: 8138682415422236331}
   - component: {fileID: 8138682415422236329}
   - component: {fileID: 8138682415422236343}
-  - component: {fileID: 8138682415422236328}
+  - component: {fileID: 1787242270}
+  - component: {fileID: 1787242276}
   m_Layer: 0
   m_Name: MoveableObject
   m_TagString: Hackable
@@ -130,6 +205,8 @@ Transform:
   m_Children:
   - {fileID: 8138682416092430239}
   - {fileID: 8138682415420339008}
+  - {fileID: 128263179}
+  - {fileID: 2072196527}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -222,9 +299,9 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &8138682415422236328
+--- !u!114 &1787242270
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -233,22 +310,50 @@ MonoBehaviour:
   m_GameObject: {fileID: 8138682415422236334}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1c60052aad3444bbf0cdc4741846a36, type: 3}
+  m_Script: {fileID: 11500000, guid: 4027b0f6d8e34ed79daf3d8395d6298e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _values:
-    _rigidbody: {fileID: 8138682415422236343}
-    _cameraOffset: {fileID: 8138682416092430239}
-    _rigOffset: {x: 0.42, y: 0.35, z: -1}
-    _movementTransform: {fileID: 0}
-    _moveSpeed: 100
-    _spinSpeed: 100
-    _moveInput: {x: 0, y: 0}
-    _spinInput: {x: 0, y: 0}
-  _nodeObject: {fileID: 8138682415420339009}
+  _moveSpeed: 5
+  _maxSpeed: 4
+  _spinSpeed: 5
+  _cameraTransform: {fileID: 8138682416092430239}
+  _player: {fileID: 0}
+  _cameraOffset: {fileID: 8138682416092430239}
+  _faceBoxOnExit: 1
+  _exitPosition: {fileID: 128263179}
+  _exitBox: {fileID: 2072196528}
+  _exitDirection: {x: -0.17, y: 0.12, z: 0}
+  _exitForce: 4
+  _onHackEnterEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  _onHackExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1787242276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8138682415422236334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b7bd9d36ac941768532bd36c7c0609f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dotAllowance: 0.8
+  _triggerVolume: {fileID: 8138682415422236329}
+  _nodeRenderer: {fileID: 8138682415420339010}
   _defaultMaterial: {fileID: 2100000, guid: 83f8ab50a0baafb47b83584a8881ed10, type: 2}
   _hackValidMaterial: {fileID: 2100000, guid: d8b86c81f490cdf449608ff46aa82111, type: 2}
   _hackedMaterial: {fileID: 2100000, guid: 248cd4ca2763b604088fac32b3b6ba24, type: 2}
+  _onHackValidEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  _onHackFalseEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &8138682416092430236
 GameObject:
   m_ObjectHideFlags: 0
