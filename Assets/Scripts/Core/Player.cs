@@ -8,7 +8,7 @@ namespace Malicious.Core
     {
         //Animator Variables//
         [SerializeField] private float _animationSwapSpeed = 3f;
-        private Animator _playerAnimator = null;
+        [SerializeField] private Animator _playerAnimator = null;
         private readonly int _animatorRunVariable = Animator.StringToHash("RunAmount");
         private readonly int _jumpingVariable = Animator.StringToHash("Jumping");
         private float _currentRunAmount = 0f;
@@ -51,7 +51,7 @@ namespace Malicious.Core
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
-            _playerAnimator = GetComponent<Animator>();
+            _playerAnimator = _modelContainer.GetComponent<Animator>();
             _playerAnimator.SetFloat(_animatorRunVariable, 0);
             EnableInput();
             

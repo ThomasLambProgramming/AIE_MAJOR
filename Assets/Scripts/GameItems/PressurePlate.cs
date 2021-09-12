@@ -42,5 +42,12 @@ namespace Malicious.GameItems
                 }
             }
         }
+        #if UNITY_EDITOR
+        [ContextMenu("RUN ON EVENT")]
+        public void RunON()
+        {
+            _OnEvent?.Invoke();
+        }
+        #endif
     }
 }

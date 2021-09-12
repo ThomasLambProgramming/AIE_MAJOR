@@ -39,16 +39,19 @@ namespace Malicious.Hackable
             if (_moveInput != Vector2.zero)
             {
                 Vector3 camForward = _cameraOffset.forward;
-                //camForward.y = 0;
-
+                camForward.y = 0;
+                camForward = camForward.normalized;
                 Vector3 camRight = _cameraOffset.right;
-                //camRight.y = 0;
+                camRight.y = 0;
+                camRight = camRight.normalized;
 
                 float currentYAmount = _rigidbody.velocity.y;
                 Vector3 newVel =
                     camForward * (_moveInput.y * _moveSpeed * Time.deltaTime) +
                     camRight * (_moveInput.x * _moveSpeed * Time.deltaTime);
-                newVel.y = currentYAmount;
+
+                newVel.y = currentYAmount + 0.02f;
+                
                 _rigidbody.velocity = newVel;
             }
 
