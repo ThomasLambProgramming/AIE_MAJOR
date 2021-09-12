@@ -46,10 +46,9 @@ namespace Malicious.Core
         //When pause is activated all gameobjects that need to will stop movement and etc
         public static event Action GamePauseStart;
         public static event Action GamePauseExit;
-
-        //This is to avoid references for the designers 
-        public static event Action UiHealthDown;
-        public static event Action UiHealthUp;
+        
+        public static event Action PlayerHit;
+        public static event Action PlayerHealed;
 
         void Update()
         {
@@ -86,6 +85,7 @@ namespace Malicious.Core
             }
         }
 
+        //Used by ui button (doesnt like the input function)
         public static void ResumePlay()
         {
             if (_paused)
@@ -93,21 +93,6 @@ namespace Malicious.Core
                 GamePauseExit?.Invoke();
                 _paused = false;
             }
-        }
-        
-
-        /// <summary>
-        /// THIS IS ONLY TO BE USED WHEN ABSOLUTELY NEEDED
-        /// MAINLY FOR DEBUG
-        /// </summary>
-        public void ClearAllEvents()
-        {
-            PlayerUpdate        = null;
-            PlayerFixedUpdate   = null;
-            EnemyUpdate         = null;
-            EnemyFixedUpdate    = null;
-            GeneralUpdate       = null;
-            GeneralFixedUpdate  = null;
         }
     }
 }

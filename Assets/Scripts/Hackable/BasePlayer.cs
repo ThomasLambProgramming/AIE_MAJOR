@@ -1,10 +1,8 @@
-﻿using System;
-using Cinemachine;
-using UnityEngine.InputSystem;
+﻿using UnityEngine.InputSystem;
 using UnityEngine;
 using Malicious.Core;
 
-namespace Malicious.Core
+namespace Malicious.Hackable
 {
     public class BasePlayer : MonoBehaviour
     {
@@ -24,7 +22,7 @@ namespace Malicious.Core
         //HackableRigidbody
         protected Rigidbody _rigidbody = null;
         
-        [SerializeField] protected bool _hasHoldOption = false;
+        [SerializeField] public bool _hasHoldOption = false;
         [SerializeField] public float _holdChargeTime = 2f;
 
         //Input Variables//
@@ -36,11 +34,9 @@ namespace Malicious.Core
         protected virtual void Tick()
         {
         }
-
         protected virtual void FixedTick()
         {
         }
-
         public virtual void OnHackEnter()
         {
             EnableInput();
@@ -49,7 +45,6 @@ namespace Malicious.Core
             GameEventManager.PlayerUpdate += Tick;
             GameEventManager.PlayerFixedUpdate += FixedTick;
         }
-
         public virtual void OnHackExit()
         {
             DisableInput();
@@ -58,37 +53,33 @@ namespace Malicious.Core
             GameEventManager.PlayerUpdate -= Tick;
             GameEventManager.PlayerFixedUpdate -= FixedTick;
         }
-
+        public virtual void HoldOptionActivate()
+        {
+            
+        }
         protected virtual void OnPauseEnter()
         {
         }
-
         protected virtual void OnPauseExit()
         {
         }
-
         public virtual Quaternion GiveRotation()
         {
             return transform.rotation;
         }
-
+        public virtual void SetRotation(Quaternion a_rotation)
+        {
+        }
+        public virtual void SetCameraTransform(Transform a_cameraTransform)
+        {
+            _cameraTransform = a_cameraTransform;
+        }
         public virtual Quaternion GiveCameraRotation()
         {
             return _cameraTransform.rotation;
         }
 
-        public virtual void HoldOptionActivate()
-        {
-            
-        }
-        public virtual void SetRotation(Quaternion a_rotation)
-        {
-        }
-
-        public virtual void SetCameraTransform(Transform a_cameraTransform)
-        {
-            _cameraTransform = a_cameraTransform;
-        }
+        #region Input
         
         protected virtual void MoveInputEnter(InputAction.CallbackContext a_context)
         {
@@ -167,5 +158,6 @@ namespace Malicious.Core
             GlobalData.InputManager.Player.Down.performed -= DownInputEnter;
             GlobalData.InputManager.Player.Down.canceled -= DownInputExit;
         }
+        #endregion
     }
 }

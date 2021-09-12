@@ -112,10 +112,19 @@ namespace Malicious.Hackable
             _moveToEnd = false;
         }
 
-        public override void HoldOptionActivate()
+        private void InsideWireHoldOptionActivate()
         {
             ResetPath();
             _wireModel.SetActive(false);
+        }
+        public override void HoldOptionActivate()
+        {
+            Vector3 startingPos = _wirePath[0];
+            _wirePath.Clear();
+            _wirePath = new List<Vector3>();
+            _wirePath.Add(startingPos);
+            _pathIndex = 0;
+            _chargesLeft = _wireCharges;
         }
 
         private void ResetPath()
@@ -381,7 +390,7 @@ namespace Malicious.Hackable
             if (_holdTimer >= _holdChargeTime)
             {
                 _holdingInteractButton = false;
-                HoldOptionActivate();
+                InsideWireHoldOptionActivate();
             }
         }
         #if UNITY_EDITOR

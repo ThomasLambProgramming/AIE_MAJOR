@@ -2,10 +2,10 @@ using Malicious.Core;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Malicious.Hackable
+namespace Malicious.Interactables
 {
     [SelectionBase]
-    public class Lever : MonoBehaviour
+    public class Lever : MonoBehaviour, IInteractable
     {
         [SerializeField] private bool reusable = true;
         [SerializeField] private UnityEvent onEvent;
@@ -15,28 +15,19 @@ namespace Malicious.Hackable
         [SerializeField] private float timeForRotate = 2f;
         [SerializeField] private float rotateAmount = 70;
         [SerializeField] private Transform rotateAnchor = null;
-
-        [SerializeField] private GameObject _nodeObject = null;
-        private MeshRenderer _nodeRenderer = null;
-        [SerializeField] private Material _defaultMaterial = null;
-        [SerializeField] private Material _hackValidMaterial = null;
-        [SerializeField] private Material _hackedMaterial = null;
+        
+        
+        
         private bool _beenHacked = false;
         public void OnHackValid()
-        { 
-            if (!_beenHacked)
-                _nodeRenderer.material = _hackValidMaterial;
+        {
         }
-
         public void OnHackFalse()
         {
-            if (!_beenHacked)
-                _nodeRenderer.material = _defaultMaterial;
         }
-        private void Start()
-        {
-            _nodeRenderer = _nodeObject.GetComponent<MeshRenderer>();
-        }
+        public float HackedHoldTime() => 0f;
+        public bool HasHoldInput() => false;
+        public void HoldInputActivate(){}
 
 #if UNITY_EDITOR
         [SerializeField] private bool testEvents = false;
@@ -55,7 +46,6 @@ namespace Malicious.Hackable
 
         public void Hacked()
         {
-            _nodeRenderer.material = _hackedMaterial;
             _beenHacked = true;
             //if its in the middle of rotating dont let the player change (to not
             //cause errors with rotation)

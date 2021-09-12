@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using Cinemachine;
-using Unity.Mathematics;
 
 namespace Malicious.Core
 {
@@ -29,8 +28,7 @@ namespace Malicious.Core
         private static CinemachineVirtualCamera _groundEnemy = null;
         private static CinemachineVirtualCamera _flyingEnemy = null;
         private static CinemachineVirtualCamera _currentHackableCamera = null;
-        [SerializeField] private CinemachineBrain init_BrainCamera = null;
-        private static CinemachineBrain _cameraBrain = null;
+        
         private void Start()
         {
             _mainCamTransform = init_mainCamTransform;
@@ -44,8 +42,6 @@ namespace Malicious.Core
             _wire = init_wire;
             _groundEnemy = init_groundEnemy;
             _flyingEnemy = init_flyingEnemy;
-
-            _cameraBrain = init_BrainCamera;
         }
 
 

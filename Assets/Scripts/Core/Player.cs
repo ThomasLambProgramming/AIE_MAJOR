@@ -7,6 +7,7 @@ namespace Malicious.Core
     public class Player : MonoBehaviour
     {
         #region Variables
+        
         //Speed Variables//
         [SerializeField] private float _moveSpeed = 100f;
         [SerializeField] private float _maxSpeed = 4f;
@@ -56,7 +57,6 @@ namespace Malicious.Core
         private HackableField _currentHackableField = null;
         //--------------------------------//
         #endregion
-
         public void SetHackableField(HackableField a_field)
         {
             if (a_field == null)
@@ -78,7 +78,6 @@ namespace Malicious.Core
         }
         public HackableField CurrentHackableField() => _currentHackableField;
         public Transform GiveOffset() => _cameraTransform;
-        
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
@@ -96,7 +95,6 @@ namespace Malicious.Core
             _currentRunAmount = 0;
 
         }
-
         private void Tick()
         {
             UpdateAnimator();
@@ -299,49 +297,6 @@ namespace Malicious.Core
             }
         }
         #endregion
-        #region Input
-        private void InteractionInputEnter(InputAction.CallbackContext a_context)
-        {
-            if (_currentHackableField != null)
-            {
-                if (_currentHackableField.HackIntoObject())
-                {
-                    OnHackExit();
-                }
-            }
-        }
-
-        private void JumpInputEnter(InputAction.CallbackContext a_context)
-        {
-            if (!_holdingJump)
-            {
-                Jump();
-                _holdingJump = true;
-            }
-        }
-
-        private void JumpInputExit(InputAction.CallbackContext a_context) => _holdingJump = false;
-
-        private void PauseInputEnter(InputAction.CallbackContext a_context)
-        {
-            DisableInput();
-            _playerAnimator.enabled = false;
-            _moveInput = Vector2.zero;
-            _isPaused = true;
-            _pauseEnterVelocity = _rigidbody.velocity;
-            _rigidbody.isKinematic = true;
-        }
-
-        private void PauseInputExit(InputAction.CallbackContext a_context)
-        {
-            EnableInput();
-            _playerAnimator.enabled = true;
-            _isPaused = false;
-            _rigidbody.isKinematic = false;
-            _rigidbody.velocity = _pauseEnterVelocity;
-        }
-        #endregion
-        
         private IEnumerator IFrame()
         {
             _iFrameActive = true;
@@ -369,6 +324,47 @@ namespace Malicious.Core
             _modelContainer.SetActive(true);
             _iFrameActive = false;
         }
+        #region Input
+        private void InteractionInputEnter(InputAction.CallbackContext a_context)
+        {
+            if (_currentHackableField != null)
+            {
+                _currentHackableField.HackInputStarted();
+            }
+        }
+        private void InteractionInputExit(InputAction.CallbackContext a_context)
+        {
+            if (_currentHackableField != null)
+            {
+                _currentHackableField.HackInputStopped();
+            }
+        }
+        private void JumpInputEnter(InputAction.CallbackContext a_context)
+        {
+            if (!_holdingJump)
+            {
+                Jump();
+                _holdingJump = true;
+            }
+        }
+        private void JumpInputExit(InputAction.CallbackContext a_context) => _holdingJump = false;
+        private void PauseInputEnter(InputAction.CallbackContext a_context)
+        {
+            DisableInput();
+            _playerAnimator.enabled = false;
+            _moveInput = Vector2.zero;
+            _isPaused = true;
+            _pauseEnterVelocity = _rigidbody.velocity;
+            _rigidbody.isKinematic = true;
+        }
+        private void PauseInputExit(InputAction.CallbackContext a_context)
+        {
+            EnableInput();
+            _playerAnimator.enabled = true;
+            _isPaused = false;
+            _rigidbody.isKinematic = false;
+            _rigidbody.velocity = _pauseEnterVelocity;
+        }
         private void MoveInputEnter(InputAction.CallbackContext a_context)
         {
             _moveInput = a_context.ReadValue<Vector2>();
@@ -394,7 +390,7 @@ namespace Malicious.Core
             GlobalData.InputManager.Player.Camera.performed += CameraInputEnter;
             GlobalData.InputManager.Player.Camera.canceled += CameraInputExit;
             GlobalData.InputManager.Player.Interaction.performed += InteractionInputEnter;
-            //GlobalData.InputManager.Player.Interaction.canceled += InteractionInputExit;
+            GlobalData.InputManager.Player.Interaction.canceled += InteractionInputExit;
             //GlobalData.InputManager.Player.Down.performed += DownInputEnter;
             //GlobalData.InputManager.Player.Down.canceled += DownInputExit;
         }
@@ -407,9 +403,10 @@ namespace Malicious.Core
             GlobalData.InputManager.Player.Camera.performed -= CameraInputEnter;
             GlobalData.InputManager.Player.Camera.canceled -= CameraInputExit;
             GlobalData.InputManager.Player.Interaction.performed -= InteractionInputEnter;
-            //GlobalData.InputManager.Player.Interaction.canceled -= InteractionInputExit;
+            GlobalData.InputManager.Player.Interaction.canceled -= InteractionInputExit;
             //GlobalData.InputManager.Player.Down.performed -= DownInputEnter;
             //GlobalData.InputManager.Player.Down.canceled -= DownInputExit;
         }
+        #endregion
     }
 }

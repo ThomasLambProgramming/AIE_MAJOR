@@ -1,6 +1,8 @@
-﻿using System;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using Malicious.Hackable;
+using Malicious.Interactables;
 
 namespace Malicious.Core
 {
@@ -12,8 +14,13 @@ namespace Malicious.Core
     {
         //Other Variables//
         [SerializeField] private float _dotAllowance = 0.8f;
+        [SerializeField] private float _maxTapHoldLength = 0.4f;
+        private bool _holdingHackButton = false;
+        private float _holdTime = 0;
+        
         private BasePlayer _hackable = null;
-        //private InteractInterface _interactable = null;
+        private IInteractable _interactable = null;
+        
         private Player _player = null;
         private bool _hackValid = false;
         
@@ -30,13 +37,10 @@ namespace Malicious.Core
         [SerializeField] private UnityEvent _onHackValidEvent = null;
         [SerializeField] private UnityEvent _onHackFalseEvent = null;
         
-        
-        [Tooltip("Only use if there is a option for holding and tapping")]
-        [SerializeField] private bool _hasHoldOption = false;
-        [SerializeField] private float _holdTime = 2f;
         private void Start()
         {
             _hackable = GetComponent<BasePlayer>();
+            _interactable = GetComponent<IInteractable>();
         }
 
         public void OnHackValid()
@@ -51,6 +55,8 @@ namespace Malicious.Core
             _hackValid = false;
             _onHackFalseEvent?.Invoke();
             _nodeRenderer.material = _defaultMaterial;
+            _holdTime = 0;
+            _holdingHackButton = false;
         }
 
 
@@ -66,20 +72,66 @@ namespace Malicious.Core
             return false;
         }
 
-        public bool HackIntoObject()
+        public void HackInputStarted()
         {
             if (_hackValid)
             {
-                //run hack interface
-                _hackable._player = _player;
-                _hackable.OnHackEnter();
-                _nodeRenderer.material = _hackedMaterial;
-                _player = null;
-                return true;
+                _holdingHackButton = true;
+                StartCoroutine(HoldCheck());
             }
-
-            return false;
         }
+        public void HackInputStopped()
+        {
+            _holdingHackButton = false;
+            if (_holdTime >= _maxTapHoldLength)
+            {
+                _holdTime = 0;
+                return;
+            }
+            if (_hackValid)
+            {
+                if (_interactable != null)
+                {
+                    _interactable.Hacked();
+                }
+
+                if (_hackable != null)
+                {
+                    _hackable._player = _player;
+                    _hackable.OnHackEnter();
+                    _nodeRenderer.material = _hackedMaterial;
+                    _player.OnHackExit();
+                    _player = null;
+                }
+            }
+        }
+
+        private IEnumerator HoldCheck()
+        {
+            while (_holdingHackButton)
+            {
+                _holdTime += Time.deltaTime;
+
+                if (_interactable != null)
+                {
+                    if (_holdTime >= _interactable.HackedHoldTime())
+                    {
+                        _interactable.HoldInputActivate();
+                        _holdingHackButton = false;
+                    }
+                }
+                else if (_hackable != null)
+                {
+                    if (_holdTime >= _hackable._holdChargeTime)
+                    {
+                        _hackable.HoldOptionActivate();
+                        _holdingHackButton = false;
+                    }
+                }
+                yield return null;
+            }
+        }
+        
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.CompareTag("Player"))
@@ -90,13 +142,15 @@ namespace Malicious.Core
         {
             if (_player == null)
                 return;
-                
+            
             _player.SetHackableField(this); 
             
             if (DotCheck())
                 OnHackValid();
             else
+            {
                 OnHackFalse();
+            }
         }
 
         private void OnTriggerExit(Collider other)
@@ -105,6 +159,7 @@ namespace Malicious.Core
             //as the player gets setactived alot
             if (_player != null)
                 _player.SetHackableField(null);
+            
             OnHackFalse();
             _player = null;
         }
