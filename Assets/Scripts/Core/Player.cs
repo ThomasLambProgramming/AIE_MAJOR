@@ -119,6 +119,7 @@ namespace Malicious.Core
             _currentHackableField = null;
             gameObject.SetActive(true);
             CameraController.ChangeCamera(ObjectType.Player);
+            _heldInputDown = false;
         }
         public void OnHackExit()
         {
@@ -128,6 +129,7 @@ namespace Malicious.Core
             GameEventManager.PlayerUpdate -= Tick;
             GameEventManager.PlayerFixedUpdate -= FixedTick;
             gameObject.SetActive(false);
+            _heldInputDown = false;
         }
         private void Movement()
         {
@@ -325,8 +327,11 @@ namespace Malicious.Core
             _iFrameActive = false;
         }
         #region Input
+
+        private bool _heldInputDown = false;
         private void InteractionInputEnter(InputAction.CallbackContext a_context)
         {
+            _heldInputDown = true;
             if (_currentHackableField != null)
             {
                 _currentHackableField.HackInputStarted();
@@ -334,9 +339,10 @@ namespace Malicious.Core
         }
         private void InteractionInputExit(InputAction.CallbackContext a_context)
         {
-            if (_currentHackableField != null)
+            if (_currentHackableField != null && _heldInputDown)
             {
                 _currentHackableField.HackInputStopped();
+                _heldInputDown = false;
             }
         }
         private void JumpInputEnter(InputAction.CallbackContext a_context)
