@@ -19,7 +19,7 @@ namespace Malicious.Hackable
         [SerializeField] private float _heightAngleAllowance = 0.6f;
         [SerializeField] private float _wireLength = 5f;
         [SerializeField] private int _wireCharges = 4;
-        [SerializeField] private float _goNextWire = 0.2f;
+        [SerializeField] private float _stoppingDistance = 0.2f;
         [SerializeField] private LayerMask _wireStopMask = ~0;
         [SerializeField] private float _maxTimeForExit = 0.4f;
         [SerializeField] private Vector3 _launchDirection = Vector3.zero;
@@ -141,7 +141,7 @@ namespace Malicious.Hackable
         {
             bool moveRotOccuring = false;
             if (Vector3.SqrMagnitude(_wirePath[_pathIndex] - _wireModel.transform.position) >
-                _goNextWire)
+                _stoppingDistance)
             {
                 moveRotOccuring = true;
                 Vector3 currentWirePos = _wireModel.transform.position;
@@ -150,6 +150,10 @@ namespace Malicious.Hackable
                                  .normalized *
                                  (Time.deltaTime * (_moveSpeed));
                 _wireModel.transform.position = currentWirePos;
+            }
+            else
+            {
+                _wireModel.transform.position = _wirePath[_pathIndex];
             }
             if (_rotateObject)
             {
