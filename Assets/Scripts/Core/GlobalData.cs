@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Malicious.Core
 {
@@ -12,6 +13,12 @@ namespace Malicious.Core
         private void Awake()
         {
             InputManager = new MasterInput();
+        }
+
+        private void Start()
+        {
+            InputManager.Enable();
+            InputManager.Player.Enable();
         }
     }
 }

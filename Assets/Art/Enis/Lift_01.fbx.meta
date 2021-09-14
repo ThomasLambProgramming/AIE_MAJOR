@@ -6,7 +6,27 @@ ModelImporter:
   - first:
       74: 1827226128182048838
     second: Take 001
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Base1
+    second: {fileID: 2100000, guid: 6e97484a42ce07b4fb61659d708da98c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Battery12
+    second: {fileID: 2100000, guid: 9384043f2bab8aa438f43417f785a90c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Chip_03
+    second: {fileID: -5940211850994248164, guid: 9f9ff6c9a8db10d4e8be25659ffd29d2, type: 3}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert1
+    second: {fileID: 2100000, guid: 614697f408b2b4a42bbd8ae7448dd5a6, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
