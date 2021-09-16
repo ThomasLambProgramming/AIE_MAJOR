@@ -44,6 +44,10 @@ namespace Malicious.Core
             _flyingEnemy = init_flyingEnemy;
         }
 
+        public static void DisableCameraMovement()
+        {
+            
+        }
 
         public static void ChangeCamera(
             ObjectType a_type,
@@ -99,6 +103,26 @@ namespace Malicious.Core
                 _currentHackableCamera.Follow = a_offset;
             }
             _currentHackableCamera.Priority = _activePrio;
+        }
+
+        public static void UpdateCameraX(float _aSpeed)
+        {
+            _player.m_XAxis.m_MaxSpeed = _aSpeed;
+        }
+
+        public static void UpdateCameraY(float _aSpeed)
+        {
+            _player.m_YAxis.m_MaxSpeed = _aSpeed;
+        }
+
+        public static void InvertY(bool _aState)
+        {
+            _player.m_YAxis.m_InvertInput = _aState;
+        }
+
+        public static void InvertX(bool _aState)
+        {
+            _player.m_XAxis.m_InvertInput = _aState;
         }
     }
 }
