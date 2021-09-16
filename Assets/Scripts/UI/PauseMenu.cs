@@ -9,6 +9,7 @@ namespace Malicious.UI
     {
         [SerializeField] private GameObject _hudObject = null;
         [SerializeField] private GameObject _pauseObject = null;
+        [SerializeField] private GameObject _optionsObject = null;
         void Start()
         {
             GameEventManager.GamePauseStart += OnPause;
@@ -18,12 +19,14 @@ namespace Malicious.UI
         {
             _pauseObject.SetActive(true);
             _hudObject.SetActive(false);
+            _optionsObject.SetActive(false);
         }
 
         private void OnPauseExit()
         {
             _hudObject.SetActive(true);
             _pauseObject.SetActive(false);
+            _optionsObject.SetActive(false);
         }
     }
 }
