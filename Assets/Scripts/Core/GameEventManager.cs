@@ -1,4 +1,5 @@
 using System;
+using Malicious.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -42,14 +43,20 @@ namespace Malicious.Core
         public static event Action GeneralFixedUpdate;
 
 
-        private static bool _paused = false;
         //When pause is activated all gameobjects that need to will stop movement and etc
         public static event Action GamePauseStart;
         public static event Action GamePauseExit;
         
         public static event Action PlayerHit;
         public static event Action PlayerHealed;
+        public static event Action PlayerDead;
 
+        private static bool _paused = false;
+        
+        private static int _playerHealth = 3;
+
+        [SerializeField] private FadeTransition _fadeTransitionInit = null;
+        private static FadeTransition _fadeTransition = null;
         void Update()
         {
             PlayerUpdate?.Invoke();
@@ -92,6 +99,36 @@ namespace Malicious.Core
             {
                 GamePauseExit?.Invoke();
                 _paused = false;
+            }
+        }
+
+        /// <summary>
+        /// Manage player health in the game event manager so
+        /// all other objects can get updated without knowing the players current health
+        /// </summary>
+        public static void PlayerHitFunc()
+        {
+            if (_playerHealth >= 1)
+                PlayerHit?.Invoke();
+            
+            _playerHealth -= 1;
+            
+            if (_playerHealth <= 0)
+            {
+                PlayerDead?.Invoke();
+                //fade to black
+                _fadeTransition.FadeOut();
+                _playerHealth = 3;
+            }
+            
+        }
+
+        public static void PlayerHealedFunc()
+        {
+            if (_playerHealth < 3)
+            {
+                _playerHealth++;
+                PlayerHealed?.Invoke();
             }
         }
     }

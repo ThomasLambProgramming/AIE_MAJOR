@@ -296,6 +296,7 @@ namespace Malicious.Core
             {
                 //player hit
                 StartCoroutine(IFrame());
+                GameEventManager.PlayerHitFunc();
             }
         }
         #endregion

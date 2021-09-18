@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Malicious.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -44,7 +41,7 @@ namespace Malicious.UI
         }
 
         //Running on awake so the camera controller can get the values without needing to get references
-        void Awake()
+        void Start()
         {
             //check if the values are in the playerprefs
             //if they arent in the key then set to the defaults
@@ -122,9 +119,15 @@ namespace Malicious.UI
 
             _cameraSpeedXSlider.onValueChanged.AddListener(delegate {UpdateSliderX();});
             _cameraSpeedYSlider.onValueChanged.AddListener(delegate {UpdateSliderY();});
+
+            if (_invertCameraX)
+                InvertX();
+            if (_invertCameraY)
+                InvertY();
             
             //update camera x and y
             //plus inverting
+            SaveValue();
         }
 
         private void UpdateSliderX()

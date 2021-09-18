@@ -1,4 +1,7 @@
+using System;
 using UnityEngine;
+using Malicious.Core;
+
 
 namespace Malicious.UI
 {
@@ -8,7 +11,13 @@ namespace Malicious.UI
         [SerializeField] private GameObject _health2 = null;
         [SerializeField] private GameObject _health3 = null;
         private int _currenthealth = 3;
-        
+
+        public void Start()
+        {
+            GameEventManager.PlayerHealed += AddHealth;
+            GameEventManager.PlayerHit += RemoveHealth;
+        }
+
         public void RemoveHealth()
         {
             _currenthealth--;
