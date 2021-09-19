@@ -1,4 +1,5 @@
 using System.Collections;
+using Malicious.Core;
 using UnityEngine;
 
 namespace Malicious.GameItems
@@ -17,12 +18,26 @@ namespace Malicious.GameItems
         [SerializeField] private bool _waitForTime = false;
         [SerializeField] private float _waitTime = 3f;
         private bool waiting = false;
+        
+        private Vector3 _sceneStartLocation = Vector3.zero;
+        private Vector3 _initalTarget = Vector3.zero;
         void Start()
         {
+            _sceneStartLocation = transform.position;
+            _initalTarget = _targetLocation;
             _startLocation = transform.position;
             _movementAmount = _targetLocation - _startLocation;
             if (_waitPlayer)
                 waiting = true;
+
+            GameEventManager.PlayerDead += ResetToStart;
+        }
+
+        void ResetToStart()
+        {
+            transform.position = _sceneStartLocation;
+            _targetLocation = _initalTarget;
+            
         }
 
         IEnumerator WaitAtPoint()

@@ -16,6 +16,7 @@ namespace Malicious.UI
         {
             GameEventManager.PlayerHealed += AddHealth;
             GameEventManager.PlayerHit += RemoveHealth;
+            GameEventManager.PlayerDead += ResetHealth;
         }
 
         public void RemoveHealth()
@@ -50,6 +51,14 @@ namespace Malicious.UI
                     _health1.SetActive(true);
                     break;
             }
+        }
+
+        private void ResetHealth()
+        {
+            _health1.SetActive(true);
+            _health2.SetActive(true);
+            _health3.SetActive(true);
+            _currenthealth = 3;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using Malicious.Interactables;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -55,6 +57,7 @@ namespace Malicious.Core
         private Rigidbody _rigidbody = null;
         private Vector3 _pauseEnterVelocity = Vector3.zero;
         private HackableField _currentHackableField = null;
+        [SerializeField] private CheckPoint _activeCheckpoint = null;
         //--------------------------------//
         #endregion
         public void SetHackableField(HackableField a_field)
@@ -94,6 +97,7 @@ namespace Malicious.Core
             GameEventManager.PlayerFixedUpdate += FixedTick;
             _currentRunAmount = 0;
 
+            GameEventManager.PlayerDead += PlayerDead;
         }
         private void Tick()
         {
@@ -197,13 +201,11 @@ namespace Malicious.Core
                     _rigidbody.velocity.z);
             }
         }
-        public Quaternion GiveRotation()
+
+        private void PlayerDead()
         {
-            return transform.rotation;
-        }
-        public Quaternion GiveCameraRotation()
-        {
-            return _cameraTransform.rotation;
+            transform.position = _activeCheckpoint._returnPosition;
+            transform.rotation = Quaternion.LookRotation(_activeCheckpoint._facingDirection);
         }
         #region Pausing
         private void PauseEnter()
@@ -214,10 +216,6 @@ namespace Malicious.Core
             _isPaused = true;
             _pauseEnterVelocity = _rigidbody.velocity;
             _rigidbody.isKinematic = true;
-        }
-        public void SetCameraTransform(Transform a_cameraTransform)
-        {
-            _cameraTransform = a_cameraTransform;
         }
         private void PauseExit()
         {
@@ -295,10 +293,37 @@ namespace Malicious.Core
             if (other.gameObject.CompareTag("Enemy") && _iFrameActive == false)
             {
                 //player hit
-                StartCoroutine(IFrame());
                 GameEventManager.PlayerHitFunc();
+                if (GameEventManager.CurrentHealth() <= 0)
+                {
+                    //Run shader for dissolve
+                }
+                else
+                {
+                    StartCoroutine(IFrame());
+                }
+                
+                
             }
         }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("CheckPoint"))
+            {
+                CheckPoint currentCheckPoint = other.GetComponent<CheckPoint>();
+                
+                if (_activeCheckpoint == null || currentCheckPoint._ID > _activeCheckpoint._ID)
+                {
+                    if (_activeCheckpoint != null)
+                        _activeCheckpoint.TurnOff();
+                    
+                    _activeCheckpoint = currentCheckPoint;
+                    _activeCheckpoint.TurnOn();
+                }
+            }
+        }
+
         #endregion
         private IEnumerator IFrame()
         {

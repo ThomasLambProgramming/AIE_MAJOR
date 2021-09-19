@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Malicious.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -51,9 +52,17 @@ namespace Malicious.Core
         public static event Action PlayerHealed;
         public static event Action PlayerDead;
 
+        //I really wanted to avoid using this but I couldnt call a coroutine from a static function
+        //so for fade transitions it would be worse to try and make some sort of wait then just use a singleton
+        public static GameEventManager _CurrentManager = null; 
+
         private static bool _paused = false;
         
         private static int _playerHealth = 3;
+        
+        //Getter for the player health so it can be seen without chance of changing the value outside of 
+        //the class
+        public static int CurrentHealth() => _playerHealth;
 
         [SerializeField] private FadeTransition _fadeTransitionInit = null;
         private static FadeTransition _fadeTransition = null;
@@ -76,6 +85,8 @@ namespace Malicious.Core
             GlobalData.InputManager.Enable();
             GlobalData.InputManager.Player.Enable();
             GlobalData.InputManager.Player.Pause.performed += PausePressed;
+            _CurrentManager = this;
+            _fadeTransition = _fadeTransitionInit;
         }
 
         private void PausePressed(InputAction.CallbackContext a_context)
@@ -115,12 +126,25 @@ namespace Malicious.Core
             
             if (_playerHealth <= 0)
             {
-                PlayerDead?.Invoke();
                 //fade to black
                 _fadeTransition.FadeOut();
-                _playerHealth = 3;
+                _CurrentManager.WaitForFade();
             }
             
+        }
+
+        private void WaitForFade()
+        {
+            StartCoroutine(FadeWait());
+        }
+
+        private IEnumerator FadeWait()
+        {
+            yield return new WaitForSeconds(1f);
+            _playerHealth = 3;
+            PlayerDead?.Invoke();
+            yield return new WaitForSeconds(1f);
+            _fadeTransition.FadeIn();
         }
 
         public static void PlayerHealedFunc()
