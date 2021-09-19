@@ -127,6 +127,7 @@ namespace Malicious.Core
             if (_playerHealth <= 0)
             {
                 //fade to black
+                //Player shader for death play 
                 _fadeTransition.FadeOut();
                 _CurrentManager.WaitForFade();
             }
@@ -157,7 +158,8 @@ namespace Malicious.Core
 
         public static void SpikeHit()
         {
-            
+            _playerHealth = 0;
+            PlayerHitFunc();
         }
     }
 }
