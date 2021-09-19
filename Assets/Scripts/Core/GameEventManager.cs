@@ -140,7 +140,7 @@ namespace Malicious.Core
 
         private IEnumerator FadeWait()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1.3f);
             _playerHealth = 3;
             PlayerDead?.Invoke();
             yield return new WaitForSeconds(1f);

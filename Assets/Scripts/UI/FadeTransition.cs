@@ -21,13 +21,15 @@ namespace Malicious.UI
         [ContextMenu("Fade In")]
         public void FadeIn()
         {
-            _animator.SetTrigger(_inParameter);
+            _animator.SetBool(_inParameter, true);
+            _animator.SetBool(_outParameter, false);
         }
 
         [ContextMenu("Fade Out")]
         public void FadeOut()
         {
-            _animator.SetTrigger(_outParameter);
+            _animator.SetBool(_inParameter, false);
+            _animator.SetBool(_outParameter, true);
         }
     }
 }
