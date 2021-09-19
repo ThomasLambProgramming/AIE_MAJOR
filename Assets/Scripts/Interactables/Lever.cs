@@ -18,7 +18,7 @@ namespace Malicious.Interactables
         
         
         
-        private bool _beenHacked = false;
+        //private bool _beenHacked = false;
         public void OnHackValid()
         {
         }
@@ -46,7 +46,7 @@ namespace Malicious.Interactables
 
         public void Hacked()
         {
-            _beenHacked = true;
+            //_beenHacked = true;
             //if its in the middle of rotating dont let the player change (to not
             //cause errors with rotation)
             if (isRotating)

@@ -132,7 +132,6 @@ namespace Malicious.Core
             }
             
         }
-
         private void WaitForFade()
         {
             StartCoroutine(FadeWait());
@@ -154,6 +153,11 @@ namespace Malicious.Core
                 _playerHealth++;
                 PlayerHealed?.Invoke();
             }
+        }
+
+        public static void SpikeHit()
+        {
+            
         }
     }
 }

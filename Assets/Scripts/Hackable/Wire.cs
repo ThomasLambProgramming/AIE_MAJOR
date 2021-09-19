@@ -43,7 +43,7 @@ namespace Malicious.Hackable
         [SerializeField] private bool _showPath = true;
         [SerializeField] private Vector3 _pointSize = new Vector3(0.4f, 0.4f, 0.4f);
         [SerializeField] private bool _showDirection = true;
-        [SerializeField] private bool _showLaunchDirection = true;
+        //[SerializeField] private bool _showLaunchDirection = true;
         private void Start()
         {
             _chargesLeft = _wireCharges;
