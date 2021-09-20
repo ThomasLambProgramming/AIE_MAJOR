@@ -13,6 +13,10 @@ namespace Malicious.Hackable
         [SerializeField] private GameObject _wireModel = null;
         [SerializeField] private Transform _wireCameraOffset = null;
         [SerializeField] private List<Vector3> _wirePath = new List<Vector3>();
+        //since it will be a prefab probably just make it have a script that auto plays the shader
+        //for it to dissolve in to avoid any logic being needed
+        [SerializeField] private GameObject _wirePrefab = null;
+        
         
         //------Other Variables----------------//
         [SerializeField] private Vector3 _startingDirection = Vector3.zero;
@@ -26,6 +30,7 @@ namespace Malicious.Hackable
         [SerializeField] private float _launchForce = 0;
         [SerializeField] private float _resetSpeed = 2f;
 
+        private bool DisolveRunning = false;
         private Vector3 _resetAmount = Vector3.zero;
         private bool _resetting = false;
         private bool _holdingInteractButton = false;
@@ -59,6 +64,9 @@ namespace Malicious.Hackable
 
         protected override void FixedTick()
         {
+            if (DisolveRunning)
+                return;
+            
             if (_resetting)
             {
                 Vector3 direction = (_wirePath[0] - _wireModel.transform.position);
@@ -397,6 +405,9 @@ namespace Malicious.Hackable
                 InsideWireHoldOptionActivate();
             }
         }
+
+        
+        
         #if UNITY_EDITOR
         private void OnDrawGizmos()
         {

@@ -45,6 +45,7 @@ namespace Malicious.Core
         //IFrame Variables//
         private bool _isPaused = false;
         private bool _iFrameActive = false;
+        [SerializeField] private float _hitForce = 4f;
         [SerializeField] private float _iframeTime = 1.5f;
         [SerializeField] private GameObject _modelContainer = null;
         //--------------------------------//
@@ -250,12 +251,9 @@ namespace Malicious.Core
                     
                     for (int i = 0; i < collisions.Length - 1; i++)
                     {
-                        Debug.Log(collisions[i].isTrigger);
                         if (collisions[i].isTrigger == false)
                         {
                             collisionValid = true;
-                            
-                            
                         }
                     }
 
@@ -286,7 +284,13 @@ namespace Malicious.Core
         {
             if (other.gameObject.CompareTag("Enemy") && _iFrameActive == false)
             {
-                //player hit
+                Vector3 resolutionForce = other.impulse;
+                resolutionForce.y = 0;
+                resolutionForce = resolutionForce.normalized;
+                resolutionForce.y += 0.2f;
+                //resolution force is done here to make sure it is a consistent force applied
+                //while also not allowing abuse of being hit to launch into the air with a well done jump
+                LaunchPlayer(resolutionForce * _hitForce);
                 GameEventManager.PlayerHitFunc();
                 if (GameEventManager.CurrentHealth() <= 0)
                 {
@@ -294,6 +298,7 @@ namespace Malicious.Core
                 }
                 else
                 {
+                    
                     StartCoroutine(IFrame());
                 }
                 
