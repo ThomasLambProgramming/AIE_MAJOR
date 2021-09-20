@@ -14,7 +14,7 @@ namespace Malicious.GameItems
         Vector3 _movementAmount = Vector3.zero;
         
         [SerializeField] private bool _waitPlayer = false;
-        
+        private bool _isPaused = false;
         [SerializeField] private bool _waitForTime = false;
         [SerializeField] private float _waitTime = 3f;
         private bool waiting = false;
@@ -31,6 +31,8 @@ namespace Malicious.GameItems
                 waiting = true;
 
             GameEventManager.PlayerDead += ResetToStart;
+            GameEventManager.GamePauseStart += PauseStart;
+            GameEventManager.GamePauseExit += PauseExit;
         }
 
         void ResetToStart()
@@ -46,9 +48,19 @@ namespace Malicious.GameItems
             SwapTarget();
             waiting = false;
         }
+
+        private void PauseStart()
+        {
+            _isPaused = true;
+        }
+
+        private void PauseExit()
+        {
+            _isPaused = false;
+        }
         void FixedUpdate()
         {
-            if (waiting)
+            if (waiting || _isPaused)
                 return;
             //later add a timer for waiting at the position for a short time and a slow down as it gets closer to the platform
             if (Vector3.SqrMagnitude(_targetLocation - transform.position) < _stoppingDistance)

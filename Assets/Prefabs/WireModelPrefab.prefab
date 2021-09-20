@@ -23,7 +23,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5081303646587899567}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6, y: 0, z: 14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 4687917100090421416}
   - component: {fileID: 8548122735489941261}
   - component: {fileID: 5856367400739507143}
+  - component: {fileID: 519737604}
   m_Layer: 0
   m_Name: 1M_Wire
   m_TagString: Untagged
@@ -90,7 +91,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 5561349426305759274, guid: 73b0a622e0ff1e44b86d9d2b15e6f2af, type: 3}
+  - {fileID: 2100000, guid: f62d760b5fe7ab741bf06f84ae00f52b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -112,3 +113,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &519737604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5351687508917627410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6d0fa753cf9df242918a78ced0900f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dissolveSpeed: 1
