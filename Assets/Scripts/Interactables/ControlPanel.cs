@@ -13,7 +13,7 @@ namespace Malicious.Interactables
         [SerializeField] private float _holdTime = 2f;
         [SerializeField] private UnityEvent _holdEvent;
         
-        private bool _beenHacked = false;
+        //private bool _beenHacked = false;
         public void OnHackValid()
         { 
             
@@ -48,7 +48,7 @@ namespace Malicious.Interactables
         
         public void Hacked()
         {
-            _beenHacked = true;
+            //_beenHacked = true;
             if (!isOn)
             {
                 _onEvent?.Invoke();

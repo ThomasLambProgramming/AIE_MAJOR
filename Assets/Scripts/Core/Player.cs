@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Malicious.Interactables;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -19,15 +20,14 @@ namespace Malicious.Core
         [SerializeField] private float _animationSwapSpeed = 3f;
         [SerializeField] private Animator _playerAnimator = null;
         private readonly int _animatorRunVariable = Animator.StringToHash("RunAmount");
-        private readonly int _jumpingVariable = Animator.StringToHash("Jumping");
-        private float _currentRunAmount = 0f;
+        //private readonly int _jumpingVariable = Animator.StringToHash("Jumping");
+        //private float _currentRunAmount = 0f;
         private float _prevRunAnimAmount = 0;
         //--------------------------------//
         
         
         //Input Variables//
         private Vector2 _moveInput = Vector2.zero;
-        private Vector2 _spinInput = Vector2.zero;
         //-------------------------------------//
         
         
@@ -45,6 +45,7 @@ namespace Malicious.Core
         //IFrame Variables//
         private bool _isPaused = false;
         private bool _iFrameActive = false;
+        [SerializeField] private float _hitForce = 4f;
         [SerializeField] private float _iframeTime = 1.5f;
         [SerializeField] private GameObject _modelContainer = null;
         //--------------------------------//
@@ -55,6 +56,7 @@ namespace Malicious.Core
         private Rigidbody _rigidbody = null;
         private Vector3 _pauseEnterVelocity = Vector3.zero;
         private HackableField _currentHackableField = null;
+        [SerializeField] private CheckPoint _activeCheckpoint = null;
         //--------------------------------//
         #endregion
         public void SetHackableField(HackableField a_field)
@@ -76,8 +78,6 @@ namespace Malicious.Core
             else
                 _currentHackableField = a_field;
         }
-        public HackableField CurrentHackableField() => _currentHackableField;
-        public Transform GiveOffset() => _cameraTransform;
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
@@ -92,8 +92,9 @@ namespace Malicious.Core
 
             GameEventManager.PlayerUpdate += Tick;
             GameEventManager.PlayerFixedUpdate += FixedTick;
-            _currentRunAmount = 0;
+            //_currentRunAmount = 0;
 
+            GameEventManager.PlayerDead += PlayerDead;
         }
         private void Tick()
         {
@@ -112,10 +113,9 @@ namespace Malicious.Core
         {
             EnableInput();
             _moveInput = Vector2.zero;
-            _spinInput = Vector2.zero;
             GameEventManager.PlayerUpdate += Tick;
             GameEventManager.PlayerFixedUpdate += FixedTick;
-            _currentRunAmount = 0;
+            //_currentRunAmount = 0;
             _currentHackableField = null;
             gameObject.SetActive(true);
             CameraController.ChangeCamera(ObjectType.Player);
@@ -125,7 +125,6 @@ namespace Malicious.Core
         {
             DisableInput();
             _moveInput = Vector2.zero;
-            _spinInput = Vector2.zero;
             GameEventManager.PlayerUpdate -= Tick;
             GameEventManager.PlayerFixedUpdate -= FixedTick;
             gameObject.SetActive(false);
@@ -197,13 +196,11 @@ namespace Malicious.Core
                     _rigidbody.velocity.z);
             }
         }
-        public Quaternion GiveRotation()
+
+        private void PlayerDead()
         {
-            return transform.rotation;
-        }
-        public Quaternion GiveCameraRotation()
-        {
-            return _cameraTransform.rotation;
+            transform.position = _activeCheckpoint._returnPosition;
+            transform.rotation = Quaternion.LookRotation(_activeCheckpoint._facingDirection);
         }
         #region Pausing
         private void PauseEnter()
@@ -214,10 +211,6 @@ namespace Malicious.Core
             _isPaused = true;
             _pauseEnterVelocity = _rigidbody.velocity;
             _rigidbody.isKinematic = true;
-        }
-        public void SetCameraTransform(Transform a_cameraTransform)
-        {
-            _cameraTransform = a_cameraTransform;
         }
         private void PauseExit()
         {
@@ -258,12 +251,9 @@ namespace Malicious.Core
                     
                     for (int i = 0; i < collisions.Length - 1; i++)
                     {
-                        Debug.Log(collisions[i].isTrigger);
                         if (collisions[i].isTrigger == false)
                         {
                             collisionValid = true;
-                            
-                            
                         }
                     }
 
@@ -294,10 +284,45 @@ namespace Malicious.Core
         {
             if (other.gameObject.CompareTag("Enemy") && _iFrameActive == false)
             {
-                //player hit
-                StartCoroutine(IFrame());
+                Vector3 resolutionForce = other.impulse;
+                resolutionForce.y = 0;
+                resolutionForce = resolutionForce.normalized;
+                resolutionForce.y += 0.2f;
+                //resolution force is done here to make sure it is a consistent force applied
+                //while also not allowing abuse of being hit to launch into the air with a well done jump
+                LaunchPlayer(resolutionForce * _hitForce);
+                GameEventManager.PlayerHitFunc();
+                if (GameEventManager.CurrentHealth() <= 0)
+                {
+                    //Run shader for dissolve
+                }
+                else
+                {
+                    
+                    StartCoroutine(IFrame());
+                }
+                
+                
             }
         }
+
+        private void OnTriggerEnter(Collider a_other)
+        {
+            if (a_other.gameObject.CompareTag("CheckPoint"))
+            {
+                CheckPoint currentCheckPoint = a_other.GetComponent<CheckPoint>();
+                
+                if (_activeCheckpoint == null || currentCheckPoint._ID > _activeCheckpoint._ID)
+                {
+                    if (_activeCheckpoint != null)
+                        _activeCheckpoint.TurnOff();
+                    
+                    _activeCheckpoint = currentCheckPoint;
+                    _activeCheckpoint.TurnOn();
+                }
+            }
+        }
+
         #endregion
         private IEnumerator IFrame()
         {
@@ -328,7 +353,7 @@ namespace Malicious.Core
         }
         #region Input
 
-        private bool _heldInputDown = false;
+        private bool _heldInputDown;
         private void InteractionInputEnter(InputAction.CallbackContext a_context)
         {
             _heldInputDown = true;
@@ -354,23 +379,6 @@ namespace Malicious.Core
             }
         }
         private void JumpInputExit(InputAction.CallbackContext a_context) => _holdingJump = false;
-        private void PauseInputEnter(InputAction.CallbackContext a_context)
-        {
-            DisableInput();
-            _playerAnimator.enabled = false;
-            _moveInput = Vector2.zero;
-            _isPaused = true;
-            _pauseEnterVelocity = _rigidbody.velocity;
-            _rigidbody.isKinematic = true;
-        }
-        private void PauseInputExit(InputAction.CallbackContext a_context)
-        {
-            EnableInput();
-            _playerAnimator.enabled = true;
-            _isPaused = false;
-            _rigidbody.isKinematic = false;
-            _rigidbody.velocity = _pauseEnterVelocity;
-        }
         private void MoveInputEnter(InputAction.CallbackContext a_context)
         {
             _moveInput = a_context.ReadValue<Vector2>();
@@ -379,24 +387,19 @@ namespace Malicious.Core
         {
             _moveInput = Vector2.zero;
         }
-        private void CameraInputEnter(InputAction.CallbackContext a_context)
-        {
-            _spinInput = a_context.ReadValue<Vector2>();
-        }
-        private void CameraInputExit(InputAction.CallbackContext a_context)
-        {
-            _spinInput = Vector2.zero;
-        }
+        
         private void EnableInput()
         {
             GlobalData.InputManager.Player.Movement.performed += MoveInputEnter;
             GlobalData.InputManager.Player.Movement.canceled += MoveInputExit;
             GlobalData.InputManager.Player.Jump.performed += JumpInputEnter;
             GlobalData.InputManager.Player.Jump.canceled += JumpInputExit;
-            GlobalData.InputManager.Player.Camera.performed += CameraInputEnter;
-            GlobalData.InputManager.Player.Camera.canceled += CameraInputExit;
             GlobalData.InputManager.Player.Interaction.performed += InteractionInputEnter;
             GlobalData.InputManager.Player.Interaction.canceled += InteractionInputExit;
+            
+            //left these just incase i added any controls because retyping them is annoying
+            //GlobalData.InputManager.Player.Camera.performed += CameraInputEnter;
+            //GlobalData.InputManager.Player.Camera.canceled += CameraInputExit;
             //GlobalData.InputManager.Player.Down.performed += DownInputEnter;
             //GlobalData.InputManager.Player.Down.canceled += DownInputExit;
         }
@@ -406,10 +409,10 @@ namespace Malicious.Core
             GlobalData.InputManager.Player.Movement.canceled -= MoveInputExit;
             GlobalData.InputManager.Player.Jump.performed -= JumpInputEnter;
             GlobalData.InputManager.Player.Jump.canceled -= JumpInputExit;
-            GlobalData.InputManager.Player.Camera.performed -= CameraInputEnter;
-            GlobalData.InputManager.Player.Camera.canceled -= CameraInputExit;
             GlobalData.InputManager.Player.Interaction.performed -= InteractionInputEnter;
             GlobalData.InputManager.Player.Interaction.canceled -= InteractionInputExit;
+            //GlobalData.InputManager.Player.Camera.performed -= CameraInputEnter;
+            //GlobalData.InputManager.Player.Camera.canceled -= CameraInputExit;
             //GlobalData.InputManager.Player.Down.performed -= DownInputEnter;
             //GlobalData.InputManager.Player.Down.canceled -= DownInputExit;
         }

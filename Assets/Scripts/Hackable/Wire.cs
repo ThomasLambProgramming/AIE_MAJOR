@@ -13,6 +13,10 @@ namespace Malicious.Hackable
         [SerializeField] private GameObject _wireModel = null;
         [SerializeField] private Transform _wireCameraOffset = null;
         [SerializeField] private List<Vector3> _wirePath = new List<Vector3>();
+        //since it will be a prefab probably just make it have a script that auto plays the shader
+        //for it to dissolve in to avoid any logic being needed
+        [SerializeField] private GameObject _wirePrefab = null;
+        
         
         //------Other Variables----------------//
         [SerializeField] private Vector3 _startingDirection = Vector3.zero;
@@ -20,12 +24,14 @@ namespace Malicious.Hackable
         [SerializeField] private float _wireLength = 5f;
         [SerializeField] private int _wireCharges = 4;
         [SerializeField] private float _stoppingDistance = 0.2f;
+        [SerializeField] private float _dissolveTime = 1f;
         [SerializeField] private LayerMask _wireStopMask = ~0;
         [SerializeField] private float _maxTimeForExit = 0.4f;
         [SerializeField] private Vector3 _launchDirection = Vector3.zero;
         [SerializeField] private float _launchForce = 0;
         [SerializeField] private float _resetSpeed = 2f;
 
+        private bool _dissolveRunning = false;
         private Vector3 _resetAmount = Vector3.zero;
         private bool _resetting = false;
         private bool _holdingInteractButton = false;
@@ -37,13 +43,14 @@ namespace Malicious.Hackable
         private bool _takingInput = false;
         private int _pathIndex = 0;
         private int _chargesLeft = 0;
-        
+
+        private List<WireModelDissolve> _dissolveWires = new List<WireModelDissolve>();
         
         //------Debug Variables----------------//
         [SerializeField] private bool _showPath = true;
         [SerializeField] private Vector3 _pointSize = new Vector3(0.4f, 0.4f, 0.4f);
         [SerializeField] private bool _showDirection = true;
-        [SerializeField] private bool _showLaunchDirection = true;
+        //[SerializeField] private bool _showLaunchDirection = true;
         private void Start()
         {
             _chargesLeft = _wireCharges;
@@ -59,6 +66,9 @@ namespace Malicious.Hackable
 
         protected override void FixedTick()
         {
+            if (_dissolveRunning)
+                return;
+            
             if (_resetting)
             {
                 Vector3 direction = (_wirePath[0] - _wireModel.transform.position);
@@ -125,6 +135,11 @@ namespace Malicious.Hackable
             _wirePath.Add(startingPos);
             _pathIndex = 0;
             _chargesLeft = _wireCharges;
+            foreach (var wire in _dissolveWires)
+            {
+                wire.DissolveOut(true);
+            }
+            _dissolveWires.Clear();
         }
 
         private void ResetPath()
@@ -136,6 +151,11 @@ namespace Malicious.Hackable
             _wireModel.transform.rotation = Quaternion.LookRotation(_startingDirection);
             _resetAmount = _wirePath[0] - _wireModel.transform.position;
             _resetting = true;
+            foreach (var wire in _dissolveWires)
+            {
+                wire.DissolveOut(true);
+            }
+            _dissolveWires.Clear();
         }
         private void MoveToEndOfWire()
         {
@@ -215,10 +235,36 @@ namespace Malicious.Hackable
                     _takingInput = false;
                     _moveToEnd = true;
                     _chargesLeft--;
-                    
                     _wirePath.Add(newWirePoint);
+                    GameObject accessVar = 
+                        Instantiate(_wirePrefab, 
+                            _wirePath[_wirePath.Count - 2], 
+                            Quaternion.LookRotation(a_direction));
+                    Vector3 scaleBuffer = accessVar.transform.localScale;
+                    scaleBuffer.z = _wireLength;
+                    accessVar.transform.localScale = scaleBuffer;
+                    
+                    //this is for the resetting to be able to dissolve them before deleting
+                    _dissolveWires.Add(accessVar.GetComponentInChildren<WireModelDissolve>());
+                    StartCoroutine(WaitForDissolve());
                 }
             }
+        }
+
+        private IEnumerator WaitForDissolve()
+        {
+            _dissolveRunning = true;
+            bool waiting = true;
+            float timer = 0;
+            while (waiting)
+            {
+                timer += Time.deltaTime;
+                if (timer > _dissolveTime)
+                    waiting = false;
+                yield return null;
+            }
+
+            _dissolveRunning = false;
         }
         //Check all other points in the wire list to not allow overlap
         private bool CheckPoint(Vector3 a_position)
@@ -397,6 +443,9 @@ namespace Malicious.Hackable
                 InsideWireHoldOptionActivate();
             }
         }
+
+        
+        
         #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
