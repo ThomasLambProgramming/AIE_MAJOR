@@ -120,7 +120,7 @@ namespace Malicious.Core
                         _holdingHackButton = false;
                     }
                 }
-                else if (_hackable != null)
+                else if (_hackable != null && _hackable._hasHoldOption)
                 {
                     if (_holdTime >= _hackable._holdChargeTime)
                     {
