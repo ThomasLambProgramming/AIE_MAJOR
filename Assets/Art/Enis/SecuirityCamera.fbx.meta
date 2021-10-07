@@ -3,7 +3,22 @@ guid: 6655b61367a1ee04a874bd25358b7f76
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CameraArm_MAT
+    second: {fileID: 2100000, guid: 7f7fc2975e578754b88d2de081466e62, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Handle1
+    second: {fileID: 2100000, guid: 4abb924d32ee751429959f4015c2725c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SecruityCamera
+    second: {fileID: 2100000, guid: 254f393f8e71c8141807a0e1dd02b117, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
