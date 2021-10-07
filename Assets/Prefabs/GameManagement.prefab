@@ -1893,12 +1893,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 140179bbcfc94f32b362d7cb3c6a8705, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 100
-  _maxSpeed: 4
+  _moveSpeed: 130
+  _maxSpeed: 5
   _spinSpeed: 5
   _animationSwapSpeed: 3
   _playerAnimator: {fileID: 0}
-  _jumpForce: 7
+  _jumpForce: 5.5
   _additionalGravity: -9.81
   _groundMask:
     serializedVersion: 2
