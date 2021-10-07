@@ -63,21 +63,6 @@ namespace Malicious.Hackable
         protected virtual void OnPauseExit()
         {
         }
-        public virtual Quaternion GiveRotation()
-        {
-            return transform.rotation;
-        }
-        public virtual void SetRotation(Quaternion a_rotation)
-        {
-        }
-        public virtual void SetCameraTransform(Transform a_cameraTransform)
-        {
-            _cameraTransform = a_cameraTransform;
-        }
-        public virtual Quaternion GiveCameraRotation()
-        {
-            return _cameraTransform.rotation;
-        }
 
         #region Input
         
@@ -122,13 +107,6 @@ namespace Malicious.Hackable
         }
 
         protected virtual void DownInputExit(InputAction.CallbackContext a_context)
-        {
-        }
-
-        protected virtual void PauseInputEnter(InputAction.CallbackContext a_context)
-        {
-        }
-        protected virtual void PauseInputExit(InputAction.CallbackContext a_context)
         {
         }
         protected void EnableInput()
