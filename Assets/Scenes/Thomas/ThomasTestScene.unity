@@ -3843,11 +3843,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7820512539631577553, guid: 9c404c7e00660814b8b0a6e2cec3505e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.9
+      value: -14.376
       objectReference: {fileID: 0}
     - target: {fileID: 7820512539631577553, guid: 9c404c7e00660814b8b0a6e2cec3505e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.51
+      value: 0.516
       objectReference: {fileID: 0}
     - target: {fileID: 7820512539631577553, guid: 9c404c7e00660814b8b0a6e2cec3505e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4156,10 +4156,46 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1522378077182924463, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -16.74
+      objectReference: {fileID: 0}
+    - target: {fileID: 1522378077182924463, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 8.77
+      objectReference: {fileID: 0}
     - target: {fileID: 2191918653843491865, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: _activeCheckpoint
       value: 
       objectReference: {fileID: 919132148169294505}
+    - target: {fileID: 3453307705036951514, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8.181154
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453307705036951514, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.6550713
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453307705036951514, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.010045
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453307705036951514, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.5651869
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453307705036951514, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.18981726
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453307705036951514, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7610535
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453307705036951514, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.25559875
+      objectReference: {fileID: 0}
     - target: {fileID: 3453307705184082761, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: m_Name
       value: GameManagement

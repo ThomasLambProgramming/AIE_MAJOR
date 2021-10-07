@@ -230,6 +230,9 @@ namespace Malicious.Core
                 Vector3 prevVel = _rigidbody.velocity;
                 prevVel.y = _jumpForce;
                 _rigidbody.velocity = prevVel;
+                
+               _playerAnimator.SetBool(_Jumping, true);
+                
                 if (_canJump == false)
                     _hasDoubleJumped = true;
                 _canJump = false;
@@ -354,6 +357,8 @@ namespace Malicious.Core
         #region Input
 
         private bool _heldInputDown;
+        private static readonly int _Jumping = Animator.StringToHash("Jumping");
+
         private void InteractionInputEnter(InputAction.CallbackContext a_context)
         {
             _heldInputDown = true;
