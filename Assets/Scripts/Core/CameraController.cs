@@ -5,12 +5,6 @@ namespace Malicious.Core
 {
     public class CameraController : MonoBehaviour
     {
-        [SerializeField] private int init_resetPrio = 0;
-        [SerializeField] private int init_activePrio = 10;
-        
-        private static int _resetPrio = 0;
-        private static int _activePrio = 10;
-
         //named init to not accidentally use in functions
         [SerializeField] private Transform init_mainCamTransform = null;
         [SerializeField] private CinemachineFreeLook init_player = null;
@@ -29,13 +23,19 @@ namespace Malicious.Core
         private static CinemachineVirtualCamera _flyingEnemy = null;
         private static CinemachineVirtualCamera _currentHackableCamera = null;
         
+        [SerializeField] private int init_resetPrio = 0;
+        [SerializeField] private int init_activePrio = 10;
+        
+        private static int _resetPrio = 0;
+        private static int _activePrio = 10;
+        
+        
         private void Start()
         {
+            //Set all static variables to the references given to the active gameobject
             _mainCamTransform = init_mainCamTransform;
-            
             _resetPrio = init_resetPrio;
             _activePrio = init_activePrio;
-            
             _player = init_player;
             _moveable = init_moveable;
             _pointOfInterest = init_pointOfInterest;
@@ -46,7 +46,15 @@ namespace Malicious.Core
 
         public static void DisableCameraMovement()
         {
-            
+            //Check for active camera
+            //have a previous speed variable for x/y
+            //set camera speed to 0
+        }
+
+        public static void EnableCameraMovement()
+        {
+            //check which is the active camera 
+            //set its speed back to the previous speeds
         }
 
         public static void ChangeCamera(
@@ -59,7 +67,7 @@ namespace Malicious.Core
                 _player.Priority = 0;
             }
             
-            
+            //Just as a default thing the camera is 100% changing so the previous needs to be reset
             if (_currentHackableCamera != null)
             {
                 _currentHackableCamera.Priority = _resetPrio;
@@ -71,12 +79,11 @@ namespace Malicious.Core
                 case ObjectType.Player:
                     //The player has to be different as it is not the same type
                     _player.Priority = 20;
-                    Vector3 currentPlayerRot = _player.transform.rotation.eulerAngles;
-                    currentPlayerRot.y = _currentHackableCamera.transform.rotation.eulerAngles.y;
-                    _player.transform.rotation = Quaternion.Euler(currentPlayerRot);
+                    //Solve for some solution to get the rotation correct
                     return;
                 case ObjectType.Moveable:
                     _currentHackableCamera = _moveable;
+                    //Sets the y rotation of the camera to be the previous cameras y rotation
                     float newY = _mainCamTransform.rotation.eulerAngles.y;
                     Vector3 offsetEular = a_offset.rotation.eulerAngles;
                     offsetEular.y = newY;
