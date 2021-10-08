@@ -52,8 +52,6 @@ namespace Malicious.Hackable
 
                 newVel.y = currentYAmount + 0.02f;
                 
-                Debug.Log(newVel);
-                
                 _rigidbody.velocity = newVel;
             }
 
