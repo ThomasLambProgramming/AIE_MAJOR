@@ -8,19 +8,16 @@ namespace Malicious.Interactables
         public int _ID = 0;
         public Vector3 _returnPosition = Vector3.zero;
         public Vector3 _facingDirection = Vector3.zero;
-        private LineRenderer _lineRenderer = null;
+        
         
         private void Start()
         {
-            _lineRenderer = GetComponent<LineRenderer>();
         }
         public void TurnOn()
         {
-            _lineRenderer.enabled = true;
         }
         public void TurnOff()
         {
-            _lineRenderer.enabled = false;
         }
         
         #if UNITY_EDITOR
