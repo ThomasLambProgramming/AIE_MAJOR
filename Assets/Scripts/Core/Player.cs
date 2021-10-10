@@ -39,6 +39,9 @@ namespace Malicious.Core
         private bool _canJump = true;
         private bool _hasDoubleJumped = false;
         private bool _holdingJump = false;
+
+        [SerializeField] private float _groundCheckDelay = 0.2f;
+        private bool _waitingForEnumerator = false;
         //--------------------------------//
         
         
@@ -147,10 +150,12 @@ namespace Malicious.Core
                 float scaleAmount = _moveInput.magnitude;
                 
                 float currentYAmount = _rigidbody.velocity.y;
+
+                Vector2 normalisedInput = _moveInput.normalized;
                 
                 Vector3 newVel =
-                    _cameraTransform.forward * (_moveInput.y * _moveSpeed * Time.deltaTime) +
-                    _cameraTransform.right * (_moveInput.x * _moveSpeed * Time.deltaTime);
+                    _cameraTransform.forward * (normalisedInput.y * _moveSpeed * Time.deltaTime) +
+                    _cameraTransform.right * (normalisedInput.x * _moveSpeed * Time.deltaTime);
                 
                 //We are checking if the horizontal speed is too great 
                 Vector3 tempVelocity = _rigidbody.velocity + newVel;
@@ -227,6 +232,7 @@ namespace Malicious.Core
             //the 2 y velocity check is so the player can jump just before the arc of their jump
             if ((_canJump || _hasDoubleJumped == false) && _rigidbody.velocity.y < 2)
             {
+                StartCoroutine(JumpWait());
                 Vector3 prevVel = _rigidbody.velocity;
                 prevVel.y = _jumpForce;
                 _rigidbody.velocity = prevVel;
@@ -238,36 +244,41 @@ namespace Malicious.Core
                 _canJump = false;
             }
         }
+
         private void GroundCheck()
         {
             //We only want to check when the player is actually falling (slight grace amount for when the player
             //is on the ground)
-            if (_canJump)
+            if (_waitingForEnumerator)
                 return;
-            
-            if (_rigidbody.velocity.y <= 0.3f)
-            {
-                Collider[] collisions = Physics.OverlapSphere(_groundCheck.position, 1f, _groundMask);
-                if (collisions.Length > 0)
-                {
-                    bool collisionValid = false;
-                    
-                    for (int i = 0; i < collisions.Length - 1; i++)
-                    {
-                        if (collisions[i].isTrigger == false)
-                        {
-                            collisionValid = true;
-                        }
-                    }
 
-                    if (collisionValid)
+
+            Collider[] collisions = Physics.OverlapSphere(_groundCheck.position, 1f, _groundMask);
+            if (collisions.Length > 0)
+            {
+                bool collisionValid = false;
+
+                for (int i = 0; i < collisions.Length - 1; i++)
+                {
+                    if (!collisions[i].isTrigger)
                     {
-                        _canJump = true; 
-                        _hasDoubleJumped = false;
+                        collisionValid = true;
                     }
                 }
+                if (collisionValid)
+                {
+                    _canJump = true;
+                    _hasDoubleJumped = false;
+                }
+            }
+            else
+            {
+                //if its not colliding with anything then we know they are in the air 
+                //possibly add a timer to it for the extension
+                _canJump = false;
             }
         }
+
         #endregion
         private void UpdateAnimator()
         {
@@ -303,8 +314,6 @@ namespace Malicious.Core
                 {
                     StartCoroutine(IFrame());
                 }
-                
-                
             }
         }
 
@@ -312,7 +321,6 @@ namespace Malicious.Core
         {
             if (a_other.gameObject.CompareTag("CheckPoint"))
             {
-                
                 CheckPoint currentCheckPoint = a_other.GetComponent<CheckPoint>();
                 
                 if (_activeCheckpoint == null || _activeCheckpoint._ID < currentCheckPoint._ID)
@@ -322,7 +330,6 @@ namespace Malicious.Core
                     
                     _activeCheckpoint = currentCheckPoint;
                     _activeCheckpoint.TurnOn();
-                Debug.Log("Test");
                 }
             }
         }
@@ -354,6 +361,14 @@ namespace Malicious.Core
 
             _modelContainer.SetActive(true);
             _iFrameActive = false;
+        }
+
+        //this delays the ground check for a short period of time so on jump it doesnt instantly reset
+        private IEnumerator JumpWait()
+        {
+            _waitingForEnumerator = true;
+            yield return new WaitForSeconds(_groundCheckDelay);
+            _waitingForEnumerator = false;
         }
         #region Input
 

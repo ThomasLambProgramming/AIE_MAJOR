@@ -124,6 +124,9 @@ namespace Malicious.Hackable
 
         private void InsideWireHoldOptionActivate()
         {
+            if (_wirePath.Count == 1)
+                return;
+            
             ResetPath();
             _wireModel.SetActive(false);
         }
@@ -424,7 +427,7 @@ namespace Malicious.Hackable
             _player.transform.position = _wireModel.transform.position + _wireModel.transform.forward;
             Vector3 wireModelEular = _wireModel.transform.rotation.eulerAngles;
             Vector3 playerEular = _player.transform.rotation.eulerAngles;
-
+            
             playerEular.y = wireModelEular.y;
             _player.transform.rotation = Quaternion.Euler(playerEular);
             
