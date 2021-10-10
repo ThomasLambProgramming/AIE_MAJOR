@@ -108,7 +108,8 @@ GameObject:
   - component: {fileID: 2626718072262932055}
   - component: {fileID: 2626718072262932054}
   - component: {fileID: 2626718072262932058}
-  - component: {fileID: 2626718072262932059}
+  - component: {fileID: 1620165923}
+  - component: {fileID: 1620165924}
   m_Layer: 0
   m_Name: WireController
   m_TagString: Hackable
@@ -206,7 +207,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3.04, y: 1.73, z: 3.01}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2626718072262932059
+--- !u!114 &1620165923
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -215,31 +216,59 @@ MonoBehaviour:
   m_GameObject: {fileID: 2626718072262932053}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4324e16c572c413d9e8b10028b3a8398, type: 3}
+  m_Script: {fileID: 11500000, guid: c2e20528d08341168202ba3c03743845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _values:
-    _wireModel: {fileID: 0}
-    _wireCameraOffset: {fileID: 0}
-    _wirePath:
-    - {x: 8, y: 0.5, z: 13}
-    - {x: 15, y: 0.5, z: 13}
-    _pathIndex: 0
-    _rotationGoal: {x: 0, y: 0, z: 0, w: 1}
-    _rotateObject: 0
-    _startingDirection: {x: 0, y: 0, z: 0}
-    _heightAngleAllowance: 0.8
-    _wireLength: 5
-    _wireCharges: 90
-    _chargesLeft: 0
-    _rigOffset: {x: 0, y: 0, z: 0}
-    _moveToEnd: 0
-    _takingInput: 0
-    _goNextWire: 0.2
-    _wireSpeed: 5
-    _rotateSpeed: 4
-    _showPath: 0
-  _nodeObject: {fileID: 2626718070730980586}
+  _moveSpeed: 5
+  _maxSpeed: 4
+  _spinSpeed: 5
+  _cameraTransform: {fileID: 0}
+  _player: {fileID: 0}
+  _hasHoldOption: 1
+  _holdChargeTime: 2
+  _wireModel: {fileID: 0}
+  _wireCameraOffset: {fileID: 0}
+  _wirePath:
+  - {x: 7.32, y: 0.57, z: 9.36}
+  _wirePrefab: {fileID: 923981262691301710, guid: 5942664a276b1c2428be53b2b33995ad, type: 3}
+  _startingDirection: {x: 1, y: 0, z: 0}
+  _heightAngleAllowance: 0.6
+  _wireLength: 5
+  _wireCharges: 4
+  _stoppingDistance: 0.2
+  _dissolveTime: 1
+  _wireStopMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  _maxTimeForExit: 0.4
+  _launchDirection: {x: 0, y: 0.5, z: 0}
+  _launchForce: 10
+  _resetSpeed: 2
+  _showPath: 1
+  _pointSize: {x: 0.4, y: 0.4, z: 0.4}
+  _showDirection: 1
+--- !u!114 &1620165924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2626718072262932053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b7bd9d36ac941768532bd36c7c0609f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dotAllowance: 0.8
+  _maxTapHoldLength: 0.4
+  _triggerVolume: {fileID: 2626718072262932054}
+  _nodeRenderer: {fileID: 2626718070730980589}
   _defaultMaterial: {fileID: 2100000, guid: 83f8ab50a0baafb47b83584a8881ed10, type: 2}
   _hackValidMaterial: {fileID: 2100000, guid: d8b86c81f490cdf449608ff46aa82111, type: 2}
   _hackedMaterial: {fileID: 2100000, guid: 248cd4ca2763b604088fac32b3b6ba24, type: 2}
+  _onHackValidEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  _onHackFalseEvent:
+    m_PersistentCalls:
+      m_Calls: []
