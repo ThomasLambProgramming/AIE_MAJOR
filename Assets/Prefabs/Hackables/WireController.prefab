@@ -29,7 +29,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2758701430632637843}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6.18, y: 0.5, z: 13.18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -110,7 +110,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.04, y: 1.73, z: 3.01}
+  m_Size: {x: 4, y: 2, z: 4}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2758701430206633950
 MonoBehaviour:
@@ -124,30 +124,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2e20528d08341168202ba3c03743845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 5
-  _maxSpeed: 4
+  _moveSpeed: 10
+  _maxSpeed: 8
   _spinSpeed: 5
   _cameraTransform: {fileID: 0}
   _player: {fileID: 0}
   _hasHoldOption: 1
-  _holdChargeTime: 2
+  _holdChargeTime: 0.5
   _wireModel: {fileID: 0}
   _wireCameraOffset: {fileID: 0}
   _wirePath:
-  - {x: 7.81, y: 0.5, z: 13.18}
+  - {x: 0.5, y: 0.5, z: -7}
   _wirePrefab: {fileID: 923981262691301710, guid: 5942664a276b1c2428be53b2b33995ad, type: 3}
-  _startingDirection: {x: 1, y: 0, z: 0}
+  _startingDirection: {x: 0, y: 0, z: -1}
   _heightAngleAllowance: 0.6
-  _wireLength: 5
-  _wireCharges: 4
+  _wireLength: 2.5
+  _wireCharges: 5
   _stoppingDistance: 0.01
   _dissolveTime: 1
   _wireStopMask:
     serializedVersion: 2
     m_Bits: 4294967295
   _maxTimeForExit: 0.4
-  _launchDirection: {x: 0, y: 0, z: 0}
-  _launchForce: 0
+  _launchDirection: {x: 0, y: 1, z: 0}
+  _launchForce: 3
   _resetSpeed: 2
   _showPath: 1
   _pointSize: {x: 0.4, y: 0.4, z: 0.4}
