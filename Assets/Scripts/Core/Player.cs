@@ -252,8 +252,8 @@ namespace Malicious.Core
 
         private void GroundCheck()
         {
-            Collider[] collisions = Physics.OverlapSphere(_groundCheck.position, 1f, _groundMask);
-            if (collisions.Length == 0)
+            Collider[] collisions = Physics.OverlapSphere(_groundCheck.position, 0.5f, _groundMask);
+            if (collisions == null || collisions.Length == 0)
             {
                 _canJump = false;
             }
@@ -288,6 +288,8 @@ namespace Malicious.Core
                 {
                     averagedNormal += contactPoint.normal;
                 }
+
+                averagedNormal = averagedNormal / contacts.Count;
 
                 averagedNormal.y = 0;
                 averagedNormal = averagedNormal.normalized;
