@@ -1880,7 +1880,7 @@ CapsuleCollider:
   m_Radius: 0.3
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 1.03, z: 0}
+  m_Center: {x: 0, y: 0.95, z: 0}
 --- !u!114 &2191918653843491865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1898,14 +1898,16 @@ MonoBehaviour:
   _spinSpeed: 5
   _animationSwapSpeed: 3
   _playerAnimator: {fileID: 0}
-  _jumpForce: 5.5
+  _jumpForce: 5.3
   _additionalGravity: -9.81
   _groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
   _groundCheck: {fileID: 3453307706236470828}
+  _groundCheckDelay: 0.2
   _hitForce: 4
   _iframeTime: 1.5
+  _yHitAmount: 3
   _modelContainer: {fileID: 2534951401061061068}
   _cameraTransform: {fileID: 0}
   _activeCheckpoint: {fileID: 0}
@@ -4537,7 +4539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
@@ -4905,8 +4907,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3453307705308448572}
-  m_LocalRotation: {x: -0.0000000046632302, y: 0.99672884, z: -0.080818996, w: -0.000000057510935}
-  m_LocalPosition: {x: 0, y: -0.051625967, z: -0.005637169}
+  m_LocalRotation: {x: -0.00000002085314, y: 0.9593164, z: -0.28233343, w: -0.00000007085509}
+  m_LocalPosition: {x: 0, y: 1.6550713, z: -0.53968716}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3453307705872216991}
