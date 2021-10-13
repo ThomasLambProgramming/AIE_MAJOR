@@ -37,6 +37,7 @@ namespace Malicious.Core
         [SerializeField] private float _additionalGravity = -9.81f;
         [SerializeField] private LayerMask _groundMask = ~0;
         [SerializeField] private Transform _groundCheck = null;
+        [SerializeField] private float _groundCheckAngleAllowance = 0.7f;
         private bool _canJump = true;
         private bool _hasDoubleJumped = false;
         private bool _holdingJump = false;
@@ -288,9 +289,6 @@ namespace Malicious.Core
                 {
                     averagedNormal += contactPoint.normal;
                 }
-
-                averagedNormal = averagedNormal / contacts.Count;
-
                 averagedNormal.y = 0;
                 averagedNormal = averagedNormal.normalized;
                 averagedNormal.y = _yHitAmount;
@@ -317,13 +315,18 @@ namespace Malicious.Core
                 List<ContactPoint> contacts = new List<ContactPoint>(); 
                 other.GetContacts(contacts);
 
+                Vector3 averagedNormal = Vector3.zero;
                 foreach (var contactPoint in contacts)
                 {
-                    if (Vector3.Dot(contactPoint.normal, Vector3.up) > 0.8f)
-                    {
-                        _canJump = true;
-                        _hasDoubleJumped = false;
-                    }
+                    averagedNormal += contactPoint.normal;
+                }
+                averagedNormal = averagedNormal / contacts.Count;
+                averagedNormal = averagedNormal.normalized;
+
+                if (Vector3.Dot(averagedNormal, Vector3.up) > _groundCheckAngleAllowance)
+                {
+                    _canJump = true;
+                    _hasDoubleJumped = false;
                 }
             }
         }
