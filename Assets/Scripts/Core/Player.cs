@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Malicious.Interactables;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -48,8 +49,10 @@ namespace Malicious.Core
         //IFrame Variables//
         private bool _isPaused = false;
         private bool _iFrameActive = false;
+        private bool _movementDisabled = false;
         [SerializeField] private float _hitForce = 4f;
         [SerializeField] private float _iframeTime = 1.5f;
+        [SerializeField] private float _yHitAmount = 3f;
         [SerializeField] private GameObject _modelContainer = null;
         //--------------------------------//
         
@@ -135,7 +138,7 @@ namespace Malicious.Core
         }
         private void Movement()
         {
-            if (_moveInput != Vector2.zero)
+            if (_moveInput != Vector2.zero && !_movementDisabled)
             {
                 //For controller users this will change the max movespeed according to how small their inputs are
                 float targetAngle = Mathf.Atan2(_moveInput.x, _moveInput.y) * Mathf.Rad2Deg +
@@ -229,6 +232,8 @@ namespace Malicious.Core
         #region Jumping
         private void Jump()
         {
+            if (_movementDisabled)
+                return;
             //the 2 y velocity check is so the player can jump just before the arc of their jump
             if ((_canJump || _hasDoubleJumped == false) && _rigidbody.velocity.y < 2)
             {
@@ -247,34 +252,9 @@ namespace Malicious.Core
 
         private void GroundCheck()
         {
-            //We only want to check when the player is actually falling (slight grace amount for when the player
-            //is on the ground)
-            if (_waitingForEnumerator)
-                return;
-
-
             Collider[] collisions = Physics.OverlapSphere(_groundCheck.position, 1f, _groundMask);
-            if (collisions.Length > 0)
+            if (collisions.Length == 0)
             {
-                bool collisionValid = false;
-
-                for (int i = 0; i < collisions.Length - 1; i++)
-                {
-                    if (!collisions[i].isTrigger)
-                    {
-                        collisionValid = true;
-                    }
-                }
-                if (collisionValid)
-                {
-                    _canJump = true;
-                    _hasDoubleJumped = false;
-                }
-            }
-            else
-            {
-                //if its not colliding with anything then we know they are in the air 
-                //possibly add a timer to it for the extension
                 _canJump = false;
             }
         }
@@ -296,15 +276,24 @@ namespace Malicious.Core
         #region Collisions
         private void OnCollisionEnter(Collision other)
         {
-            if (other.gameObject.CompareTag("Enemy") && _iFrameActive == false)
+            if ((other.gameObject.CompareTag("Enemy") || 
+                other.gameObject.CompareTag("Laser")) && 
+                _iFrameActive == false)
             {
-                Vector3 resolutionForce = other.impulse;
-                resolutionForce.y = 0;
-                resolutionForce = resolutionForce.normalized;
-                resolutionForce.y += 0.2f;
-                //resolution force is done here to make sure it is a consistent force applied
-                //while also not allowing abuse of being hit to launch into the air with a well done jump
-                LaunchPlayer(resolutionForce * _hitForce);
+                List<ContactPoint> contacts = new List<ContactPoint>(); 
+                other.GetContacts(contacts);
+
+                Vector3 averagedNormal = Vector3.zero;
+                foreach (var contactPoint in contacts)
+                {
+                    averagedNormal += contactPoint.normal;
+                }
+
+                averagedNormal.y = 0;
+                averagedNormal = averagedNormal.normalized;
+                averagedNormal.y = _yHitAmount;
+                LaunchPlayer(averagedNormal * _hitForce);
+                
                 GameEventManager.PlayerHitFunc();
                 if (GameEventManager.CurrentHealth() <= 0)
                 {
@@ -313,6 +302,26 @@ namespace Malicious.Core
                 else
                 {
                     StartCoroutine(IFrame());
+                    StartCoroutine(DisableMoveInput());
+                }
+            }
+            else if (other.gameObject.CompareTag("Ground"))
+            {
+                _canJump = true;
+                _hasDoubleJumped = false;
+            }
+            else if (other.gameObject.CompareTag("Environment"))
+            {
+                List<ContactPoint> contacts = new List<ContactPoint>(); 
+                other.GetContacts(contacts);
+
+                foreach (var contactPoint in contacts)
+                {
+                    if (Vector3.Dot(contactPoint.normal, Vector3.up) > 0.8f)
+                    {
+                        _canJump = true;
+                        _hasDoubleJumped = false;
+                    }
                 }
             }
         }
@@ -370,6 +379,14 @@ namespace Malicious.Core
             yield return new WaitForSeconds(_groundCheckDelay);
             _waitingForEnumerator = false;
         }
+
+        private IEnumerator DisableMoveInput()
+        {
+            _movementDisabled = true;
+            yield return new WaitForSeconds(_iframeTime * 0.50f);
+            _movementDisabled = false;
+        }
+        
         #region Input
 
         private bool _heldInputDown;
