@@ -1904,10 +1904,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   _groundCheck: {fileID: 3453307706236470828}
+  _groundCheckAngleAllowance: 0.7
   _groundCheckDelay: 0.2
   _hitForce: 4
   _iframeTime: 1.5
-  _yHitAmount: 3
+  _yHitAmount: 1
   _modelContainer: {fileID: 2534951401061061068}
   _cameraTransform: {fileID: 0}
   _activeCheckpoint: {fileID: 0}
