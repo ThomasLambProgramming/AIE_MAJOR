@@ -3495,8 +3495,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 2.78, z: 4.67}
-  m_Center: {x: 2.22, y: 1.09, z: -1.04}
+  m_Size: {x: 1, y: 1.25, z: 6.5}
+  m_Center: {x: 1.75, y: 0.55, z: -1.04}
 --- !u!120 &7917781148067110640
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -3609,7 +3609,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _areaCollider: {fileID: 7917781148067110653}
   _activeTime: 2
-  _offTime: 1
+  _offTime: 2.5
   _arcWidth: 0.2
   _arcOnTime: 1
   _arcOffTime: 0.3
