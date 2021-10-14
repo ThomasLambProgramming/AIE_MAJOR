@@ -65,7 +65,8 @@ namespace Malicious.Core
         public static int CurrentHealth() => _playerHealth;
 
         [SerializeField] private FadeTransition _fadeTransitionInit = null;
-        private static FadeTransition _fadeTransition = null;
+        //I cant be bothered at this point and im just making things static so its easy to reference
+        public static FadeTransition _fadeTransition = null;
         void Update()
         {
             PlayerUpdate?.Invoke();
@@ -160,6 +161,21 @@ namespace Malicious.Core
         {
             _playerHealth = 0;
             PlayerHitFunc();
+        }
+
+        public static void Reset()
+        {
+            PlayerUpdate        = null;
+            PlayerFixedUpdate   = null;
+            EnemyUpdate         = null;
+            EnemyFixedUpdate    = null;
+            GeneralUpdate       = null;
+            GeneralFixedUpdate  = null;
+            GamePauseStart      = null;
+            GamePauseExit       = null;
+            PlayerHit           = null;
+            PlayerHealed        = null;
+            PlayerDead          = null;
         }
     }
 }

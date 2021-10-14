@@ -12,9 +12,9 @@ namespace Malicious.Tools
             SceneManager.LoadScene(0);
         }
 
-        public void LoadLevelOne()
+        public void LoadLevelOne(int a_index)
         {
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(a_index);
         }
     }
 }

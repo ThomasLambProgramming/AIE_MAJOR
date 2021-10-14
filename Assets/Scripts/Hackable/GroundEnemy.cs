@@ -10,7 +10,7 @@ namespace Malicious.Hackable
     [SelectionBase]
     public class GroundEnemy : BasePlayer
     {
-        [SerializeField] private float _turningSpeed = 10f;
+        //[SerializeField] private float _turningSpeed = 10f;
         
         [Tooltip("The turning positions for the left and right wheel (like wheel axles)")]
         [SerializeField] private Transform _leftAnchorPoint = null;

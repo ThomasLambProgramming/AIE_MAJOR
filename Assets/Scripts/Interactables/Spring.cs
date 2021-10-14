@@ -9,7 +9,7 @@ namespace Malicious.Interactables
     {
         [SerializeField] private LayerMask _launchMask;
         [SerializeField] private float _launchForce = 10f;
-        [SerializeField] private float _animationTime = 2f;
+        [SerializeField] private float _animationTime = 1f;
 
         private Animator _launchAnimation = null;
         
@@ -26,6 +26,7 @@ namespace Malicious.Interactables
         {
             _resetting = true;
             yield return new WaitForSeconds(_animationTime);
+            _launchAnimation.SetBool(_Launched, false);
             _resetting = false;
         }
 
