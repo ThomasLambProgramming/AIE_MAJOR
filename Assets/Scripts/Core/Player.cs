@@ -43,7 +43,6 @@ namespace Malicious.Core
         private bool _holdingJump = false;
 
         [SerializeField] private float _groundCheckDelay = 0.2f;
-        private bool _waitingForEnumerator = false;
         //--------------------------------//
         
         
@@ -310,7 +309,10 @@ namespace Malicious.Core
                 _canJump = true;
                 _hasDoubleJumped = false;
             }
-            else if (other.gameObject.CompareTag("Environment"))
+            else if (other.gameObject.CompareTag("Environment") || 
+                     other.gameObject.CompareTag("Hackable") || 
+                     other.gameObject.CompareTag("Interactable") ||
+                     other.gameObject.CompareTag("CheckPoint"))
             {
                 List<ContactPoint> contacts = new List<ContactPoint>(); 
                 other.GetContacts(contacts);
@@ -380,9 +382,9 @@ namespace Malicious.Core
         //this delays the ground check for a short period of time so on jump it doesnt instantly reset
         private IEnumerator JumpWait()
         {
-            _waitingForEnumerator = true;
+            
             yield return new WaitForSeconds(_groundCheckDelay);
-            _waitingForEnumerator = false;
+            
         }
 
         private IEnumerator DisableMoveInput()
