@@ -874,6 +874,11 @@ MonoBehaviour:
   _laserMask:
     serializedVersion: 2
     m_Bits: 4023
+--- !u!1 &922886905 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 980510982311547646, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+  m_PrefabInstance: {fileID: 3453307706263745250}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &948369915
 GameObject:
   m_ObjectHideFlags: 0
@@ -2238,9 +2243,33 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2191918653843491865, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: _modelContainer
+      value: 
+      objectReference: {fileID: 922886905}
+    - target: {fileID: 2191918653843491865, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: _activeCheckpoint
       value: 
       objectReference: {fileID: 919132148169294505}
+    - target: {fileID: 3453307704681875111, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9306383
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453307704681875111, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.05354065
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453307704681875111, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.020792017
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453307705036951514, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.06861154
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453307705036951514, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.023043087
+      objectReference: {fileID: 0}
     - target: {fileID: 3453307705184082761, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: m_Name
       value: GameManagement
@@ -2289,6 +2318,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5778265600652546622, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 9764319070460354296545c6ddfb5143, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
 --- !u!1001 &3456106251621178686
