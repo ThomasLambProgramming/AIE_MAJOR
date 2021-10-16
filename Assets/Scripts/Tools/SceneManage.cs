@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Malicious.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +10,7 @@ namespace Malicious.Tools
     {
         public void LoadMenu()
         {
+            GameEventManager.Reset();
             SceneManager.LoadScene(0);
         }
 
@@ -16,5 +18,11 @@ namespace Malicious.Tools
         {
             SceneManager.LoadScene(a_index);
         }
+
+        public void QuitApplication()
+        {
+            Application.Quit();
+        }
+        
     }
 }
