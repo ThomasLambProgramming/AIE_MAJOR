@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 906435213705538792}
   - component: {fileID: 906435213705538798}
   - component: {fileID: 906435213705538793}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cpu
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -138,7 +138,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1681712384521259382}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MovingPlatform
   m_TagString: Environment
   m_Icon: {fileID: 0}
@@ -227,9 +227,21 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: f886f834a05db9d4f9c6b5e985e074fd, type: 2}
+    - target: {fileID: -795908349699576852, guid: b85e268756ad6eb4ba9196d1f315ecb5, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b85e268756ad6eb4ba9196d1f315ecb5, type: 3}
       propertyPath: m_Name
       value: chip
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b85e268756ad6eb4ba9196d1f315ecb5, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b85e268756ad6eb4ba9196d1f315ecb5, type: 3}
+      propertyPath: m_TagString
+      value: Environment
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b85e268756ad6eb4ba9196d1f315ecb5, type: 3}
