@@ -94,11 +94,13 @@ namespace Malicious.Core
         {
             if (!_paused)
             {
+                Time.timeScale = 0;
                 GamePauseStart?.Invoke();
                 _paused = true;
             }
             else
             {
+                Time.timeScale = 1f;
                 GamePauseExit?.Invoke();
                 _paused = false;
             }
@@ -110,6 +112,7 @@ namespace Malicious.Core
             if (_paused)
             {
                 GamePauseExit?.Invoke();
+                Time.timeScale = 1f;
                 _paused = false;
             }
         }

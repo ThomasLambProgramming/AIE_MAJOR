@@ -100,6 +100,7 @@ namespace Malicious.GameItems
             Vector3 currentPosition = transform.position;
             currentPosition.y += _fanHeight;
             Gizmos.DrawLine(transform.position, currentPosition);
+            Gizmos.DrawLine(transform.position, transform.position + _launchDirection * 4);
         }
 #endif
     }

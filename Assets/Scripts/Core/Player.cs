@@ -14,6 +14,7 @@ namespace Malicious.Core
         [SerializeField] private float _moveSpeed = 100f;
         [SerializeField] private float _maxSpeed = 4f;
         [SerializeField] private float _spinSpeed = 5f;
+        private bool _inFan = false;
         //-------------------------------------//
         
         
@@ -171,8 +172,11 @@ namespace Malicious.Core
                 }
 
                 tempVelocity.y = currentYAmount;
-                _rigidbody.velocity = tempVelocity;
-                
+                if (!_inFan)
+                    _rigidbody.velocity = tempVelocity;
+                else
+                    _rigidbody.velocity += tempVelocity.normalized * (_moveSpeed * Time.deltaTime);
+
             }
             
             if (Mathf.Abs(_moveInput.magnitude) < 0.1f)
@@ -347,6 +351,11 @@ namespace Malicious.Core
                     _activeCheckpoint = currentCheckPoint;
                     _activeCheckpoint.TurnOn();
                 }
+            }
+
+            if (a_other.gameObject.CompareTag("Fan"))
+            {
+                
             }
         }
 
