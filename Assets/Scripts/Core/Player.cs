@@ -344,15 +344,16 @@ namespace Malicious.Core
             if (a_other.gameObject.CompareTag("CheckPoint"))
             {
                 CheckPoint currentCheckPoint = a_other.GetComponent<CheckPoint>();
-                
-                if (_activeCheckpoint == null || _activeCheckpoint._ID < currentCheckPoint._ID)
-                {
-                    if (_activeCheckpoint != null)
-                        _activeCheckpoint.TurnOff();
-                    
-                    _activeCheckpoint = currentCheckPoint;
-                    _activeCheckpoint.TurnOn();
-                }
+
+                if (_activeCheckpoint != null)
+                    _activeCheckpoint.TurnOff();
+
+                _activeCheckpoint = currentCheckPoint;
+                _activeCheckpoint.TurnOn();
+
+                //if (_activeCheckpoint == null || _activeCheckpoint._ID < currentCheckPoint._ID)
+                //{
+                //}
             }
 
             if (a_other.gameObject.CompareTag("Fan"))

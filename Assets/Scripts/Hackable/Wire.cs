@@ -16,7 +16,7 @@ namespace Malicious.Hackable
         //since it will be a prefab probably just make it have a script that auto plays the shader
         //for it to dissolve in to avoid any logic being needed
         [SerializeField] private GameObject _wirePrefab = null;
-        
+        [SerializeField] private Vector3 _startingCameraDirection = Vector3.zero;
         
         //------Other Variables----------------//
         [SerializeField] private Vector3 _startingDirection = Vector3.zero;
@@ -44,7 +44,7 @@ namespace Malicious.Hackable
         private int _pathIndex = 0;
         private int _chargesLeft = 0;
 
-        private List<WireModelDissolve> _dissolveWires = new List<WireModelDissolve>();
+        [SerializeField] private List<WireModelDissolve> _dissolveWires = new List<WireModelDissolve>();
         
         //------Debug Variables----------------//
         [SerializeField] private bool _showPath = true;
@@ -55,7 +55,6 @@ namespace Malicious.Hackable
         {
             _chargesLeft = _wireCharges;
             _pathIndex = 0;
-            
         }
 
         protected override void Tick()
@@ -98,7 +97,7 @@ namespace Malicious.Hackable
             CameraController.ChangeCamera(ObjectType.Wire, _wireCameraOffset);
             base.OnHackEnter();
             _wireModel.SetActive(true);
-            _wireModel.transform.rotation = Quaternion.LookRotation(_startingDirection);
+            _wireModel.transform.rotation = Quaternion.LookRotation(_startingCameraDirection);
             _wireModel.transform.position = _wirePath[0];
             if (_wirePath.Count > 1)
             {
@@ -328,7 +327,9 @@ namespace Malicious.Hackable
                 _pathIndex--;
                 
                 _wirePath.RemoveAt(_wirePath.Count - 1);
-
+                _dissolveWires[_wirePath.Count - 1].DissolveOut(false);
+                StartCoroutine(DeleteWire(_wirePath.Count - 1));
+                
                 if (_pathIndex > 0)
                 {
                     Vector3 previousDirection = (_wirePath[_pathIndex] - _wirePath[_pathIndex - 1]).normalized;
@@ -344,7 +345,7 @@ namespace Malicious.Hackable
                 else
                 {
                     _rotationGoal = Quaternion.LookRotation(
-                        (_startingDirection),
+                        (_startingCameraDirection),
                         Vector3.up);
                     _rotateObject = true;
                 }
@@ -447,6 +448,11 @@ namespace Malicious.Hackable
             }
         }
 
+        private IEnumerator DeleteWire(int a_index)
+        {
+            yield return new WaitForSeconds(1f);
+            _dissolveWires.RemoveAt(a_index);
+        }
         
         
         #if UNITY_EDITOR
@@ -455,7 +461,10 @@ namespace Malicious.Hackable
             if (_wirePath.Count > 0)
             {
                 if (_showDirection)
+                {
                     Gizmos.DrawLine(_wirePath[0], _wirePath[0] + _startingDirection.normalized * 4f);
+                    Gizmos.DrawLine(transform.position, transform.position + _startingCameraDirection * 2);   
+                }
 
                 if (_showPath)
                 {
