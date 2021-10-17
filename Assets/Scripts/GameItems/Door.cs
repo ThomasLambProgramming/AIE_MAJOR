@@ -7,7 +7,10 @@ namespace Malicious.GameItems
         [SerializeField] private Vector3 offsetPosition = Vector3.zero;
         private Vector3 startingPosition = Vector3.zero;
         private Vector3 moveDirection = Vector3.zero;
-    
+
+        [SerializeField] private int _coresNeededToOpen = 0;
+        private int coresHacked = 0;
+        
         private bool openDoor = false;
     
         private bool doneMoving = true;
@@ -61,6 +64,15 @@ namespace Malicious.GameItems
             openDoor = false;
         
             doneMoving = false;
+        }
+
+        public void CoreHacked()
+        {
+            coresHacked++;
+            if (coresHacked >= _coresNeededToOpen)
+            {
+                Open();
+            }
         }
     }
 }
