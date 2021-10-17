@@ -22,6 +22,8 @@ namespace Malicious.Core
         [SerializeField] private float _animationSwapSpeed = 3f;
         [SerializeField] private Animator _playerAnimator = null;
         private readonly int _animatorRunVariable = Animator.StringToHash("RunAmount");
+        private static readonly int _Jumped = Animator.StringToHash("Jumped");
+        
         //private readonly int _jumpingVariable = Animator.StringToHash("Jumping");
         //private float _currentRunAmount = 0f;
         private float _prevRunAnimAmount = 0;
@@ -246,7 +248,7 @@ namespace Malicious.Core
                 prevVel.y = _jumpForce;
                 _rigidbody.velocity = prevVel;
                 
-               _playerAnimator.SetBool(_Jumping, true);
+               _playerAnimator.SetTrigger(_Jumped);
                 
                 if (_canJump == false)
                     _hasDoubleJumped = true;
@@ -406,7 +408,6 @@ namespace Malicious.Core
         #region Input
 
         private bool _heldInputDown;
-        private static readonly int _Jumping = Animator.StringToHash("Jumping");
 
         private void InteractionInputEnter(InputAction.CallbackContext a_context)
         {

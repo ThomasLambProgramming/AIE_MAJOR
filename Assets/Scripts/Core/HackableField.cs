@@ -23,10 +23,11 @@ namespace Malicious.Core
         
         private Player _player = null;
         private bool _hackValid = false;
+
+        [SerializeField] private Transform _lookGoal = null;
         
         //This is to allow for sphere colliders or box colliders as needed
-        [SerializeField] private Collider _triggerVolume;
-        
+
         //Material Variables//
         [SerializeField] private MeshRenderer _nodeRenderer = null;
         [SerializeField] private Material _defaultMaterial = null;
@@ -63,7 +64,12 @@ namespace Malicious.Core
         private bool DotCheck()
         {
             Transform playerTransform = _player.transform;
-            Vector3 direction = (transform.position - playerTransform.position).normalized;
+            Vector3 direction = Vector3.zero;
+            if (_lookGoal != null)
+                direction = (_lookGoal.position - playerTransform.position).normalized;
+            else
+                direction = (transform.position - playerTransform.position).normalized;
+
             if (Vector3.Dot(direction, playerTransform.forward) > _dotAllowance)
             {
                 return true;
