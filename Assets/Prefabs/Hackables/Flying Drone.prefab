@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 875079078}
   - component: {fileID: 875079081}
   - component: {fileID: 875079080}
-  - component: {fileID: 875079079}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -82,19 +81,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &875079079
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 875079077}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &240734457605571130
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,7 +181,7 @@ GameObject:
   - component: {fileID: 270638636}
   m_Layer: 0
   m_Name: Flying Drone
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -268,8 +254,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.39, y: 1, z: 3.97}
-  m_Center: {x: 0, y: 1.62, z: -0.78}
+  m_Size: {x: 1.39, y: 2, z: 3.97}
+  m_Center: {x: 0, y: 2, z: -0.78}
 --- !u!65 &270638635
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -281,8 +267,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 5.47, y: 1, z: 1.16}
-  m_Center: {x: 0, y: 1.62, z: 0}
+  m_Size: {x: 5.47, y: 2, z: 1.16}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!114 &270638630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,7 +282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 5
-  _maxSpeed: 0
+  _maxSpeed: 5
   _spinSpeed: 5
   _cameraTransform: {fileID: 0}
   _player: {fileID: 0}
@@ -324,6 +310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dotAllowance: 0.8
+  _maxDistanceAway: 5
   _maxTapHoldLength: 0.4
   _lookGoal: {fileID: 875079078}
   _nodeRenderer: {fileID: 875079080}
