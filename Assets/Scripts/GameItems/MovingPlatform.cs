@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Malicious.Core;
 using UnityEngine;
@@ -7,90 +8,85 @@ namespace Malicious.GameItems
     public class MovingPlatform : MonoBehaviour
     {
         [SerializeField] private float _moveSpeed = 0.5f;
-        [SerializeField] private float _stoppingDistance = 0.4f;
-        
         [SerializeField] private Vector3 _targetLocation = Vector3.zero;
         private Vector3 _startLocation = Vector3.zero;
-        Vector3 _movementAmount = Vector3.zero;
         
         [SerializeField] private bool _waitPlayer = false;
-        private bool _isPaused = false;
         [SerializeField] private bool _waitForTime = false;
         [SerializeField] private float _waitTime = 3f;
+
+        private float _timer = 0;
         private bool waiting = false;
+        private bool _moveToTarget = true;
         
         private Vector3 _sceneStartLocation = Vector3.zero;
-        private Vector3 _initalTarget = Vector3.zero;
+        
         void Start()
         {
-            _sceneStartLocation = transform.position;
-            _initalTarget = _targetLocation;
+            GameEventManager.PlayerDead += ResetToStart;
             _startLocation = transform.position;
-            _movementAmount = _targetLocation - _startLocation;
+            _sceneStartLocation = transform.position;
+            
             if (_waitPlayer)
                 waiting = true;
-
-            GameEventManager.PlayerDead += ResetToStart;
-            GameEventManager.GamePauseStart += PauseStart;
-            GameEventManager.GamePauseExit += PauseExit;
         }
 
-        void ResetToStart()
+        [ContextMenu("SetPositions")]
+        public void MakePositions()
         {
-            transform.position = _sceneStartLocation;
-            _targetLocation = _initalTarget;
-            
+            _startLocation = transform.position;
+            _targetLocation = transform.position;
         }
-
-        IEnumerator WaitAtPoint()
-        {
-            yield return new WaitForSeconds(_waitTime);
-            SwapTarget();
-            waiting = false;
-        }
-
-        private void PauseStart()
-        {
-            _isPaused = true;
-        }
-
-        private void PauseExit()
-        {
-            _isPaused = false;
-        }
+        
+        
         void FixedUpdate()
         {
-            if (waiting || _isPaused)
+            if (waiting)
                 return;
-            //later add a timer for waiting at the position for a short time and a slow down as it gets closer to the platform
-            if (Vector3.SqrMagnitude(_targetLocation - transform.position) < _stoppingDistance)
+
+            if (_moveToTarget)
             {
-                if (_waitForTime)
+                if (_timer < 1)
                 {
-                    StartCoroutine(WaitAtPoint());
-                    waiting = true;
-                }
-                else if (_waitPlayer)
-                {
-                    waiting = true;
+                    _timer += Time.deltaTime * _moveSpeed;
+                    transform.position = Vector3.Lerp(_startLocation, _targetLocation, _timer);
                 }
                 else
-                    SwapTarget();
+                {
+                    _timer = 1;
+                    if (_waitForTime)
+                    {
+                        StartCoroutine(WaitAtPoint());
+                        waiting = true;   
+                    }
+                    else
+                        waiting = true;
+                    
+                    _moveToTarget = false;
+                }
             }
             else
             {
-                transform.position += _movementAmount * (Time.deltaTime * _moveSpeed);
+                if (_timer > 0)
+                {
+                    _timer -= Time.deltaTime * _moveSpeed;
+                    transform.position = Vector3.Lerp(_startLocation, _targetLocation, _timer);
+                }
+                else
+                {
+                    if (_waitForTime)
+                    {
+                        StartCoroutine(WaitAtPoint());
+                        waiting = true;
+                    }
+                    else
+                        waiting = true;
+                    
+                    _timer = 0;
+                    _moveToTarget = true;
+                }
             }
         }
-
-        private void SwapTarget()
-        {
-            Vector3 buffer = _startLocation;
-            _startLocation = _targetLocation;
-            _targetLocation = buffer;
-            _movementAmount = _targetLocation - _startLocation;
-        }
-
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.CompareTag("Player"))
@@ -98,10 +94,19 @@ namespace Malicious.GameItems
                 other.transform.parent = this.transform;
                 if (_waitPlayer && waiting)
                 {
-                    SwapTarget();
                     waiting = false;
                 }
             }
+        }
+        void ResetToStart()
+        {
+            transform.position = _sceneStartLocation;
+        }
+
+        IEnumerator WaitAtPoint()
+        {
+            yield return new WaitForSeconds(_waitTime);
+            waiting = false;
         }
         private void OnTriggerExit(Collider other)
         {
@@ -110,5 +115,13 @@ namespace Malicious.GameItems
                 other.transform.parent = null;
             }
         }
+        
+        #if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawCube(_startLocation, Vector3.one / 2);
+            Gizmos.DrawCube(_targetLocation, Vector3.one / 2);
+        }
+#endif
     }
 }

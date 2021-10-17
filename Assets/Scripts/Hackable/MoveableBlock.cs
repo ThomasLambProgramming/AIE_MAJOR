@@ -93,9 +93,12 @@ namespace Malicious.Hackable
             Vector3 rotationDirection = Vector3.zero;
             
             if (_faceBoxOnExit) 
-                rotationDirection = (transform.position - _exitPosition.position).normalized;
+                rotationDirection = transform.position - _exitPosition.position;
             else
-                rotationDirection = (_exitPosition.position - transform.position).normalized;
+                rotationDirection = _exitPosition.position - transform.position;
+
+            rotationDirection.y = 0;
+            rotationDirection = rotationDirection.normalized;
             
             _player.transform.rotation = Quaternion.LookRotation(rotationDirection);
             _player.OnHackEnter();
