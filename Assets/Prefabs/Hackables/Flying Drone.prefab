@@ -254,8 +254,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.39, y: 1, z: 3.97}
-  m_Center: {x: 0, y: 1.62, z: -0.78}
+  m_Size: {x: 1.39, y: 2, z: 3.97}
+  m_Center: {x: 0, y: 2, z: -0.78}
 --- !u!65 &270638635
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -267,8 +267,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 5.47, y: 1, z: 1.16}
-  m_Center: {x: 0, y: 1.62, z: 0}
+  m_Size: {x: 5.47, y: 2, z: 1.16}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!114 &270638630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,7 +282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 5
-  _maxSpeed: 0
+  _maxSpeed: 5
   _spinSpeed: 5
   _cameraTransform: {fileID: 0}
   _player: {fileID: 0}
