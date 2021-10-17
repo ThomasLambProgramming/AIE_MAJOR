@@ -73,7 +73,9 @@ namespace Malicious.Core
 
             //This is to remove the y from the looking direction so its only if the player is looking horizontally in
             Vector2 horizontalDirection = new Vector2(direction.x, direction.z);
+            horizontalDirection = horizontalDirection.normalized;
             Vector2 playerLookDirection = new Vector2(playerTransform.forward.x, playerTransform.forward.z);
+            playerLookDirection = playerLookDirection.normalized;
             
             if (Vector2.Dot(horizontalDirection, playerLookDirection) > _dotAllowance)
             {

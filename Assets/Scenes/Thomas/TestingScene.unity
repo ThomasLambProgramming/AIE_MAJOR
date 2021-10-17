@@ -2224,6 +2224,14 @@ PrefabInstance:
       propertyPath: _lookGoal
       value: 
       objectReference: {fileID: 2012151614}
+    - target: {fileID: 2012151611, guid: f5f17ba2a31073544a3d1fa2b1dc4dc8, type: 3}
+      propertyPath: _dotAllowance
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2012151611, guid: f5f17ba2a31073544a3d1fa2b1dc4dc8, type: 3}
+      propertyPath: _maxDistanceAway
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2012151613, guid: f5f17ba2a31073544a3d1fa2b1dc4dc8, type: 3}
       propertyPath: m_Size.x
       value: 52.7
@@ -2744,11 +2752,11 @@ PrefabInstance:
       objectReference: {fileID: 919132148169294505}
     - target: {fileID: 3453307705036951514, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.068611585
+      value: 0.06861154
       objectReference: {fileID: 0}
     - target: {fileID: 3453307705036951514, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.023043104
+      value: 0.023043087
       objectReference: {fileID: 0}
     - target: {fileID: 3453307705184082761, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: m_Name
