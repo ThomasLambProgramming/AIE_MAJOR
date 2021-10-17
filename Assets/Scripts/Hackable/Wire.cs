@@ -119,6 +119,7 @@ namespace Malicious.Hackable
             _wireModel.SetActive(false);
             _takingInput = false;
             _moveToEnd = false;
+            ResetPath();
         }
 
         private void InsideWireHoldOptionActivate()
