@@ -14,6 +14,7 @@ namespace Malicious.Core
     {
         //Other Variables//
         [SerializeField] private float _dotAllowance = 0.8f;
+        [SerializeField] private float _maxDistanceAway = 5f;
         [SerializeField] private float _maxTapHoldLength = 0.4f;
         private bool _holdingHackButton = false;
         private float _holdTime = 0;
@@ -70,9 +71,14 @@ namespace Malicious.Core
             else
                 direction = (transform.position - playerTransform.position).normalized;
 
-            if (Vector3.Dot(direction, playerTransform.forward) > _dotAllowance)
+            //This is to remove the y from the looking direction so its only if the player is looking horizontally in
+            Vector2 horizontalDirection = new Vector2(direction.x, direction.z);
+            Vector2 playerLookDirection = new Vector2(playerTransform.forward.x, playerTransform.forward.z);
+            
+            if (Vector2.Dot(horizontalDirection, playerLookDirection) > _dotAllowance)
             {
-                return true;
+                if (Vector3.SqrMagnitude(transform.position - _player.transform.position) < _maxDistanceAway)
+                    return true;
             }
 
             return false;
