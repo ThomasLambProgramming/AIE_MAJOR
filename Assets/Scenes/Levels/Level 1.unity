@@ -59131,7 +59131,7 @@ PrefabInstance:
     - target: {fileID: 2191918653843491865, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: _modelContainer
       value: 
-      objectReference: {fileID: 1188527267}
+      objectReference: {fileID: 1921085088}
     - target: {fileID: 2191918653843491865, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: _activeCheckpoint
       value: 
@@ -70861,11 +70861,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1 &1188527267 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2191918653843491861, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
-  m_PrefabInstance: {fileID: 1009486469}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1190066977
 GameObject:
   m_ObjectHideFlags: 0
@@ -119442,6 +119437,11 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &1921085088 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3085459152598001728, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+  m_PrefabInstance: {fileID: 1009486469}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1926042140
 GameObject:
   m_ObjectHideFlags: 0
