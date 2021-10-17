@@ -27,18 +27,20 @@ namespace Malicious.GameItems
             {
                 _timer += Time.deltaTime * _moveSpeed;
                 _liftObject.position = Vector3.Lerp(_groundPosition, _topPosition, _timer);
+                
+                if (_timer >= 1)
+                    _wait = true;
             }
             else if (_moveDown)
             {
-                _timer += Time.deltaTime * _moveSpeed;
-                _liftObject.position = Vector3.Lerp(_topPosition,_groundPosition,  _timer);
+                _timer -= Time.deltaTime * _moveSpeed;
+                _liftObject.position = Vector3.Lerp(_groundPosition, _topPosition, _timer);
+                
+                if (_timer <= 0)
+                    _wait = true;
             }
 
-            if (_timer >= 1)
-            {
-                _timer = 0;
-                _wait = true;
-            }
+            
         }
 
         private void OnTriggerEnter(Collider other)
@@ -70,7 +72,6 @@ namespace Malicious.GameItems
         {
             _moveUp = true;
             _moveDown = false;
-            _timer = 0;
             _wait = false;
         }
 
@@ -79,7 +80,6 @@ namespace Malicious.GameItems
         {
             _moveUp = false;
             _moveDown = true;
-            _timer = 0;
             _wait = false;
         }
         
