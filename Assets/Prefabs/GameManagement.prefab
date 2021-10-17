@@ -829,7 +829,7 @@ MonoBehaviour:
   _hitForce: 5
   _iframeTime: 1.5
   _yHitAmount: 0.5
-  _modelContainer: {fileID: 0}
+  _modelContainer: {fileID: 3085459152598001728}
   _cameraTransform: {fileID: 0}
   _activeCheckpoint: {fileID: 0}
 --- !u!1 &3453307704318689838
@@ -1905,7 +1905,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3453307704681875105}
-  m_LocalRotation: {x: 0.36140478, y: -0.053540703, z: 0.020792037, w: 0.9306384}
+  m_LocalRotation: {x: 0.36140478, y: -0.053540688, z: 0.020792034, w: 0.9306384}
   m_LocalPosition: {x: 0.20809555, y: 1.764441, z: -1.8733449}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2405,7 +2405,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3453307705036951508}
-  m_LocalRotation: {x: 0.023043104, y: 0.94547933, z: -0.31753793, w: 0.068611585}
+  m_LocalRotation: {x: 0.023043087, y: 0.94547933, z: -0.31753793, w: 0.06861154}
   m_LocalPosition: {x: -0.7417197, y: 1.764441, z: 5.5208015}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5831,8 +5831,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: VirusCharacter
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: b64d3237013d43b4488e67c0197dc3e8, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 9764319070460354296545c6ddfb5143, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b64d3237013d43b4488e67c0197dc3e8, type: 3}
+--- !u!1 &3085459152598001728 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b64d3237013d43b4488e67c0197dc3e8, type: 3}
+  m_PrefabInstance: {fileID: 2742878066024502545}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2421265809686180602 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b64d3237013d43b4488e67c0197dc3e8, type: 3}
