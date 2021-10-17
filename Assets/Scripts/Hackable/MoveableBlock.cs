@@ -10,7 +10,7 @@ namespace Malicious.Hackable
     public class MoveableBlock : BasePlayer
     {
         [SerializeField] private Transform _cameraOffset = null;
-
+        
         [SerializeField] private bool _faceBoxOnExit = true;
         [SerializeField] private Transform _exitPosition = null;
         [SerializeField] private Collider _exitBox = null;
@@ -19,10 +19,12 @@ namespace Malicious.Hackable
         
         [SerializeField] private UnityEvent _onHackEnterEvent = null;
         [SerializeField] private UnityEvent _onHackExitEvent = null;
+        private Vector3 _startingPosition = Vector3.zero;
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
             _cameraTransform = _cameraOffset;
+            _startingPosition = transform.position;
         }
 
         protected override void Tick()
@@ -69,6 +71,12 @@ namespace Malicious.Hackable
                 }
             }
         }
+
+        public void ResetToOriginalPosition()
+        {
+            transform.position = _startingPosition;
+        }
+
         private void SpinMovement()
         {
             if (_spinInput != Vector2.zero)
