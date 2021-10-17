@@ -24018,6 +24018,46 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8712297759930779134, guid: 66aa12e0e01c1964ea9429dd239c73ed, type: 3}
+      propertyPath: onEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8712297759930779134, guid: 66aa12e0e01c1964ea9429dd239c73ed, type: 3}
+      propertyPath: offEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8712297759930779134, guid: 66aa12e0e01c1964ea9429dd239c73ed, type: 3}
+      propertyPath: onEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8712297759930779134, guid: 66aa12e0e01c1964ea9429dd239c73ed, type: 3}
+      propertyPath: onEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8712297759930779134, guid: 66aa12e0e01c1964ea9429dd239c73ed, type: 3}
+      propertyPath: offEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8712297759930779134, guid: 66aa12e0e01c1964ea9429dd239c73ed, type: 3}
+      propertyPath: offEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8712297759930779134, guid: 66aa12e0e01c1964ea9429dd239c73ed, type: 3}
+      propertyPath: onEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8712297759930779134, guid: 66aa12e0e01c1964ea9429dd239c73ed, type: 3}
+      propertyPath: onEvent.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8712297759930779134, guid: 66aa12e0e01c1964ea9429dd239c73ed, type: 3}
+      propertyPath: offEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8712297759930779134, guid: 66aa12e0e01c1964ea9429dd239c73ed, type: 3}
+      propertyPath: offEvent.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8712297759930779135, guid: 66aa12e0e01c1964ea9429dd239c73ed, type: 3}
       propertyPath: m_Name
       value: Lever
@@ -58861,11 +58901,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3453307705036951514, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.019514835
+      value: 0.019514833
       objectReference: {fileID: 0}
     - target: {fileID: 3453307705036951514, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.006554031
+      value: -0.0065540303
       objectReference: {fileID: 0}
     - target: {fileID: 3453307705184082761, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: m_Name
