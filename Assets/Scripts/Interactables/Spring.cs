@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Malicious.Hackable;
 using UnityEngine;
 
 namespace Malicious.Interactables
@@ -32,6 +33,12 @@ namespace Malicious.Interactables
 
         private void OnTriggerEnter(Collider other)
         {
+            Vector3 directionToObject = other.gameObject.transform.position - transform.position;
+            directionToObject = directionToObject.normalized;
+
+            if (Vector3.Dot(directionToObject, Vector3.up) < 0.8f)
+                return;
+            
             if ((_launchMask & (1 << other.gameObject.layer)) > 0)
             {
                 Rigidbody objectRb = other.gameObject.GetComponent<Rigidbody>();

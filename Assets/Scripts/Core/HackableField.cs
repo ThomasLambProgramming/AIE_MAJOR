@@ -18,7 +18,8 @@ namespace Malicious.Core
         [SerializeField] private float _maxTapHoldLength = 0.4f;
         private bool _holdingHackButton = false;
         private float _holdTime = 0;
-        
+        [SerializeField] private bool _requiresSameYHeight = false;
+        [SerializeField] private float _yDifferenceAllowed = 1f;
         private BasePlayer _hackable = null;
         private IInteractable _interactable = null;
         
@@ -65,6 +66,21 @@ namespace Malicious.Core
         private bool DotCheck()
         {
             Transform playerTransform = _player.transform;
+
+            if (_requiresSameYHeight)
+            {
+                if (_lookGoal != null)
+                {
+                    if (Mathf.Abs(_lookGoal.position.y - playerTransform.position.y) > _yDifferenceAllowed)
+                    {
+                        return false;
+                    }
+                }
+                else if (Mathf.Abs(transform.position.y - playerTransform.position.y) > _yDifferenceAllowed)
+                {
+                    return false;
+                }
+            }
             Vector3 direction = Vector3.zero;
             if (_lookGoal != null)
                 direction = (_lookGoal.position - playerTransform.position).normalized;
