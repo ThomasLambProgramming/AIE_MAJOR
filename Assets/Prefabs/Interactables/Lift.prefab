@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 632184487017243469}
   - component: {fileID: 5090575552946371935}
   - component: {fileID: 9061890480820010146}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Battery18
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3998047581263088968}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LiftCircut
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 3973874200978547804}
   - component: {fileID: 7137969429752940538}
   - component: {fileID: 4773566362168472808}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Battery13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -211,9 +211,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1371720342574843971}
-  m_Layer: 0
-  m_Name: Lift_01
-  m_TagString: Untagged
+  - component: {fileID: 237506462}
+  - component: {fileID: 8714986999233753173}
+  - component: {fileID: 237506463}
+  m_Layer: 7
+  m_Name: Lift
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -235,6 +238,48 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &237506462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748105629377598201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 317de2190ba14743941410eee263437f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _moveSpeed: 0.5
+  _topPosition: {x: 2.12, y: 3.4123116, z: 14.7634535}
+  _groundPosition: {x: 2.12, y: 0.4123116, z: 14.7634535}
+  _liftObject: {fileID: 7151613034196211759}
+--- !u!65 &8714986999233753173
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748105629377598201}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 389.91, y: 24.67, z: 380.5}
+  m_Center: {x: 0, y: -3.38, z: 14.4}
+--- !u!65 &237506463
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748105629377598201}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 389.91, y: 492.6, z: 26.3}
+  m_Center: {x: 0, y: 240.4, z: -182.8}
 --- !u!1 &1854580328792695965
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,7 +291,7 @@ GameObject:
   - component: {fileID: 2657675637128664921}
   - component: {fileID: 954178204542096796}
   - component: {fileID: 6757224604658882390}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Chip7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,7 +372,7 @@ GameObject:
   - component: {fileID: 5071232944225727871}
   - component: {fileID: 6837726475728309155}
   - component: {fileID: 5116633372059219310}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Chip8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,7 +451,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4494436529813759194}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Lift
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -440,7 +485,7 @@ GameObject:
   - component: {fileID: 4910281593385398892}
   - component: {fileID: 3070666299167336096}
   - component: {fileID: 7841028287546603061}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Chip12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -521,7 +566,7 @@ GameObject:
   - component: {fileID: 7126576516888369538}
   - component: {fileID: 9216084949573795692}
   - component: {fileID: 1366022425740819027}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Chip9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -602,7 +647,7 @@ GameObject:
   - component: {fileID: 2224245580500617314}
   - component: {fileID: 3955574391273352926}
   - component: {fileID: 6513451273817057931}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wiring_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -683,7 +728,7 @@ GameObject:
   - component: {fileID: 3402332513379079774}
   - component: {fileID: 1271531087244668308}
   - component: {fileID: 505222554336488747}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -764,7 +809,7 @@ GameObject:
   - component: {fileID: 7567746141094694243}
   - component: {fileID: 5922612135924587104}
   - component: {fileID: 3754078179420256478}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Battery19
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -843,7 +888,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7264096694723111086}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LiftAttatchment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -882,7 +927,7 @@ GameObject:
   - component: {fileID: 2724382465597351761}
   - component: {fileID: 1422863787639797965}
   - component: {fileID: 1388307173113856415}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: pCube60
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -961,7 +1006,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3603025583893459409}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wiring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -996,7 +1041,7 @@ GameObject:
   - component: {fileID: 1433733862271561133}
   - component: {fileID: 5862434061156494829}
   - component: {fileID: 5535357395181249825}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1077,7 +1122,7 @@ GameObject:
   - component: {fileID: 631233662528408078}
   - component: {fileID: 464264632485067954}
   - component: {fileID: 371457552425626257}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wire_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1158,7 +1203,7 @@ GameObject:
   - component: {fileID: 2970824842843718414}
   - component: {fileID: 4746977908355479164}
   - component: {fileID: 1710597251966457817}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1239,7 +1284,7 @@ GameObject:
   - component: {fileID: 3660035896120388343}
   - component: {fileID: 7962228815351817045}
   - component: {fileID: 3940843990576561668}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: pCube61
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1320,7 +1365,7 @@ GameObject:
   - component: {fileID: 3913688095737998090}
   - component: {fileID: 148359026619703289}
   - component: {fileID: 322640296193785172}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Chip11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1401,7 +1446,7 @@ GameObject:
   - component: {fileID: 8795938602004071797}
   - component: {fileID: 1872730750765789115}
   - component: {fileID: 2917692444541121103}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Chip10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1482,7 +1527,7 @@ GameObject:
   - component: {fileID: 6682844305019171861}
   - component: {fileID: 1191113758907273804}
   - component: {fileID: 8924284471148524989}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Battery20
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1563,7 +1608,7 @@ GameObject:
   - component: {fileID: 481318069186352836}
   - component: {fileID: 6882459449907581088}
   - component: {fileID: 2908876268381749436}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Battery14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1642,9 +1687,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7151613034196211759}
-  m_Layer: 0
+  - component: {fileID: 1959583216}
+  - component: {fileID: 1959583217}
+  m_Layer: 7
   m_Name: AnimatedLift
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1666,6 +1713,32 @@ Transform:
   m_Father: {fileID: 4494436529813759194}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1959583216
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6072183552803172868}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 380.02, y: 11.5, z: 349.3}
+  m_Center: {x: 0, y: 6.1, z: 186.01}
+--- !u!65 &1959583217
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6072183552803172868}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 396.5, y: 11.5, z: 371.09}
+  m_Center: {x: 0, y: 0, z: 186.01}
 --- !u!1 &6261780986788026491
 GameObject:
   m_ObjectHideFlags: 0
@@ -1677,7 +1750,7 @@ GameObject:
   - component: {fileID: 3761817497683451340}
   - component: {fileID: 864961058297454855}
   - component: {fileID: 1513479835468370478}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Battery15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1758,7 +1831,7 @@ GameObject:
   - component: {fileID: 7772505319772682925}
   - component: {fileID: 174738064044964985}
   - component: {fileID: 6778153623260736235}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ElevatorSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1839,7 +1912,7 @@ GameObject:
   - component: {fileID: 8241886187475082302}
   - component: {fileID: 3305112087786286914}
   - component: {fileID: 4835250230392515648}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Lift 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1920,7 +1993,7 @@ GameObject:
   - component: {fileID: 391589823253237782}
   - component: {fileID: 587797306393501633}
   - component: {fileID: 1191174657015088994}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Battery16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2001,7 +2074,7 @@ GameObject:
   - component: {fileID: 5144052398962546974}
   - component: {fileID: 6638091094571575606}
   - component: {fileID: 3492719565822834157}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BatterySilver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
