@@ -22,7 +22,7 @@ namespace Malicious.GameItems
             _lineRenderer = GetComponent<LineRenderer>(); 
             if (_laserDirection == Vector3.zero)
             {
-                _laserDirection = transform.forward;
+                _laserDirection = transform.up;
             }
             else
             {
