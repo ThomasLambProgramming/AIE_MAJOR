@@ -147,15 +147,26 @@ namespace Malicious.Hackable
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.gameObject.CompareTag("Player"))
             {
-                other.gameObject.transform.parent = this.transform;
+                other.gameObject.transform.parent = transform;
+            }
+        }
+
+        private void OnTriggerStay(Collider other)
+        {
+            if (other.gameObject.CompareTag("Player"))
+            {
+                if (Vector3.SqrMagnitude(transform.position - other.gameObject.transform.position) > 9)
+                {
+                    other.gameObject.transform.parent = null;
+                }
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.gameObject.CompareTag("Player"))
             {
                 other.gameObject.transform.parent = null;
             }

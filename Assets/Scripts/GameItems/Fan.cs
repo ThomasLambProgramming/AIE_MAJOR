@@ -100,6 +100,7 @@ namespace Malicious.GameItems
                     transform.rotation, 
                     goalRot, 
                     _rotateFanSpeed * Time.deltaTime);
+                _launchDirection = transform.up;
                 yield return null;
             }
         }
