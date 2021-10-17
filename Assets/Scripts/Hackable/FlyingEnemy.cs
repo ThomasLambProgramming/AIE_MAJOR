@@ -1,16 +1,15 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.InputSystem;
 using Malicious.Core;
-using UnityEditor;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Malicious.Hackable
 {
-    public class GroundEnemy : BasePlayer
+    public class FlyingEnemy : BasePlayer
     {
-        [SerializeField] private List<Vector3> _groundPath = new List<Vector3>();
+        [SerializeField] private List<Vector3> _flightPath = new List<Vector3>();
         [SerializeField] private int _pathIndex = 0;
         private int direction = 1;
         [SerializeField] private float _goNextDistance = 4;
@@ -30,7 +29,7 @@ namespace Malicious.Hackable
 
         void AiUpdate()
         {
-            Vector3 directionToTarget = _groundPath[_pathIndex] - transform.position;
+            Vector3 directionToTarget = _flightPath[_pathIndex] - transform.position;
             if (Vector3.SqrMagnitude(directionToTarget) > _goNextDistance)
             {
                 Vector3 desiredVelocity = Vector3.Normalize(directionToTarget) * _maxSpeed;
@@ -55,7 +54,7 @@ namespace Malicious.Hackable
             {
                 if (direction == 1)
                 {
-                    if (_pathIndex < _groundPath.Count - 1)
+                    if (_pathIndex < _flightPath.Count - 1)
                         _pathIndex++;
                     else
                     {
@@ -145,16 +144,27 @@ namespace Malicious.Hackable
             base.OnHackExit();
             GameEventManager.EnemyFixedUpdate += AiUpdate;
         }
-        
-        private void OnTriggerStay(Collider other)
+
+        private void OnTriggerEnter(Collider other)
         {
-            throw new NotImplementedException();
+            if (other.CompareTag("Player"))
+            {
+                other.gameObject.transform.parent = this.transform;
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Player"))
+            {
+                other.gameObject.transform.parent = null;
+            }
         }
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            foreach (var point in _groundPath)
+            foreach (var point in _flightPath)
             {
                 Gizmos.DrawSphere(point, 0.3f);
             }
