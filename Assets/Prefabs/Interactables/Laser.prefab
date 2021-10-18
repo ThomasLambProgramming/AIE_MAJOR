@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1567975387}
   m_Layer: 12
   m_Name: LaserStartPosition
-  m_TagString: Untagged
+  m_TagString: Laser
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 2051884501}
   m_Layer: 12
   m_Name: PlayerCollider
-  m_TagString: Untagged
+  m_TagString: Laser
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -86,9 +86,9 @@ GameObject:
   - component: {fileID: 1761905396}
   - component: {fileID: 1761905397}
   - component: {fileID: 1761905398}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Laser
-  m_TagString: Untagged
+  m_TagString: Laser
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -253,9 +253,9 @@ GameObject:
   - component: {fileID: 717947867431406301}
   - component: {fileID: 4391689307928259705}
   - component: {fileID: 8375333260503543338}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: LaserShell
-  m_TagString: Untagged
+  m_TagString: Laser
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -334,9 +334,9 @@ GameObject:
   - component: {fileID: 2738881834433533234}
   - component: {fileID: 8637636938149868260}
   - component: {fileID: 3561598352273701783}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Lense
-  m_TagString: Untagged
+  m_TagString: Laser
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
