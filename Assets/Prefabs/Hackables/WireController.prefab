@@ -136,7 +136,6 @@ MonoBehaviour:
   _wireCameraOffset: {fileID: 0}
   _wirePath:
   - {x: -16.04, y: 0.481, z: 7.3953905}
-  - {x: -16.04, y: 2.7, z: 7.3953905}
   _wirePrefab: {fileID: 923981262691301710, guid: 5942664a276b1c2428be53b2b33995ad, type: 3}
   _startingCameraDirection: {x: -0.57, y: 0, z: 0}
   _startingDirection: {x: 0, y: 1, z: 0}
@@ -172,6 +171,8 @@ MonoBehaviour:
   _dotAllowance: 0.8
   _maxDistanceAway: 5
   _maxTapHoldLength: 0.4
+  _requiresSameYHeight: 0
+  _yDifferenceAllowed: 1
   _lookGoal: {fileID: 0}
   _nodeRenderer: {fileID: 2758701430988091179}
   _defaultMaterial: {fileID: 2100000, guid: 83f8ab50a0baafb47b83584a8881ed10, type: 2}
