@@ -15,6 +15,8 @@ namespace Malicious.GameItems
         [SerializeField] private bool _waitForTime = false;
         [SerializeField] private float _waitTime = 3f;
 
+        private GameObject _playerObject = null;
+        
         private float _timer = 0;
         private bool waiting = false;
         private bool _moveToTarget = true;
@@ -41,6 +43,14 @@ namespace Malicious.GameItems
         
         void FixedUpdate()
         {
+            if (_playerObject != null)
+            {
+                if (Vector3.SqrMagnitude(_playerObject.transform.position - transform.position) > 5)
+                {
+                    _playerObject.transform.parent = null;
+                    _playerObject = null;
+                }
+            }
             if (waiting)
                 return;
 
@@ -91,6 +101,7 @@ namespace Malicious.GameItems
         {
             if (other.gameObject.CompareTag("Player"))
             {
+                _playerObject = other.gameObject;
                 other.transform.parent = this.transform;
                 if (_waitPlayer && waiting)
                 {
@@ -113,6 +124,7 @@ namespace Malicious.GameItems
             if (other.gameObject.CompareTag("Player"))
             {
                 other.transform.parent = null;
+                _playerObject = null;
             }
         }
         
