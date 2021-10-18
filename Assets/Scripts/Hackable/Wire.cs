@@ -302,6 +302,43 @@ namespace Malicious.Hackable
             
             return true;
         }
+
+        private void RemoveInputEnter(InputAction.CallbackContext a_context)
+        {
+            if (_moveToEnd)
+                return;
+
+            if (_pathIndex == 0)
+                return;
+            _takingInput = false;
+            _chargesLeft++;
+            _moveToEnd = true;
+            _pathIndex--;
+                
+            _wirePath.RemoveAt(_wirePath.Count - 1);
+            _dissolveWires[_wirePath.Count - 1].DissolveOut(false);
+            StartCoroutine(DeleteWire(_wirePath.Count - 1));
+                
+            if (_pathIndex > 0)
+            {
+                Vector3 previousDirection = (_wirePath[_pathIndex] - _wirePath[_pathIndex - 1]).normalized;
+
+                if (Vector3.Dot(previousDirection, Vector3.up) < _heightAngleAllowance &&
+                    Vector3.Dot(previousDirection, Vector3.down) < _heightAngleAllowance)
+                {
+                    _rotationGoal = Quaternion.LookRotation(previousDirection,
+                        Vector3.up);
+                    _rotateObject = true;
+                }
+            }
+            else
+            {
+                _rotationGoal = Quaternion.LookRotation(
+                    (_startingCameraDirection),
+                    Vector3.up);
+                _rotateObject = true;
+            }
+        }
         protected override void MoveInputEnter(InputAction.CallbackContext a_context)
         {
             //if we are moving then we dont want to be able to take in input
@@ -320,44 +357,10 @@ namespace Malicious.Hackable
             
             if (Vector2.Dot(input, Vector2.down) > 0.8f)
             {
-                if (_pathIndex == 0)
-                    return;
-                _takingInput = false;
-                _chargesLeft++;
-                _moveToEnd = true;
-                _pathIndex--;
-                
-                _wirePath.RemoveAt(_wirePath.Count - 1);
-                _dissolveWires[_wirePath.Count - 1].DissolveOut(false);
-                StartCoroutine(DeleteWire(_wirePath.Count - 1));
-                
-                if (_pathIndex > 0)
-                {
-                    Vector3 previousDirection = (_wirePath[_pathIndex] - _wirePath[_pathIndex - 1]).normalized;
-
-                    if (Vector3.Dot(previousDirection, Vector3.up) < _heightAngleAllowance &&
-                        Vector3.Dot(previousDirection, Vector3.down) < _heightAngleAllowance)
-                    {
-                        _rotationGoal = Quaternion.LookRotation(previousDirection,
-                            Vector3.up);
-                        _rotateObject = true;
-                    }
-                }
-                else
-                {
-                    _rotationGoal = Quaternion.LookRotation(
-                        (_startingCameraDirection),
-                        Vector3.up);
-                    _rotateObject = true;
-                }
-
-                return;
+                AddPoint(-forwardDirection);
+                _rotateObject = true;
             }
-            //We always want to be able to go backwards
-            if (!_takingInput)
-                return;
-            
-            if (Vector2.Dot(input, Vector2.up) > 0.8f)
+            else if (Vector2.Dot(input, Vector2.up) > 0.8f)
                 AddPoint(forwardDirection);
             else if (Vector2.Dot(input, Vector2.left) > 0.8f)
             {
