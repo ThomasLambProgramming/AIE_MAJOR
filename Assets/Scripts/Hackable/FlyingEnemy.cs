@@ -26,10 +26,14 @@ namespace Malicious.Hackable
             GameEventManager.EnemyFixedUpdate += AiUpdate;
             _rigidbody = GetComponent<Rigidbody>();
             _sqrMaxTurningSpeed = _maxTurningSpeed * _maxTurningSpeed;
+            
         }
 
         void AiUpdate()
         {
+            if (_flightPath.Count == 0)
+                return;
+            
             Vector3 directionToTarget = _flightPath[_pathIndex] - transform.position;
             if (Vector3.SqrMagnitude(directionToTarget) > _goNextDistance)
             {
@@ -144,6 +148,7 @@ namespace Malicious.Hackable
         {
             base.OnHackEnter();
             GameEventManager.EnemyFixedUpdate -= AiUpdate;
+            CameraController.ChangeCamera(ObjectType.FlyingEnemy, _cameraTransform);
         }
 
         public override void OnHackExit()
