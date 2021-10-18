@@ -113,7 +113,7 @@ namespace Malicious.Hackable
         protected virtual void DownInputExit(InputAction.CallbackContext a_context)
         {
         }
-        protected void EnableInput()
+        protected virtual void EnableInput()
         {
             GlobalData.InputManager.Player.Movement.performed += MoveInputEnter;
             GlobalData.InputManager.Player.Movement.canceled += MoveInputExit;
@@ -127,7 +127,7 @@ namespace Malicious.Hackable
             GlobalData.InputManager.Player.Down.canceled += DownInputExit;
         }
 
-        protected void DisableInput()
+        protected virtual void DisableInput()
         {
             GlobalData.InputManager.Player.Movement.performed -= MoveInputEnter;
             GlobalData.InputManager.Player.Movement.canceled -= MoveInputExit;
