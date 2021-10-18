@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 704829934}
   - component: {fileID: 704829935}
   m_Layer: 0
-  m_Name: Spring
+  m_Name: Spring NonHackable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -179,7 +179,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2627154774341299844}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
