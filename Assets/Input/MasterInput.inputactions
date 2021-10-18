@@ -60,6 +60,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "RemoveWire",
+                    "type": "Button",
+                    "id": "05182dc3-cba8-46d4-9f48-dc2d93bcf02a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -247,6 +255,28 @@
                     "processors": "",
                     "groups": "XboxController",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c61d5dd7-1308-4150-9e7c-ff0026f626f7",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and mouse",
+                    "action": "RemoveWire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "989b15a2-ee9a-47f2-9390-657f390c33b2",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XboxController",
+                    "action": "RemoveWire",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -73,6 +73,14 @@ public class @MasterInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""RemoveWire"",
+                    ""type"": ""Button"",
+                    ""id"": ""05182dc3-cba8-46d4-9f48-dc2d93bcf02a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -262,6 +270,28 @@ public class @MasterInput : IInputActionCollection, IDisposable
                     ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c61d5dd7-1308-4150-9e7c-ff0026f626f7"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and mouse"",
+                    ""action"": ""RemoveWire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""989b15a2-ee9a-47f2-9390-657f390c33b2"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxController"",
+                    ""action"": ""RemoveWire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -305,6 +335,7 @@ public class @MasterInput : IInputActionCollection, IDisposable
         m_Player_Click = m_Player.FindAction("Click", throwIfNotFound: true);
         m_Player_Down = m_Player.FindAction("Down", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
+        m_Player_RemoveWire = m_Player.FindAction("RemoveWire", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -361,6 +392,7 @@ public class @MasterInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Click;
     private readonly InputAction m_Player_Down;
     private readonly InputAction m_Player_Pause;
+    private readonly InputAction m_Player_RemoveWire;
     public struct PlayerActions
     {
         private @MasterInput m_Wrapper;
@@ -372,6 +404,7 @@ public class @MasterInput : IInputActionCollection, IDisposable
         public InputAction @Click => m_Wrapper.m_Player_Click;
         public InputAction @Down => m_Wrapper.m_Player_Down;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
+        public InputAction @RemoveWire => m_Wrapper.m_Player_RemoveWire;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -402,6 +435,9 @@ public class @MasterInput : IInputActionCollection, IDisposable
                 @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @RemoveWire.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRemoveWire;
+                @RemoveWire.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRemoveWire;
+                @RemoveWire.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRemoveWire;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -427,6 +463,9 @@ public class @MasterInput : IInputActionCollection, IDisposable
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @RemoveWire.started += instance.OnRemoveWire;
+                @RemoveWire.performed += instance.OnRemoveWire;
+                @RemoveWire.canceled += instance.OnRemoveWire;
             }
         }
     }
@@ -458,5 +497,6 @@ public class @MasterInput : IInputActionCollection, IDisposable
         void OnClick(InputAction.CallbackContext context);
         void OnDown(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+        void OnRemoveWire(InputAction.CallbackContext context);
     }
 }
