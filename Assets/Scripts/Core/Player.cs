@@ -155,6 +155,9 @@ namespace Malicious.Core
                 
                 float scaleAmount = _moveInput.magnitude;
                 
+                if (scaleAmount > 1)
+                    scaleAmount = 1;
+                
                 float currentYAmount = _rigidbody.velocity.y;
 
                 Vector2 normalisedInput = _moveInput.normalized;

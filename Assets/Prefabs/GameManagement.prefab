@@ -164,6 +164,7 @@ GameObject:
   m_Component:
   - component: {fileID: 443292261614890522}
   - component: {fileID: 443292261614890501}
+  - component: {fileID: 2029474585}
   m_Layer: 0
   m_Name: PointOfInterestCamera
   m_TagString: Untagged
@@ -221,6 +222,36 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 443292261961268799}
+--- !u!114 &2029474585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443292261614890500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CollideAgainst:
+    serializedVersion: 2
+    m_Bits: 8887
+  m_IgnoreTag: 
+  m_TransparentLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_MinimumDistanceFromTarget: 0.1
+  m_AvoidObstacles: 1
+  m_DistanceLimit: 0
+  m_MinimumOcclusionTime: 0
+  m_CameraRadius: 0.1
+  m_Strategy: 1
+  m_MaximumEffort: 4
+  m_SmoothingTime: 0
+  m_Damping: 0
+  m_DampingWhenOccluded: 0
+  m_OptimalTargetDistance: 0
 --- !u!1 &443292261961268798
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,6 +342,7 @@ GameObject:
   m_Component:
   - component: {fileID: 443292262148266731}
   - component: {fileID: 443292262148266740}
+  - component: {fileID: 1244514078}
   m_Layer: 0
   m_Name: MoveableCamera
   m_TagString: Untagged
@@ -368,6 +400,36 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 443292261424007886}
+--- !u!114 &1244514078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443292262148266741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CollideAgainst:
+    serializedVersion: 2
+    m_Bits: 8887
+  m_IgnoreTag: 
+  m_TransparentLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_MinimumDistanceFromTarget: 0.1
+  m_AvoidObstacles: 1
+  m_DistanceLimit: 0
+  m_MinimumOcclusionTime: 0
+  m_CameraRadius: 0.1
+  m_Strategy: 1
+  m_MaximumEffort: 4
+  m_SmoothingTime: 0
+  m_Damping: 0
+  m_DampingWhenOccluded: 0
+  m_OptimalTargetDistance: 0
 --- !u!1 &443292262330979948
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,6 +520,7 @@ GameObject:
   m_Component:
   - component: {fileID: 443292262609463165}
   - component: {fileID: 443292262609463138}
+  - component: {fileID: 1975030295}
   m_Layer: 0
   m_Name: WireCamera
   m_TagString: Untagged
@@ -515,6 +578,36 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 443292262807992152}
+--- !u!114 &1975030295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443292262609463139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CollideAgainst:
+    serializedVersion: 2
+    m_Bits: 8887
+  m_IgnoreTag: 
+  m_TransparentLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_MinimumDistanceFromTarget: 0.1
+  m_AvoidObstacles: 1
+  m_DistanceLimit: 0
+  m_MinimumOcclusionTime: 0
+  m_CameraRadius: 0.1
+  m_Strategy: 1
+  m_MaximumEffort: 4
+  m_SmoothingTime: 0
+  m_Damping: 0
+  m_DampingWhenOccluded: 0
+  m_OptimalTargetDistance: 0
 --- !u!1 &443292262721187022
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,6 +778,7 @@ GameObject:
   m_Component:
   - component: {fileID: 443292263069629674}
   - component: {fileID: 443292263069629685}
+  - component: {fileID: 1628342482}
   m_Layer: 0
   m_Name: GroundEnemyCamera
   m_TagString: Untagged
@@ -742,6 +836,36 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 443292262721187023}
+--- !u!114 &1628342482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443292263069629684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CollideAgainst:
+    serializedVersion: 2
+    m_Bits: 8887
+  m_IgnoreTag: 
+  m_TransparentLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_MinimumDistanceFromTarget: 0.1
+  m_AvoidObstacles: 1
+  m_DistanceLimit: 0
+  m_MinimumOcclusionTime: 0
+  m_CameraRadius: 0.1
+  m_Strategy: 1
+  m_MaximumEffort: 4
+  m_SmoothingTime: 0
+  m_Damping: 0
+  m_DampingWhenOccluded: 0
+  m_OptimalTargetDistance: 0
 --- !u!1 &443292263191643734
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,6 +876,7 @@ GameObject:
   m_Component:
   - component: {fileID: 443292263191643720}
   - component: {fileID: 443292263191643735}
+  - component: {fileID: 958972614}
   m_Layer: 0
   m_Name: FlyingCamera
   m_TagString: Untagged
@@ -809,6 +934,36 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 443292262330979949}
+--- !u!114 &958972614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443292263191643734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CollideAgainst:
+    serializedVersion: 2
+    m_Bits: 8887
+  m_IgnoreTag: 
+  m_TransparentLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_MinimumDistanceFromTarget: 0.1
+  m_AvoidObstacles: 1
+  m_DistanceLimit: 0
+  m_MinimumOcclusionTime: 0
+  m_CameraRadius: 0.1
+  m_Strategy: 1
+  m_MaximumEffort: 4
+  m_SmoothingTime: 0
+  m_Damping: 0
+  m_DampingWhenOccluded: 0
+  m_OptimalTargetDistance: 0
 --- !u!1 &2191918653843491861
 GameObject:
   m_ObjectHideFlags: 0
@@ -2479,8 +2634,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3453307705036951508}
-  m_LocalRotation: {x: 0.023043098, y: 0.94547933, z: -0.31753793, w: 0.06861156}
-  m_LocalPosition: {x: -0.7417197, y: 1.764441, z: 5.5208015}
+  m_LocalRotation: {x: -0.13354172, y: 0.8605425, z: -0.28901204, w: -0.3976246}
+  m_LocalPosition: {x: 1.1165166, y: 1.7814412, z: -2.4159384}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3453307705654956586}
@@ -4462,6 +4617,7 @@ GameObject:
   - component: {fileID: 3453307705675092413}
   - component: {fileID: 3453307705675092412}
   - component: {fileID: 3453307705675092354}
+  - component: {fileID: 435018834}
   m_Layer: 0
   m_Name: PlayerCam
   m_TagString: Untagged
@@ -4602,6 +4758,36 @@ MonoBehaviour:
   PlayerIndex: -1
   XYAxis: {fileID: -9079302805492613815, guid: 337fd806032bb224bacbd0a98b0febb7, type: 3}
   ZAxis: {fileID: 0}
+--- !u!114 &435018834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3453307705675092415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CollideAgainst:
+    serializedVersion: 2
+    m_Bits: 8887
+  m_IgnoreTag: 
+  m_TransparentLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_MinimumDistanceFromTarget: 0.1
+  m_AvoidObstacles: 1
+  m_DistanceLimit: 0
+  m_MinimumOcclusionTime: 0
+  m_CameraRadius: 0.1
+  m_Strategy: 1
+  m_MaximumEffort: 4
+  m_SmoothingTime: 0
+  m_Damping: 0
+  m_DampingWhenOccluded: 0
+  m_OptimalTargetDistance: 0
 --- !u!1 &3453307705699175245
 GameObject:
   m_ObjectHideFlags: 0
@@ -5905,6 +6091,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: b64d3237013d43b4488e67c0197dc3e8, type: 3}
       propertyPath: m_Name
       value: VirusCharacter
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b64d3237013d43b4488e67c0197dc3e8, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: b64d3237013d43b4488e67c0197dc3e8, type: 3}
       propertyPath: m_Controller
