@@ -155,6 +155,9 @@ namespace Malicious.Core
                 
                 float scaleAmount = _moveInput.magnitude;
                 
+                if (scaleAmount > 1)
+                    scaleAmount = 1;
+                
                 float currentYAmount = _rigidbody.velocity.y;
 
                 Vector2 normalisedInput = _moveInput.normalized;
@@ -282,8 +285,8 @@ namespace Malicious.Core
         #region Collisions
         private void OnCollisionEnter(Collision other)
         {
-            if ((other.gameObject.CompareTag("Enemy") || 
-                other.gameObject.CompareTag("Laser")) && 
+            if ((other.collider.gameObject.CompareTag("Enemy") || 
+                 other.gameObject.CompareTag("Laser")) && 
                 _iFrameActive == false)
             {
                 List<ContactPoint> contacts = new List<ContactPoint>(); 

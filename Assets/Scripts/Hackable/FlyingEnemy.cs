@@ -26,10 +26,14 @@ namespace Malicious.Hackable
             GameEventManager.EnemyFixedUpdate += AiUpdate;
             _rigidbody = GetComponent<Rigidbody>();
             _sqrMaxTurningSpeed = _maxTurningSpeed * _maxTurningSpeed;
+            
         }
 
         void AiUpdate()
         {
+            if (_flightPath.Count == 0)
+                return;
+            
             Vector3 directionToTarget = _flightPath[_pathIndex] - transform.position;
             if (Vector3.SqrMagnitude(directionToTarget) > _goNextDistance)
             {
@@ -88,55 +92,38 @@ namespace Malicious.Hackable
                 _playerObject.transform.parent = null;
                 _playerObject = null;
             }
+            
+            
             if (_moveInput != Vector2.zero)
             {
                 if (Mathf.Abs(_moveInput.x) > 0.1f)
-                {
-                    transform.Rotate(0,_moveInput.x * _playerRotateSpeed * Time.deltaTime,0);
-
-                    if (_rigidbody.velocity.magnitude > 1)
-                    {
-                        Vector3 desiredVelocity = Vector3.zero;
-                        if (_moveInput.y > 0)
-                            desiredVelocity = transform.forward * _maxSpeed;
-                        else if (_moveInput.y < 0)
-                            desiredVelocity = -transform.forward * _maxSpeed;
-                        else
-                        {
-                            Vector3 _rigidBodyVelDirection = _rigidbody.velocity.normalized;
-                            float _dotForward = Vector3.Dot(_rigidBodyVelDirection, transform.forward);
-                            float _dotBackward = Vector3.Dot(_rigidBodyVelDirection, -transform.forward);
-
-                            if (_dotForward > _dotBackward)
-                                desiredVelocity = transform.forward * _maxSpeed;
-                            else
-                                desiredVelocity = -transform.forward * _maxSpeed;
-                        } 
-                        
-                        
-                        Vector3 steeringForce = desiredVelocity - _rigidbody.velocity;
-
-                        if (steeringForce.magnitude > _playerMaxTurnSpeed)
-                            steeringForce = steeringForce.normalized * _playerMaxTurnSpeed;
-
-                        _rigidbody.velocity += steeringForce;
-                        if (_rigidbody.velocity.magnitude > _maxSpeed)
-                        {
-                            _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
-                        }
-                    }
-                }
-
-                if (Mathf.Abs(_moveInput.y) > 0.1f)
+                    transform.Rotate(0, _moveInput.x * _playerRotateSpeed * Time.deltaTime, 0);
+                
+                if (Mathf.Abs(_moveInput.y) > 0.1f) 
                 {
                     _rigidbody.velocity += transform.forward * (_moveInput.y * Time.deltaTime * _maxSpeed);
-                    
-                    if (_rigidbody.velocity.magnitude > _maxSpeed)
-                        _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
                 }
             }
+            
+            if (_rigidbody.velocity.magnitude > _maxSpeed) 
+                _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
 
-            if (_moveInput.x == 0)
+            if (_moveInput.y == 0)
+            {
+                _rigidbody.velocity = _rigidbody.velocity * 0.98f;
+
+                float sqrMagnitude = _rigidbody.velocity.sqrMagnitude;
+                if (sqrMagnitude < 3f)
+                {
+                    if (sqrMagnitude > 0.5f)
+                        _rigidbody.velocity = _rigidbody.velocity * 0.90f;
+                    else
+                        _rigidbody.velocity = Vector3.zero;
+                }
+                
+            }
+            
+            if (_moveInput.x == 0) 
                 _rigidbody.angularVelocity = Vector3.zero;
         }
 
@@ -144,6 +131,7 @@ namespace Malicious.Hackable
         {
             base.OnHackEnter();
             GameEventManager.EnemyFixedUpdate -= AiUpdate;
+            CameraController.ChangeCamera(ObjectType.FlyingEnemy, _cameraTransform);
         }
 
         public override void OnHackExit()
