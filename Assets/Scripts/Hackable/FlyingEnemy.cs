@@ -17,7 +17,8 @@ namespace Malicious.Hackable
         
         [SerializeField] private float _playerMaxTurnSpeed = 0;
         [SerializeField] private float _playerRotateSpeed = 0;
-        
+
+        private GameObject _playerObject = null;
         private float _sqrMaxTurningSpeed = 0;
         // Start is called before the first frame update
         void Start()
@@ -81,6 +82,12 @@ namespace Malicious.Hackable
 
         protected override void FixedTick()
         {
+            if (_playerObject != null && 
+                Vector3.SqrMagnitude(transform.position - _playerObject.transform.position) > 9)
+            {
+                _playerObject.transform.parent = null;
+                _playerObject = null;
+            }
             if (_moveInput != Vector2.zero)
             {
                 if (Mathf.Abs(_moveInput.x) > 0.1f)
@@ -150,25 +157,15 @@ namespace Malicious.Hackable
             if (other.gameObject.CompareTag("Player"))
             {
                 other.gameObject.transform.parent = transform;
+                _playerObject = other.gameObject;
             }
         }
-
-        private void OnTriggerStay(Collider other)
-        {
-            if (other.gameObject.CompareTag("Player"))
-            {
-                if (Vector3.SqrMagnitude(transform.position - other.gameObject.transform.position) > 9)
-                {
-                    other.gameObject.transform.parent = null;
-                }
-            }
-        }
-
         private void OnTriggerExit(Collider other)
         {
             if (other.gameObject.CompareTag("Player"))
             {
                 other.gameObject.transform.parent = null;
+                _playerObject = null;
             }
         }
 
