@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3849897260753747607}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7, y: 0, z: 0}
+  m_LocalPosition: {x: -1.058, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5017007373643885965}
@@ -339,6 +339,8 @@ MonoBehaviour:
   _dotAllowance: 0.6
   _maxDistanceAway: 5
   _maxTapHoldLength: 0.4
+  _requiresSameYHeight: 0
+  _yDifferenceAllowed: 1
   _lookGoal: {fileID: 0}
   _nodeRenderer: {fileID: 5017007373645133947}
   _defaultMaterial: {fileID: 2100000, guid: 83f8ab50a0baafb47b83584a8881ed10, type: 2}
