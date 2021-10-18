@@ -36,6 +36,9 @@ namespace Malicious.GameItems
             if (!_isActive)
                 return;
             
+            _laserDirection = transform.up;
+            
+            
             RaycastHit hit;
             Ray ray = new Ray(_laserStartPosition.position, _laserDirection);
             ray.direction = _laserDirection;
