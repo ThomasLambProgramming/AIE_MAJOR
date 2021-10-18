@@ -501,6 +501,18 @@ namespace Malicious.Hackable
             _startingDirection = (_wirePath[0] - transform.position).normalized;
         }
         #endif
+
+        protected override void EnableInput()
+        {
+            base.EnableInput();
+            GlobalData.InputManager.Player.RemoveWire.performed += RemoveInputEnter;
+        }
+
+        protected override void DisableInput()
+        {
+            base.DisableInput();
+            GlobalData.InputManager.Player.RemoveWire.performed -= RemoveInputEnter;
+        }
     }
     
 }
