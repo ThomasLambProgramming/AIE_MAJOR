@@ -43,8 +43,8 @@ namespace Malicious.GameItems
             {
                 _playerCollider.position = (hit.point + _laserStartPosition.position) / 2;
                 Vector3 newColliderScale = hit.point - _laserStartPosition.position;
-                _playerCollider.localScale = new Vector3(_laserWidth.x, _laserWidth.y, newColliderScale.magnitude);
-
+                _playerCollider.localScale = new Vector3(_laserWidth.x, newColliderScale.magnitude, _laserWidth.y);
+                
                 Vector3[] positions = {_laserStartPosition.position, hit.point};
                 _lineRenderer.SetPositions(positions);
             }
@@ -64,11 +64,6 @@ namespace Malicious.GameItems
             _playerCollider.gameObject.SetActive(true);
         }
 #if UNITY_EDITOR
-        private void Update()
-        {
-            _playerCollider.transform.localScale =
-                new Vector3(_laserWidth.x, _laserWidth.y, _playerCollider.transform.localScale.z);
-        }
 
         private void OnDrawGizmos()
         {
