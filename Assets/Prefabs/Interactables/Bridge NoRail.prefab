@@ -9,9 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1353181016406379183}
-  m_Layer: 0
-  m_Name: bridge
-  m_TagString: Untagged
+  - component: {fileID: 151623833}
+  - component: {fileID: 151623834}
+  m_Layer: 7
+  m_Name: Bridge NoRail
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23,7 +25,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1841029260094214165}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.55, y: -0.48169172, z: -18.37}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children:
@@ -31,6 +33,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &151623833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841029260094214165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f078f1bcff94b72b5c4a57cd0e8ea9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pathObject: {fileID: 8267347514220763558}
+  _scaleGoal: 5
+  _scaleSpeed: 1
+  _railObject: {fileID: 0}
+  _railHeight: 1
+  _railSpeed: 1
+--- !u!65 &151623834
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841029260094214165}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 200, y: 100, z: 300}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4940437090767854336
 GameObject:
   m_ObjectHideFlags: 0
@@ -40,7 +73,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3593913196274214788}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bridge2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,7 +107,7 @@ GameObject:
   - component: {fileID: 4284640910012927173}
   - component: {fileID: 1407538595810568978}
   - component: {fileID: 8411792245003872067}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BridgeBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155,9 +188,10 @@ GameObject:
   - component: {fileID: 8886411248609002776}
   - component: {fileID: 8016472853280160741}
   - component: {fileID: 8363383959666226687}
-  m_Layer: 0
+  - component: {fileID: 203580653}
+  m_Layer: 7
   m_Name: BridgeRoad
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -169,13 +203,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8267347514220763558}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 611.6278, y: 48.16917, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 90.5, y: 48.16917, z: 0}
+  m_LocalScale: {x: 0.001, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3593913196274214788}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!33 &8016472853280160741
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -225,3 +259,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &203580653
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8267347514220763558}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 707.14655, y: 88.65226, z: 288.6892}
+  m_Center: {x: -351.70407, y: 0, z: 0}

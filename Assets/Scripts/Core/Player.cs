@@ -285,7 +285,12 @@ namespace Malicious.Core
         #region Collisions
         private void OnCollisionEnter(Collision other)
         {
-            if ((other.collider.gameObject.CompareTag("Enemy") || 
+            if (other.collider.gameObject.CompareTag("EnemyNonMove"))
+            {
+                GameEventManager.PlayerHitFunc();
+                StartCoroutine(IFrame());
+            }
+            else if ((other.collider.gameObject.CompareTag("Enemy") || 
                  other.gameObject.CompareTag("Laser")) && 
                 _iFrameActive == false)
             {
