@@ -15,7 +15,6 @@ namespace Malicious.Hackable
         [SerializeField] private float _goNextDistance = 4;
         [SerializeField] private float _maxTurningSpeed = 10f;
         
-        [SerializeField] private float _playerMaxTurnSpeed = 0;
         [SerializeField] private float _playerRotateSpeed = 0;
 
         private GameObject _playerObject = null;

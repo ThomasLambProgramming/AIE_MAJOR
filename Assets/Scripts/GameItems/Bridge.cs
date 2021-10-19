@@ -11,7 +11,8 @@ namespace Malicious.GameItems
         [SerializeField] private float _scaleSpeed = 1f;
 
         [SerializeField] private GameObject _railObject = null;
-        [SerializeField] private float _railHeight = 1f;
+        [SerializeField] private float _railHeightTarget = 1f;
+        private float _railHeight = 0;
         [SerializeField] private float _railSpeed = 1f;
         private float _startingRailHeight = 0;
         
@@ -25,6 +26,8 @@ namespace Malicious.GameItems
             _startingScale = _pathObject.transform.localScale.x;
             if (_railObject != null)
                 _startingRailHeight = _railObject.transform.position.y;
+
+            _railHeight = _startingRailHeight + _railHeightTarget;
         }
 
         [ContextMenu("BridgeOn")]
