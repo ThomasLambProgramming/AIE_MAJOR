@@ -19,7 +19,10 @@ namespace Malicious.Hackable
         [SerializeField] private float _exitForce = 2;
         [Tooltip("Exit location z (blue one) is used for the direction to launch player")]
         [SerializeField] private Transform _exitLocation = null;
-        
+
+        [SerializeField] private float _yHitAmount = 1f;
+        [SerializeField] private float _hitForce = 5;
+        private bool _isHacked = false;
         private GameObject _playerObject = null;
         private float _sqrMaxTurningSpeed = 0;
         // Start is called before the first frame update
@@ -132,19 +135,22 @@ namespace Malicious.Hackable
 
         public override void OnHackEnter()
         {
+            _rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             base.OnHackEnter();
+            _isHacked = true;
             GameEventManager.EnemyFixedUpdate -= AiUpdate;
             CameraController.ChangeCamera(ObjectType.FlyingEnemy, _cameraTransform);
         }
 
         public override void OnHackExit()
         {
+            _rigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
             base.OnHackExit();
             GameEventManager.EnemyFixedUpdate += AiUpdate;
             _player.OnHackEnter();
             _player.LaunchPlayer(_exitLocation.forward * _exitForce);
             _player.transform.parent = null;
-
+            _isHacked = false;
             Vector3 exitDirection = _exitLocation.forward;
             exitDirection.y = 0;
             exitDirection = exitDirection.normalized;
@@ -157,8 +163,15 @@ namespace Malicious.Hackable
             _pathIndex = 1;
         }
 
+        public bool isHacked()
+        {
+            return _isHacked;
+        }
         private void OnTriggerEnter(Collider other)
         {
+            if (other.gameObject.CompareTag("Fan"))
+            {
+            }
             if (other.gameObject.CompareTag("Player"))
             {
                 other.gameObject.transform.parent = transform;
@@ -178,7 +191,17 @@ namespace Malicious.Hackable
         {
             if (other.gameObject.CompareTag("Laser"))
             {
-                
+                List<ContactPoint> contacts = new List<ContactPoint>(); 
+                other.GetContacts(contacts);
+
+                Vector3 averagedNormal = Vector3.zero;
+                foreach (var contactPoint in contacts)
+                {
+                    averagedNormal += contactPoint.normal;
+                }
+                averagedNormal.y = 0;
+                averagedNormal = averagedNormal.normalized;
+                _rigidbody.velocity = (averagedNormal * _hitForce);
             }
         }
 

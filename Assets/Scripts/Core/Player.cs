@@ -89,7 +89,7 @@ namespace Malicious.Core
                 float distanceToNew =
                     Vector3.SqrMagnitude(transform.position - a_field.transform.position);
 
-                if (Mathf.Abs(distanceToCurrent - distanceToNew) < 3)
+                if (Mathf.Abs(distanceToCurrent - distanceToNew) < 25)
                 {
                     if (_currentHackableField.transform.position.y > a_field.transform.position.y)
                         _currentHackableField = a_field;
