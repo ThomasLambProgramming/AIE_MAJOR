@@ -22,6 +22,8 @@ namespace Malicious.Core
         [SerializeField] private float _animationSwapSpeed = 3f;
         [SerializeField] private Animator _playerAnimator = null;
         private readonly int _animatorRunVariable = Animator.StringToHash("RunAmount");
+        private static readonly int _Jumped = Animator.StringToHash("Jumped");
+        
         //private readonly int _jumpingVariable = Animator.StringToHash("Jumping");
         //private float _currentRunAmount = 0f;
         private float _prevRunAnimAmount = 0;
@@ -153,6 +155,9 @@ namespace Malicious.Core
                 
                 float scaleAmount = _moveInput.magnitude;
                 
+                if (scaleAmount > 1)
+                    scaleAmount = 1;
+                
                 float currentYAmount = _rigidbody.velocity.y;
 
                 Vector2 normalisedInput = _moveInput.normalized;
@@ -246,7 +251,7 @@ namespace Malicious.Core
                 prevVel.y = _jumpForce;
                 _rigidbody.velocity = prevVel;
                 
-               _playerAnimator.SetBool(_Jumping, true);
+               _playerAnimator.SetTrigger(_Jumped);
                 
                 if (_canJump == false)
                     _hasDoubleJumped = true;
@@ -280,8 +285,8 @@ namespace Malicious.Core
         #region Collisions
         private void OnCollisionEnter(Collision other)
         {
-            if ((other.gameObject.CompareTag("Enemy") || 
-                other.gameObject.CompareTag("Laser")) && 
+            if ((other.collider.gameObject.CompareTag("Enemy") || 
+                 other.gameObject.CompareTag("Laser")) && 
                 _iFrameActive == false)
             {
                 List<ContactPoint> contacts = new List<ContactPoint>(); 
@@ -342,15 +347,16 @@ namespace Malicious.Core
             if (a_other.gameObject.CompareTag("CheckPoint"))
             {
                 CheckPoint currentCheckPoint = a_other.GetComponent<CheckPoint>();
-                
-                if (_activeCheckpoint == null || _activeCheckpoint._ID < currentCheckPoint._ID)
-                {
-                    if (_activeCheckpoint != null)
-                        _activeCheckpoint.TurnOff();
-                    
-                    _activeCheckpoint = currentCheckPoint;
-                    _activeCheckpoint.TurnOn();
-                }
+
+                if (_activeCheckpoint != null)
+                    _activeCheckpoint.TurnOff();
+
+                _activeCheckpoint = currentCheckPoint;
+                _activeCheckpoint.TurnOn();
+
+                //if (_activeCheckpoint == null || _activeCheckpoint._ID < currentCheckPoint._ID)
+                //{
+                //}
             }
 
             if (a_other.gameObject.CompareTag("Fan"))
@@ -406,7 +412,6 @@ namespace Malicious.Core
         #region Input
 
         private bool _heldInputDown;
-        private static readonly int _Jumping = Animator.StringToHash("Jumping");
 
         private void InteractionInputEnter(InputAction.CallbackContext a_context)
         {

@@ -16,7 +16,7 @@ namespace Malicious.Hackable
         //since it will be a prefab probably just make it have a script that auto plays the shader
         //for it to dissolve in to avoid any logic being needed
         [SerializeField] private GameObject _wirePrefab = null;
-        
+        [SerializeField] private Vector3 _startingCameraDirection = Vector3.zero;
         
         //------Other Variables----------------//
         [SerializeField] private Vector3 _startingDirection = Vector3.zero;
@@ -44,7 +44,7 @@ namespace Malicious.Hackable
         private int _pathIndex = 0;
         private int _chargesLeft = 0;
 
-        private List<WireModelDissolve> _dissolveWires = new List<WireModelDissolve>();
+        [SerializeField] private List<WireModelDissolve> _dissolveWires = new List<WireModelDissolve>();
         
         //------Debug Variables----------------//
         [SerializeField] private bool _showPath = true;
@@ -55,7 +55,6 @@ namespace Malicious.Hackable
         {
             _chargesLeft = _wireCharges;
             _pathIndex = 0;
-            
         }
 
         protected override void Tick()
@@ -98,7 +97,7 @@ namespace Malicious.Hackable
             CameraController.ChangeCamera(ObjectType.Wire, _wireCameraOffset);
             base.OnHackEnter();
             _wireModel.SetActive(true);
-            _wireModel.transform.rotation = Quaternion.LookRotation(_startingDirection);
+            _wireModel.transform.rotation = Quaternion.LookRotation(_startingCameraDirection);
             _wireModel.transform.position = _wirePath[0];
             if (_wirePath.Count > 1)
             {
@@ -120,6 +119,7 @@ namespace Malicious.Hackable
             _wireModel.SetActive(false);
             _takingInput = false;
             _moveToEnd = false;
+            ResetPath();
         }
 
         private void InsideWireHoldOptionActivate()
@@ -302,6 +302,43 @@ namespace Malicious.Hackable
             
             return true;
         }
+
+        private void RemoveInputEnter(InputAction.CallbackContext a_context)
+        {
+            if (_moveToEnd)
+                return;
+
+            if (_pathIndex == 0)
+                return;
+            _takingInput = false;
+            _chargesLeft++;
+            _moveToEnd = true;
+            _pathIndex--;
+                
+            _wirePath.RemoveAt(_wirePath.Count - 1);
+            _dissolveWires[_wirePath.Count - 1].DissolveOut(false);
+            StartCoroutine(DeleteWire(_wirePath.Count - 1));
+                
+            if (_pathIndex > 0)
+            {
+                Vector3 previousDirection = (_wirePath[_pathIndex] - _wirePath[_pathIndex - 1]).normalized;
+
+                if (Vector3.Dot(previousDirection, Vector3.up) < _heightAngleAllowance &&
+                    Vector3.Dot(previousDirection, Vector3.down) < _heightAngleAllowance)
+                {
+                    _rotationGoal = Quaternion.LookRotation(previousDirection,
+                        Vector3.up);
+                    _rotateObject = true;
+                }
+            }
+            else
+            {
+                _rotationGoal = Quaternion.LookRotation(
+                    (_startingCameraDirection),
+                    Vector3.up);
+                _rotateObject = true;
+            }
+        }
         protected override void MoveInputEnter(InputAction.CallbackContext a_context)
         {
             //if we are moving then we dont want to be able to take in input
@@ -320,42 +357,10 @@ namespace Malicious.Hackable
             
             if (Vector2.Dot(input, Vector2.down) > 0.8f)
             {
-                if (_pathIndex == 0)
-                    return;
-                _takingInput = false;
-                _chargesLeft++;
-                _moveToEnd = true;
-                _pathIndex--;
-                
-                _wirePath.RemoveAt(_wirePath.Count - 1);
-
-                if (_pathIndex > 0)
-                {
-                    Vector3 previousDirection = (_wirePath[_pathIndex] - _wirePath[_pathIndex - 1]).normalized;
-
-                    if (Vector3.Dot(previousDirection, Vector3.up) < _heightAngleAllowance &&
-                        Vector3.Dot(previousDirection, Vector3.down) < _heightAngleAllowance)
-                    {
-                        _rotationGoal = Quaternion.LookRotation(previousDirection,
-                            Vector3.up);
-                        _rotateObject = true;
-                    }
-                }
-                else
-                {
-                    _rotationGoal = Quaternion.LookRotation(
-                        (_startingDirection),
-                        Vector3.up);
-                    _rotateObject = true;
-                }
-
-                return;
+                AddPoint(-forwardDirection);
+                _rotateObject = true;
             }
-            //We always want to be able to go backwards
-            if (!_takingInput)
-                return;
-            
-            if (Vector2.Dot(input, Vector2.up) > 0.8f)
+            else if (Vector2.Dot(input, Vector2.up) > 0.8f)
                 AddPoint(forwardDirection);
             else if (Vector2.Dot(input, Vector2.left) > 0.8f)
             {
@@ -447,6 +452,11 @@ namespace Malicious.Hackable
             }
         }
 
+        private IEnumerator DeleteWire(int a_index)
+        {
+            yield return new WaitForSeconds(1f);
+            _dissolveWires.RemoveAt(a_index);
+        }
         
         
         #if UNITY_EDITOR
@@ -455,7 +465,10 @@ namespace Malicious.Hackable
             if (_wirePath.Count > 0)
             {
                 if (_showDirection)
+                {
                     Gizmos.DrawLine(_wirePath[0], _wirePath[0] + _startingDirection.normalized * 4f);
+                    Gizmos.DrawLine(transform.position, transform.position + _startingCameraDirection * 2);   
+                }
 
                 if (_showPath)
                 {
@@ -488,6 +501,18 @@ namespace Malicious.Hackable
             _startingDirection = (_wirePath[0] - transform.position).normalized;
         }
         #endif
+
+        protected override void EnableInput()
+        {
+            base.EnableInput();
+            GlobalData.InputManager.Player.RemoveWire.performed += RemoveInputEnter;
+        }
+
+        protected override void DisableInput()
+        {
+            base.DisableInput();
+            GlobalData.InputManager.Player.RemoveWire.performed -= RemoveInputEnter;
+        }
     }
     
 }

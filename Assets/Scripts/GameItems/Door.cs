@@ -3,64 +3,73 @@ namespace Malicious.GameItems
 {
     public class Door : MonoBehaviour
     {
-        [SerializeField] private float openSpeed = 3f;
-        [SerializeField] private Vector3 offsetPosition = Vector3.zero;
-        private Vector3 startingPosition = Vector3.zero;
-        private Vector3 moveDirection = Vector3.zero;
-    
-        private bool openDoor = false;
-    
-        private bool doneMoving = true;
+        [SerializeField] private float _openSpeed = 3f;
+        [SerializeField] private Vector3 _targetPosition = Vector3.zero;
+        [SerializeField] private int _coresNeededToOpen = 0;
+        
+        private Vector3 _startingPosition = Vector3.zero;
+        private float _timer = 0;
+        private bool _wait = true;
+        private int _coresHacked = 0;
+        
+        private bool _openDoor = false;
+        
         private void Start()
         {
-            startingPosition = transform.position;
-            offsetPosition = startingPosition + offsetPosition;
+            _startingPosition = transform.position;
+            _targetPosition = _startingPosition + _targetPosition;
         }
 
         void FixedUpdate()
         {
-            if (!doneMoving)
-            {
+            if (_wait)
+                return;
 
-                if (openDoor)
+            if (_openDoor)
+            {
+                _timer += Time.deltaTime * _openSpeed;
+                transform.position = Vector3.Lerp(_startingPosition, _targetPosition, _timer);
+
+                if (_timer >= 1)
                 {
-                    if (Vector3.SqrMagnitude(offsetPosition - transform.position) < 0.001f)
-                    {
-                        transform.position = offsetPosition;
-                        doneMoving = true;
-                        return;
-                    }
-                    moveDirection = offsetPosition - startingPosition;
-                    moveDirection = moveDirection.normalized;
-                    transform.position = transform.position + moveDirection * (Time.deltaTime * openSpeed);
-                }
-                else
-                {
-                    if (Vector3.SqrMagnitude(transform.position - startingPosition) < 0.001f)
-                    {
-                        transform.position = startingPosition;
-                        doneMoving = true;
-                        return;   
-                    }
-                    moveDirection = startingPosition - offsetPosition;
-                    moveDirection = moveDirection.normalized;
-                    transform.position = transform.position + moveDirection * (Time.deltaTime * openSpeed);
+                    _wait = true;
+                    _timer = 1;
                 }
             }
+            else
+            {
+                _timer -= Time.deltaTime * _openSpeed;
+                transform.position = Vector3.Lerp(_startingPosition, _targetPosition, _timer);
+
+                if (_timer <= 0)
+                {
+                    _wait = true;
+                    _timer = 0;
+                }
+            }
+            
         }
+
         [ContextMenu("Open Door")]
         public void Open()
         {
-            openDoor = true;
-        
-            doneMoving = false;
+            _openDoor = true;
+            _wait = false;
         }
         [ContextMenu("Close Door")]
         public void Close()
         {
-            openDoor = false;
-        
-            doneMoving = false;
+            _openDoor = false;
+            _wait = false;
+        }
+
+        public void CoreHacked()
+        {
+            _coresHacked++;
+            if (_coresHacked >= _coresNeededToOpen)
+            {
+                Open();
+            }
         }
     }
 }

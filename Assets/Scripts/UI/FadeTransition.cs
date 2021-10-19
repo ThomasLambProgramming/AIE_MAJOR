@@ -13,6 +13,7 @@ namespace Malicious.UI
         private void Start()
         {
             _animator = GetComponent<Animator>();
+            FadeIn();
         }
 
         [ContextMenu("Fade In")]

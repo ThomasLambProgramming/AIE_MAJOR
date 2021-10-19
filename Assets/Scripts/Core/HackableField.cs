@@ -14,19 +14,22 @@ namespace Malicious.Core
     {
         //Other Variables//
         [SerializeField] private float _dotAllowance = 0.8f;
+        [SerializeField] private float _maxDistanceAway = 5f;
         [SerializeField] private float _maxTapHoldLength = 0.4f;
         private bool _holdingHackButton = false;
         private float _holdTime = 0;
-        
+        [SerializeField] private bool _requiresSameYHeight = false;
+        [SerializeField] private float _yDifferenceAllowed = 1f;
         private BasePlayer _hackable = null;
         private IInteractable _interactable = null;
         
         private Player _player = null;
         private bool _hackValid = false;
+
+        [SerializeField] private Transform _lookGoal = null;
         
         //This is to allow for sphere colliders or box colliders as needed
-        [SerializeField] private Collider _triggerVolume;
-        
+
         //Material Variables//
         [SerializeField] private MeshRenderer _nodeRenderer = null;
         [SerializeField] private Material _defaultMaterial = null;
@@ -63,10 +66,37 @@ namespace Malicious.Core
         private bool DotCheck()
         {
             Transform playerTransform = _player.transform;
-            Vector3 direction = (transform.position - playerTransform.position).normalized;
-            if (Vector3.Dot(direction, playerTransform.forward) > _dotAllowance)
+
+            if (_requiresSameYHeight)
             {
-                return true;
+                if (_lookGoal != null)
+                {
+                    if (Mathf.Abs(_lookGoal.position.y - playerTransform.position.y) > _yDifferenceAllowed)
+                    {
+                        return false;
+                    }
+                }
+                else if (Mathf.Abs(transform.position.y - playerTransform.position.y) > _yDifferenceAllowed)
+                {
+                    return false;
+                }
+            }
+            Vector3 direction = Vector3.zero;
+            if (_lookGoal != null)
+                direction = (_lookGoal.position - playerTransform.position).normalized;
+            else
+                direction = (transform.position - playerTransform.position).normalized;
+
+            //This is to remove the y from the looking direction so its only if the player is looking horizontally in
+            Vector2 horizontalDirection = new Vector2(direction.x, direction.z);
+            horizontalDirection = horizontalDirection.normalized;
+            Vector2 playerLookDirection = new Vector2(playerTransform.forward.x, playerTransform.forward.z);
+            playerLookDirection = playerLookDirection.normalized;
+            
+            if (Vector2.Dot(horizontalDirection, playerLookDirection) > _dotAllowance)
+            {
+                if (Vector3.SqrMagnitude(transform.position - _player.transform.position) < _maxDistanceAway)
+                    return true;
             }
 
             return false;

@@ -1,6 +1,7 @@
 ﻿using UnityEngine.InputSystem;
 using UnityEngine;
 using Malicious.Core;
+using Unity.Mathematics;
 
 namespace Malicious.Hackable
 {
@@ -44,6 +45,9 @@ namespace Malicious.Hackable
             _spinInput = Vector2.zero;
             GameEventManager.PlayerUpdate += Tick;
             GameEventManager.PlayerFixedUpdate += FixedTick;
+            Vector3 eularRot = transform.rotation.eulerAngles;
+            eularRot.x = 0;
+            transform.rotation = Quaternion.Euler(eularRot);
         }
         public virtual void OnHackExit()
         {
@@ -109,7 +113,7 @@ namespace Malicious.Hackable
         protected virtual void DownInputExit(InputAction.CallbackContext a_context)
         {
         }
-        protected void EnableInput()
+        protected virtual void EnableInput()
         {
             GlobalData.InputManager.Player.Movement.performed += MoveInputEnter;
             GlobalData.InputManager.Player.Movement.canceled += MoveInputExit;
@@ -123,7 +127,7 @@ namespace Malicious.Hackable
             GlobalData.InputManager.Player.Down.canceled += DownInputExit;
         }
 
-        protected void DisableInput()
+        protected virtual void DisableInput()
         {
             GlobalData.InputManager.Player.Movement.performed -= MoveInputEnter;
             GlobalData.InputManager.Player.Movement.canceled -= MoveInputExit;

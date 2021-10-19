@@ -135,9 +135,10 @@ MonoBehaviour:
   _wireModel: {fileID: 0}
   _wireCameraOffset: {fileID: 0}
   _wirePath:
-  - {x: 0.5, y: 0.5, z: -7}
+  - {x: -16.04, y: 0.481, z: 7.3953905}
   _wirePrefab: {fileID: 923981262691301710, guid: 5942664a276b1c2428be53b2b33995ad, type: 3}
-  _startingDirection: {x: 0, y: 0, z: -1}
+  _startingCameraDirection: {x: -0.57, y: 0, z: 0}
+  _startingDirection: {x: 0, y: 1, z: 0}
   _heightAngleAllowance: 0.6
   _wireLength: 2.5
   _wireCharges: 5
@@ -150,6 +151,7 @@ MonoBehaviour:
   _launchDirection: {x: 0, y: 1, z: 0}
   _launchForce: 3
   _resetSpeed: 2
+  _dissolveWires: []
   _showPath: 1
   _pointSize: {x: 0.4, y: 0.4, z: 0.4}
   _showDirection: 1
@@ -166,8 +168,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dotAllowance: 0.8
+  _maxDistanceAway: 5
   _maxTapHoldLength: 0.4
-  _triggerVolume: {fileID: 2758701430632637852}
+  _requiresSameYHeight: 0
+  _yDifferenceAllowed: 1
+  _lookGoal: {fileID: 0}
   _nodeRenderer: {fileID: 2758701430988091179}
   _defaultMaterial: {fileID: 2100000, guid: 83f8ab50a0baafb47b83584a8881ed10, type: 2}
   _hackValidMaterial: {fileID: 2100000, guid: d8b86c81f490cdf449608ff46aa82111, type: 2}

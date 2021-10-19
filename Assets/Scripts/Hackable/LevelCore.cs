@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Malicious.Core;
+using Malicious.GameItems;
 using Malicious.Interactables;
 using Malicious.Tools;
 using UnityEngine;
@@ -16,8 +17,11 @@ namespace Malicious.Hackable
         [SerializeField] private int _buildIndexOfChange = 0;
         
         private ParticleSystem _particleSystem = null;
-        
-        
+
+        [SerializeField] private List<WallLight> _lights = new List<WallLight>();
+        [SerializeField] private Door _door1 = null;
+        [SerializeField] private Door _door2 = null;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -40,7 +44,24 @@ namespace Malicious.Hackable
             {
                 StartCoroutine(LoadNextLevel());
             }
+            else
+            {
+                foreach (var wallLight in _lights)
+                {
+                    wallLight.ChangeToRed();
+                }
+
+                if (_door1 != null)
+                {
+                    _door1.CoreHacked();
+                }
+                if (_door2 != null)
+                {
+                    _door2.CoreHacked();
+                }
+            }
             _hackedEvent?.Invoke();
+            
         }
 
         private IEnumerator LoadNextLevel()

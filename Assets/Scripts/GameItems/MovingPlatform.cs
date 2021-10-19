@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Malicious.Core;
 using UnityEngine;
@@ -7,108 +8,132 @@ namespace Malicious.GameItems
     public class MovingPlatform : MonoBehaviour
     {
         [SerializeField] private float _moveSpeed = 0.5f;
-        [SerializeField] private float _stoppingDistance = 0.4f;
-        
         [SerializeField] private Vector3 _targetLocation = Vector3.zero;
         private Vector3 _startLocation = Vector3.zero;
-        Vector3 _movementAmount = Vector3.zero;
         
         [SerializeField] private bool _waitPlayer = false;
-        private bool _isPaused = false;
         [SerializeField] private bool _waitForTime = false;
         [SerializeField] private float _waitTime = 3f;
+
+        private GameObject _playerObject = null;
+        
+        private float _timer = 0;
         private bool waiting = false;
+        private bool _moveToTarget = true;
         
         private Vector3 _sceneStartLocation = Vector3.zero;
-        private Vector3 _initalTarget = Vector3.zero;
+        
         void Start()
         {
-            _sceneStartLocation = transform.position;
-            _initalTarget = _targetLocation;
+            GameEventManager.PlayerDead += ResetToStart;
             _startLocation = transform.position;
-            _movementAmount = _targetLocation - _startLocation;
+            _sceneStartLocation = transform.position;
+            
             if (_waitPlayer)
                 waiting = true;
-
-            GameEventManager.PlayerDead += ResetToStart;
-            GameEventManager.GamePauseStart += PauseStart;
-            GameEventManager.GamePauseExit += PauseExit;
         }
 
+        [ContextMenu("SetPositions")]
+        public void MakePositions()
+        {
+            _startLocation = transform.position;
+            _targetLocation = transform.position;
+        }
+        
+        
+        void FixedUpdate()
+        {
+            if (_playerObject != null)
+            {
+                if (Vector3.SqrMagnitude(_playerObject.transform.position - transform.position) > 5)
+                {
+                    _playerObject.transform.parent = null;
+                    _playerObject = null;
+                }
+            }
+            if (waiting)
+                return;
+
+            if (_moveToTarget)
+            {
+                if (_timer < 1)
+                {
+                    _timer += Time.deltaTime * _moveSpeed;
+                    transform.position = Vector3.Lerp(_startLocation, _targetLocation, _timer);
+                }
+                else
+                {
+                    _timer = 1;
+                    if (_waitForTime)
+                    {
+                        StartCoroutine(WaitAtPoint());
+                        waiting = true;   
+                    }
+                    else
+                        waiting = true;
+                    
+                    _moveToTarget = false;
+                }
+            }
+            else
+            {
+                if (_timer > 0)
+                {
+                    _timer -= Time.deltaTime * _moveSpeed;
+                    transform.position = Vector3.Lerp(_startLocation, _targetLocation, _timer);
+                }
+                else
+                {
+                    if (_waitForTime)
+                    {
+                        StartCoroutine(WaitAtPoint());
+                        waiting = true;
+                    }
+                    else
+                        waiting = true;
+                    
+                    _timer = 0;
+                    _moveToTarget = true;
+                }
+            }
+        }
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("Player"))
+            {
+                _playerObject = other.gameObject;
+                other.transform.parent = this.transform;
+                if (_waitPlayer && waiting)
+                {
+                    waiting = false;
+                }
+            }
+        }
         void ResetToStart()
         {
             transform.position = _sceneStartLocation;
-            _targetLocation = _initalTarget;
-            
         }
 
         IEnumerator WaitAtPoint()
         {
             yield return new WaitForSeconds(_waitTime);
-            SwapTarget();
             waiting = false;
-        }
-
-        private void PauseStart()
-        {
-            _isPaused = true;
-        }
-
-        private void PauseExit()
-        {
-            _isPaused = false;
-        }
-        void FixedUpdate()
-        {
-            if (waiting || _isPaused)
-                return;
-            //later add a timer for waiting at the position for a short time and a slow down as it gets closer to the platform
-            if (Vector3.SqrMagnitude(_targetLocation - transform.position) < _stoppingDistance)
-            {
-                if (_waitForTime)
-                {
-                    StartCoroutine(WaitAtPoint());
-                    waiting = true;
-                }
-                else if (_waitPlayer)
-                {
-                    waiting = true;
-                }
-                else
-                    SwapTarget();
-            }
-            else
-            {
-                transform.position += _movementAmount * (Time.deltaTime * _moveSpeed);
-            }
-        }
-
-        private void SwapTarget()
-        {
-            Vector3 buffer = _startLocation;
-            _startLocation = _targetLocation;
-            _targetLocation = buffer;
-            _movementAmount = _targetLocation - _startLocation;
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.gameObject.CompareTag("Player"))
-            {
-                other.transform.parent = this.transform;
-                if (_waitPlayer && waiting)
-                {
-                    SwapTarget();
-                    waiting = false;
-                }
-            }
         }
         private void OnTriggerExit(Collider other)
         {
             if (other.gameObject.CompareTag("Player"))
             {
                 other.transform.parent = null;
+                _playerObject = null;
             }
         }
+        
+        #if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawCube(_startLocation, Vector3.one / 2);
+            Gizmos.DrawCube(_targetLocation, Vector3.one / 2);
+        }
+#endif
     }
 }

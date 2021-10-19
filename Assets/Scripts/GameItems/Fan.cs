@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,9 +8,9 @@ namespace Malicious.GameItems
     [SelectionBase]
     public class Fan : MonoBehaviour
     {
-        private bool _isActive = true;
+        [SerializeField] private bool _isActive = true;
         [SerializeField] private GameObject _rotateObject = null;
-        
+        [SerializeField] private float _rotateFanSpeed = 10f;
         [SerializeField] private Vector3 _launchDirection = Vector3.up;
         [SerializeField] private float _velocityLimitAtPeak = 4f;
         [SerializeField] private float _velocityLimitAtBottom = 10f;
@@ -81,6 +82,26 @@ namespace Malicious.GameItems
                     _activeObjects.Remove(VARIABLE);
                     break;
                 }
+            }
+        }
+        public void RotateFan(Vector3 a_goalRotation)
+        {
+            //insurance that its not overlapping rotates
+            StopCoroutine(RotateFanEnumerator(Vector3.zero));
+            StartCoroutine(RotateFanEnumerator(a_goalRotation));
+        }
+        private IEnumerator RotateFanEnumerator(Vector3 a_target)
+        {
+            Quaternion goalRot = Quaternion.Euler(a_target);
+
+            while (transform.rotation != goalRot)
+            {
+                transform.rotation = Quaternion.RotateTowards(
+                    transform.rotation, 
+                    goalRot, 
+                    _rotateFanSpeed * Time.deltaTime);
+                _launchDirection = transform.up;
+                yield return null;
             }
         }
 

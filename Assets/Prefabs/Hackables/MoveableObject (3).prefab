@@ -73,7 +73,7 @@ BoxCollider:
   m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1.5, y: 1, z: 1}
-  m_Center: {x: -0.55, y: 0, z: 0}
+  m_Center: {x: -0.55, y: 0.49, z: 0}
 --- !u!1 &7820512539629288484
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,6 +185,10 @@ GameObject:
   - component: {fileID: 7820512539631577554}
   - component: {fileID: 2052060544462530683}
   - component: {fileID: 2052060544462530625}
+  - component: {fileID: 216114327}
+  - component: {fileID: 216114328}
+  - component: {fileID: 216114329}
+  - component: {fileID: 216114330}
   m_Layer: 11
   m_Name: MoveableObject (3)
   m_TagString: Hackable
@@ -345,8 +349,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dotAllowance: 0.6
+  _maxDistanceAway: 5
   _maxTapHoldLength: 0.4
-  _triggerVolume: {fileID: 7820512539631577548}
+  _lookGoal: {fileID: 0}
   _nodeRenderer: {fileID: 7820512539629288487}
   _defaultMaterial: {fileID: 2100000, guid: 83f8ab50a0baafb47b83584a8881ed10, type: 2}
   _hackValidMaterial: {fileID: 2100000, guid: d8b86c81f490cdf449608ff46aa82111, type: 2}
@@ -357,6 +362,58 @@ MonoBehaviour:
   _onHackFalseEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!135 &216114327
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7820512539631577547}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.01
+  m_Center: {x: -0.5, y: -0.5, z: 0.5}
+--- !u!135 &216114328
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7820512539631577547}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.01
+  m_Center: {x: 0.5, y: -0.5, z: -0.5}
+--- !u!135 &216114329
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7820512539631577547}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.01
+  m_Center: {x: 0.5, y: -0.5, z: 0.5}
+--- !u!135 &216114330
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7820512539631577547}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.01
+  m_Center: {x: -0.5, y: -0.5, z: -0.5}
 --- !u!1 &7820512540033003769
 GameObject:
   m_ObjectHideFlags: 0

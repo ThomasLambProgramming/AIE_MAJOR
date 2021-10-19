@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Malicious.Hackable;
 using UnityEngine;
 
 namespace Malicious.Interactables
@@ -10,7 +11,7 @@ namespace Malicious.Interactables
         [SerializeField] private LayerMask _launchMask;
         [SerializeField] private float _launchForce = 10f;
         [SerializeField] private float _animationTime = 1f;
-
+        [SerializeField] private float _dotCheck = 0.6f;
         private Animator _launchAnimation = null;
         
         private bool _resetting;
@@ -32,6 +33,12 @@ namespace Malicious.Interactables
 
         private void OnTriggerEnter(Collider other)
         {
+            Vector3 directionToObject = other.gameObject.transform.position - transform.position;
+            directionToObject = directionToObject.normalized;
+
+            if (Vector3.Dot(directionToObject, Vector3.up) < _dotCheck)
+                return;
+            
             if ((_launchMask & (1 << other.gameObject.layer)) > 0)
             {
                 Rigidbody objectRb = other.gameObject.GetComponent<Rigidbody>();
