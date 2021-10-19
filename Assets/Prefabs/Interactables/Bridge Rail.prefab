@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 5067358209291257754}
   - component: {fileID: 1581097397}
   m_Layer: 7
-  m_Name: Bridge 11m
+  m_Name: Bridge Rail
   m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -285,7 +285,7 @@ MonoBehaviour:
   _scaleGoal: 1
   _scaleSpeed: 0.5
   _railObject: {fileID: 5470005961404154560}
-  _railHeight: 2.35
+  _railHeightTarget: 0.5
   _railSpeed: 2
 --- !u!1 &6344473454969529090
 GameObject:
