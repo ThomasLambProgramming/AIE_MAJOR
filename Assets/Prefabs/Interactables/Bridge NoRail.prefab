@@ -49,7 +49,7 @@ MonoBehaviour:
   _scaleGoal: 5
   _scaleSpeed: 1
   _railObject: {fileID: 0}
-  _railHeight: 1
+  _railHeightTarget: 1
   _railSpeed: 1
 --- !u!65 &151623834
 BoxCollider:
@@ -270,5 +270,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 707.14655, y: 88.65226, z: 288.6892}
+  m_Size: {x: 707.14655, y: 100, z: 288.6892}
   m_Center: {x: -351.70407, y: 0, z: 0}
