@@ -14,6 +14,8 @@ namespace Malicious.Interactables
         [SerializeField] private float _dotCheck = 0.6f;
         private Animator _launchAnimation = null;
         
+       
+        
         private bool _resetting;
         private static readonly int _Launched = Animator.StringToHash("Launched");
 
@@ -28,6 +30,7 @@ namespace Malicious.Interactables
             _resetting = true;
             yield return new WaitForSeconds(_animationTime);
             _launchAnimation.SetBool(_Launched, false);
+            _launchAnimation.enabled = false;
             _resetting = false;
         }
 
@@ -47,6 +50,7 @@ namespace Malicious.Interactables
                     Vector3 rbVel = objectRb.velocity;
                     rbVel.y = _launchForce;
                     objectRb.velocity = rbVel;
+                    _launchAnimation.enabled = true;
                     _launchAnimation.SetBool(_Launched, true);
                     StartCoroutine(Launched());
                 }

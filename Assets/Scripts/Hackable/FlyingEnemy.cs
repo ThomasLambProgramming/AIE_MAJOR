@@ -16,7 +16,10 @@ namespace Malicious.Hackable
         [SerializeField] private float _maxTurningSpeed = 10f;
         
         [SerializeField] private float _playerRotateSpeed = 0;
-
+        [SerializeField] private float _exitForce = 2;
+        [Tooltip("Exit location z (blue one) is used for the direction to launch player")]
+        [SerializeField] private Transform _exitLocation = null;
+        
         private GameObject _playerObject = null;
         private float _sqrMaxTurningSpeed = 0;
         // Start is called before the first frame update
@@ -25,11 +28,17 @@ namespace Malicious.Hackable
             GameEventManager.EnemyFixedUpdate += AiUpdate;
             _rigidbody = GetComponent<Rigidbody>();
             _sqrMaxTurningSpeed = _maxTurningSpeed * _maxTurningSpeed;
-            
         }
 
         void AiUpdate()
         {
+            if (_playerObject != null && 
+                Vector3.SqrMagnitude(transform.position - _playerObject.transform.position) > 9)
+            {
+                _playerObject.transform.parent = null;
+                _playerObject = null;
+            }
+            
             if (_flightPath.Count == 0)
                 return;
             
@@ -85,14 +94,6 @@ namespace Malicious.Hackable
 
         protected override void FixedTick()
         {
-            if (_playerObject != null && 
-                Vector3.SqrMagnitude(transform.position - _playerObject.transform.position) > 9)
-            {
-                _playerObject.transform.parent = null;
-                _playerObject = null;
-            }
-            
-            
             if (_moveInput != Vector2.zero)
             {
                 if (Mathf.Abs(_moveInput.x) > 0.1f)
@@ -119,11 +120,14 @@ namespace Malicious.Hackable
                     else
                         _rigidbody.velocity = Vector3.zero;
                 }
-                
             }
-            
             if (_moveInput.x == 0) 
                 _rigidbody.angularVelocity = Vector3.zero;
+        }
+
+        protected override void InteractionInputEnter(InputAction.CallbackContext a_context)
+        {
+            OnHackExit();
         }
 
         public override void OnHackEnter()
@@ -137,6 +141,20 @@ namespace Malicious.Hackable
         {
             base.OnHackExit();
             GameEventManager.EnemyFixedUpdate += AiUpdate;
+            _player.OnHackEnter();
+            _player.LaunchPlayer(_exitLocation.forward * _exitForce);
+            _player.transform.parent = null;
+
+            Vector3 exitDirection = _exitLocation.forward;
+            exitDirection.y = 0;
+            exitDirection = exitDirection.normalized;
+            
+            _player.transform.rotation = Quaternion.LookRotation(exitDirection);
+            _player.transform.position = _exitLocation.position;
+            
+            transform.position = _flightPath[0];
+            _rigidbody.velocity = Vector3.zero;
+            _pathIndex = 1;
         }
 
         private void OnTriggerEnter(Collider other)
@@ -153,6 +171,14 @@ namespace Malicious.Hackable
             {
                 other.gameObject.transform.parent = null;
                 _playerObject = null;
+            }
+        }
+
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.CompareTag("Laser"))
+            {
+                
             }
         }
 
