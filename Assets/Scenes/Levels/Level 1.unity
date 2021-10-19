@@ -298,6 +298,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: PressurePlate
       objectReference: {fileID: 0}
+    - target: {fileID: 5357296354300248179, guid: d9e2111f2fe98524eb5f8652ffa7be18, type: 3}
+      propertyPath: _OnEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 585641251}
+    - target: {fileID: 5357296354300248179, guid: d9e2111f2fe98524eb5f8652ffa7be18, type: 3}
+      propertyPath: _OffEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 585641251}
+    - target: {fileID: 5357296354300248179, guid: d9e2111f2fe98524eb5f8652ffa7be18, type: 3}
+      propertyPath: _OnEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: BridgeOn
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357296354300248179, guid: d9e2111f2fe98524eb5f8652ffa7be18, type: 3}
+      propertyPath: _OffEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: BridgeOff
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357296354300248179, guid: d9e2111f2fe98524eb5f8652ffa7be18, type: 3}
+      propertyPath: _OnEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Malicious.GameItems.Bridge, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357296354300248179, guid: d9e2111f2fe98524eb5f8652ffa7be18, type: 3}
+      propertyPath: _OffEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Malicious.GameItems.Bridge, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 5607625691411323420, guid: d9e2111f2fe98524eb5f8652ffa7be18, type: 3}
       propertyPath: m_RootOrder
       value: 12
@@ -35209,6 +35233,17 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!114 &585641251 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 151623833, guid: b3ff7ebf8bd6fb54e9282cb00c7a914c, type: 3}
+  m_PrefabInstance: {fileID: 2109532832}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f078f1bcff94b72b5c4a57cd0e8ea9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &588029004
 GameObject:
   m_ObjectHideFlags: 0
@@ -57991,6 +58026,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: PressurePlate (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5357296354300248179, guid: d9e2111f2fe98524eb5f8652ffa7be18, type: 3}
+      propertyPath: _OnEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1048494678}
+    - target: {fileID: 5357296354300248179, guid: d9e2111f2fe98524eb5f8652ffa7be18, type: 3}
+      propertyPath: _OffEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1048494678}
+    - target: {fileID: 5357296354300248179, guid: d9e2111f2fe98524eb5f8652ffa7be18, type: 3}
+      propertyPath: _OnEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: BridgeOn
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357296354300248179, guid: d9e2111f2fe98524eb5f8652ffa7be18, type: 3}
+      propertyPath: _OffEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: BridgeOff
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357296354300248179, guid: d9e2111f2fe98524eb5f8652ffa7be18, type: 3}
+      propertyPath: _OnEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Malicious.GameItems.Bridge, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5357296354300248179, guid: d9e2111f2fe98524eb5f8652ffa7be18, type: 3}
+      propertyPath: _OffEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Malicious.GameItems.Bridge, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 5607625691411323420, guid: d9e2111f2fe98524eb5f8652ffa7be18, type: 3}
       propertyPath: m_RootOrder
       value: 13
@@ -60548,6 +60607,17 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!114 &1048494678 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 151623833, guid: b3ff7ebf8bd6fb54e9282cb00c7a914c, type: 3}
+  m_PrefabInstance: {fileID: 1984307915}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f078f1bcff94b72b5c4a57cd0e8ea9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1048904999
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -123197,6 +123267,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1773385114}
     m_Modifications:
+    - target: {fileID: 151623833, guid: b3ff7ebf8bd6fb54e9282cb00c7a914c, type: 3}
+      propertyPath: _scaleGoal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 151623833, guid: b3ff7ebf8bd6fb54e9282cb00c7a914c, type: 3}
+      propertyPath: _scaleSpeed
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 154873867439181824, guid: b3ff7ebf8bd6fb54e9282cb00c7a914c, type: 3}
       propertyPath: m_RootOrder
       value: 25
@@ -130029,6 +130107,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1773385114}
     m_Modifications:
+    - target: {fileID: 151623833, guid: b3ff7ebf8bd6fb54e9282cb00c7a914c, type: 3}
+      propertyPath: _scaleGoal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 151623833, guid: b3ff7ebf8bd6fb54e9282cb00c7a914c, type: 3}
+      propertyPath: _scaleSpeed
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 154873867439181824, guid: b3ff7ebf8bd6fb54e9282cb00c7a914c, type: 3}
       propertyPath: m_RootOrder
       value: 26
