@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 938614588948011791}
   - component: {fileID: 938614588948011777}
   m_Layer: 7
-  m_Name: FanObject (5)
+  m_Name: FanObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,7 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21fea4ddbec91924f94302bd0275ef69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isActive: 1
   _rotateObject: {fileID: 4391081271132482931}
+  _rotateFanSpeed: 10
   _launchDirection: {x: 0, y: 1, z: 0}
   _velocityLimitAtPeak: 2
   _velocityLimitAtBottom: 20
@@ -58,6 +60,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   _activeObjects: []
+  _blockForceScale: 1
 --- !u!65 &938614588948011791
 BoxCollider:
   m_ObjectHideFlags: 0
