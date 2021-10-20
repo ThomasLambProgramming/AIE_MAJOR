@@ -340,21 +340,26 @@ namespace Malicious.Core
                      other.gameObject.CompareTag("Block") || 
                      other.gameObject.CompareTag("FlyingEnemy"))
             {
-                List<ContactPoint> contacts = new List<ContactPoint>(); 
-                other.GetContacts(contacts);
+                // List<ContactPoint> contacts = new List<ContactPoint>(); 
+                // other.GetContacts(contacts);
+                //
+                // Vector3 averagedNormal = Vector3.zero;
+                // foreach (var contactPoint in contacts)
+                // {
+                //     averagedNormal += contactPoint.normal;
+                // }
+                // averagedNormal = averagedNormal / contacts.Count;
+                // averagedNormal = averagedNormal.normalized;
 
-                Vector3 averagedNormal = Vector3.zero;
-                foreach (var contactPoint in contacts)
+                Ray ray = new Ray(_groundCheck.position, Vector3.down);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, 1, _groundMask))
                 {
-                    averagedNormal += contactPoint.normal;
-                }
-                averagedNormal = averagedNormal / contacts.Count;
-                averagedNormal = averagedNormal.normalized;
-
-                if (Vector3.Dot(averagedNormal, Vector3.up) > _groundCheckAngleAllowance)
-                {
-                    _canJump = true;
-                    _hasDoubleJumped = false;
+                    if (Vector3.Dot(hit.normal, Vector3.up) > _groundCheckAngleAllowance)
+                    {
+                        _canJump = true;
+                        _hasDoubleJumped = false;
+                    } 
                 }
             }
         }
