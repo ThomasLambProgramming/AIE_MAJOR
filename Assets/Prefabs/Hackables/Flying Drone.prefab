@@ -275,7 +275,6 @@ Transform:
   - {fileID: 1021328338373967330}
   - {fileID: 813534210}
   - {fileID: 117002165}
-  - {fileID: 2585607164821414235}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -372,7 +371,7 @@ MonoBehaviour:
   _maxTurningSpeed: 10
   _playerRotateSpeed: 40
   _exitForce: 2
-  _exitLocation: {fileID: 2585607164821414235}
+  _exitLocation: {fileID: 0}
   _yHitAmount: 1
   _hitForce: 10
 --- !u!114 &270638636
@@ -391,7 +390,7 @@ MonoBehaviour:
   _maxDistanceAway: 5
   _maxTapHoldLength: 0.4
   _requiresSameYHeight: 0
-  _yDifferenceAllowed: 1
+  _yDifferenceAllowed: 2
   _lookGoal: {fileID: 875079078}
   _nodeRenderer: {fileID: 875079080}
   _defaultMaterial: {fileID: 2100000, guid: 83f8ab50a0baafb47b83584a8881ed10, type: 2}
@@ -414,35 +413,5 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 5, y: 2, z: 5}
+  m_Size: {x: 6, y: 2, z: 6}
   m_Center: {x: 0, y: 2.75, z: 0}
---- !u!1 &9053143958738009609
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2585607164821414235}
-  m_Layer: 0
-  m_Name: ExitLocation
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2585607164821414235
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9053143958738009609}
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
-  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
-  m_Children: []
-  m_Father: {fileID: 3466853749773726540}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
