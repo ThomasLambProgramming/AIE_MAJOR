@@ -9,10 +9,6 @@ namespace Malicious.Interactables
         public Vector3 _returnPosition = Vector3.zero;
         public Vector3 _facingDirection = Vector3.zero;
         
-        
-        private void Start()
-        {
-        }
         public void TurnOn()
         {
         }

@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 216114330}
   m_Layer: 11
   m_Name: MoveableObject (3)
-  m_TagString: Hackable
+  m_TagString: Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -330,12 +330,17 @@ MonoBehaviour:
   _exitBox: {fileID: 2052060544748010197}
   _exitDirection: {x: -0.17, y: 0.06, z: 0}
   _exitForce: 20
+  _dotAllowanceForStacking: 0.7
+  _stackingArea: {fileID: 0}
   _onHackEnterEvent:
     m_PersistentCalls:
       m_Calls: []
   _onHackExitEvent:
     m_PersistentCalls:
       m_Calls: []
+  _collisionMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &2052060544462530625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -351,6 +356,8 @@ MonoBehaviour:
   _dotAllowance: 0.6
   _maxDistanceAway: 5
   _maxTapHoldLength: 0.4
+  _requiresSameYHeight: 0
+  _yDifferenceAllowed: 1
   _lookGoal: {fileID: 0}
   _nodeRenderer: {fileID: 7820512539629288487}
   _defaultMaterial: {fileID: 2100000, guid: 83f8ab50a0baafb47b83584a8881ed10, type: 2}

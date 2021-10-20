@@ -99,7 +99,10 @@ namespace Malicious.GameItems
         }
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("Player"))
+            if (other.gameObject.CompareTag("Player") || 
+                other.gameObject.CompareTag("Hackable") || 
+                other.gameObject.CompareTag("Enemy") || 
+                other.gameObject.CompareTag("Interactable"))
             {
                 _playerObject = other.gameObject;
                 other.transform.parent = this.transform;
@@ -121,7 +124,10 @@ namespace Malicious.GameItems
         }
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.CompareTag("Player"))
+            if (other.gameObject.CompareTag("Player") || 
+                other.gameObject.CompareTag("Hackable") || 
+                other.gameObject.CompareTag("Enemy") || 
+                other.gameObject.CompareTag("Interactable"))
             {
                 other.transform.parent = null;
                 _playerObject = null;

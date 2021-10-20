@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Malicious.Hackable;
 using UnityEngine;
 
 namespace Malicious.GameItems
@@ -21,7 +22,7 @@ namespace Malicious.GameItems
         [SerializeField] private float _rotateSpeed = 10f;
         [SerializeField] private LayerMask _objectsAllowed = ~0;
         [SerializeField] private List<Rigidbody> _activeObjects = new List<Rigidbody>();
-
+        [SerializeField] private float _blockForceScale = 1f;
         private void OnTriggerEnter(Collider other)
         {
             Rigidbody objectRb = other.gameObject.GetComponent<Rigidbody>();
@@ -46,14 +47,47 @@ namespace Malicious.GameItems
                 float maxSqrVelocity = maxVelocity * maxVelocity;
                 
                 float forceToApply = Mathf.Lerp(_maxPropelForce, _minPropelForce, posDifference);
-                
-                if (_launchDirection == Vector3.up)
+
+                if (rigidbody.gameObject.CompareTag("Enemy"))
+                {
+                    Vector3 force = forceToApply * _launchDirection;
+                    Vector3 currentVelocity = rigidbody.velocity;
+                    if (currentVelocity.sqrMagnitude > maxSqrVelocity)
+                    {
+                        currentVelocity = currentVelocity.normalized * maxVelocity;
+                        rigidbody.velocity = currentVelocity;
+                    }
+                    else
+                    {
+                        rigidbody.velocity += force;
+                    }
+                }
+                else if (rigidbody.gameObject.CompareTag("Block"))
+                {
+                    Vector3 force = forceToApply * _launchDirection;
+                    Vector3 currentVelocity = rigidbody.velocity;
+                    if (currentVelocity.sqrMagnitude > maxSqrVelocity)
+                    {
+                        currentVelocity = currentVelocity.normalized * maxVelocity;
+                        rigidbody.velocity = currentVelocity;
+                    }
+                    else
+                    {
+                        rigidbody.AddForce(force * _blockForceScale);
+                    }
+                }
+                else if (_launchDirection == Vector3.up)
                 {
                     float currentYVel = rigidbody.velocity.y;
                     if (currentYVel > maxVelocity)
                         rigidbody.AddForce(0, maxVelocity, 0);
                     else
                         rigidbody.AddForce(0, forceToApply, 0);
+                }
+                else if (rigidbody.gameObject.CompareTag("Player"))
+                {
+                    Vector3 force = forceToApply * _launchDirection * _maxPropelForce;
+                    rigidbody.AddForce(force);
                 }
                 else
                 {

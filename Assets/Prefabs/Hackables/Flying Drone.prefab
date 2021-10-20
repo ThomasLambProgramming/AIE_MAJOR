@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 117002165}
   - component: {fileID: 117002166}
-  m_Layer: 11
+  m_Layer: 14
   m_Name: HurtCollider
   m_TagString: EnemyNonMove
   m_Icon: {fileID: 0}
@@ -53,7 +53,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 813534210}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: CameraOffset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 875079078}
   - component: {fileID: 875079081}
   - component: {fileID: 875079080}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 1021328338373967330}
   - component: {fileID: 1231562515346604564}
   - component: {fileID: 8891871261528516348}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Drone1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -254,9 +254,9 @@ GameObject:
   - component: {fileID: 270638630}
   - component: {fileID: 270638636}
   - component: {fileID: 211787574402312022}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Flying Drone
-  m_TagString: Hackable
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -369,8 +369,11 @@ MonoBehaviour:
   _pathIndex: 0
   _goNextDistance: 4
   _maxTurningSpeed: 10
-  _playerMaxTurnSpeed: 5
   _playerRotateSpeed: 40
+  _exitForce: 2
+  _exitLocation: {fileID: 0}
+  _yHitAmount: 1
+  _hitForce: 10
 --- !u!114 &270638636
 MonoBehaviour:
   m_ObjectHideFlags: 0

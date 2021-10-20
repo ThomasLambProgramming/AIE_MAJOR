@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 704829935}
   m_Layer: 0
   m_Name: Spring NonHackable
-  m_TagString: Untagged
+  m_TagString: Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -74,6 +74,7 @@ MonoBehaviour:
     m_Bits: 3479
   _launchForce: 10
   _animationTime: 1
+  _dotCheck: 0.6
 --- !u!65 &704829934
 BoxCollider:
   m_ObjectHideFlags: 0

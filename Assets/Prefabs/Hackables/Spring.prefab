@@ -69,7 +69,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 242978894956372524}
-  - component: {fileID: 6178675699393984598}
   - component: {fileID: 704829933}
   - component: {fileID: 704829934}
   - component: {fileID: 704829935}
@@ -78,9 +77,10 @@ GameObject:
   - component: {fileID: 128533147}
   - component: {fileID: 128533141}
   - component: {fileID: 128533144}
+  - component: {fileID: 1786238176}
   m_Layer: 11
   m_Name: Spring
-  m_TagString: Hackable
+  m_TagString: Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -105,25 +105,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &6178675699393984598
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 582350458597341334}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: ea9b754e2f9036945af5d949aaefb84e, type: 3}
-  m_Controller: {fileID: 9100000, guid: d6b94e1bc3d52a5459ec57b4dcafc25e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &704829933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,6 +122,7 @@ MonoBehaviour:
     m_Bits: 3479
   _launchForce: 10
   _animationTime: 1
+  _dotCheck: 0.6
 --- !u!65 &704829934
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -179,9 +161,9 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 122
   m_CollisionDetection: 0
 --- !u!65 &128533146
 BoxCollider:
@@ -207,8 +189,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 306.8, y: 76.63, z: 356.7}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 306.8, y: 30.3, z: 356.7}
+  m_Center: {x: 0, y: 43.23, z: 0}
 --- !u!114 &128533141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,12 +244,36 @@ MonoBehaviour:
   _exitBox: {fileID: 128533146}
   _exitDirection: {x: 0, y: 0, z: -1}
   _exitForce: 5
+  _dotAllowanceForStacking: 0.7
+  _stackingArea: {fileID: 0}
   _onHackEnterEvent:
     m_PersistentCalls:
       m_Calls: []
   _onHackExitEvent:
     m_PersistentCalls:
       m_Calls: []
+  _collisionMask:
+    serializedVersion: 2
+    m_Bits: 0
+--- !u!95 &1786238176
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582350458597341334}
+  m_Enabled: 0
+  m_Avatar: {fileID: 9000000, guid: ea9b754e2f9036945af5d949aaefb84e, type: 3}
+  m_Controller: {fileID: 9100000, guid: d6b94e1bc3d52a5459ec57b4dcafc25e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 1
+  m_ApplyRootMotion: 1
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2199937337811219716
 GameObject:
   m_ObjectHideFlags: 0

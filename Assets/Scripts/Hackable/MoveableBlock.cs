@@ -11,15 +11,20 @@ namespace Malicious.Hackable
     {
         [SerializeField] private Transform _cameraOffset = null;
         
+        
         [SerializeField] private bool _faceBoxOnExit = true;
         [SerializeField] private Transform _exitPosition = null;
         [SerializeField] private Collider _exitBox = null;
         [SerializeField] private Vector3 _exitDirection = Vector3.zero;
         [SerializeField] private float _exitForce = 4f;
+        [SerializeField] private float _dotAllowanceForStacking = 0.7f;
+        [SerializeField] private Transform _stackingArea = null;
         
         [SerializeField] private UnityEvent _onHackEnterEvent = null;
         [SerializeField] private UnityEvent _onHackExitEvent = null;
         private Vector3 _startingPosition = Vector3.zero;
+        private GameObject _stackedObject = null;
+        [SerializeField] private LayerMask _collisionMask;
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
@@ -52,9 +57,13 @@ namespace Malicious.Hackable
                     camForward * (_moveInput.y * _moveSpeed * Time.deltaTime) +
                     camRight * (_moveInput.x * _moveSpeed * Time.deltaTime);
 
-                newVel.y = currentYAmount + 0.02f;
-                
-                _rigidbody.velocity = newVel;
+                newVel.y = currentYAmount;
+
+                Vector3 movementDirection = newVel;
+                movementDirection.y = 0;
+                movementDirection = movementDirection.normalized;
+                if (!Physics.Raycast(transform.position, movementDirection, 3, _collisionMask))
+                    _rigidbody.velocity = newVel;
             }
 
             if (Mathf.Abs(_moveInput.magnitude) < 0.1f)
@@ -62,12 +71,12 @@ namespace Malicious.Hackable
                 //if we are actually moving 
                 if (Mathf.Abs(_rigidbody.velocity.x) > 0.2f || Mathf.Abs(_rigidbody.velocity.z) > 0.2f)
                 {
-                    Vector3 newVel = _rigidbody.velocity;
+                    Vector3 adjustedVel = _rigidbody.velocity;
                     //takes off 5% of the current vel every physics update so the player can land on a platform without overshooting
                     //because the velocity doesnt stop
-                    newVel.z = newVel.z * 0.95f;
-                    newVel.x = newVel.x * 0.95f;
-                    _rigidbody.velocity = newVel;
+                    adjustedVel.z = adjustedVel.z * 0.95f;
+                    adjustedVel.x = adjustedVel.x * 0.95f;
+                    _rigidbody.velocity = adjustedVel;
                 }
             }
         }
@@ -109,8 +118,8 @@ namespace Malicious.Hackable
         public override void OnHackEnter()
         {
             _onHackEnterEvent?.Invoke();
-            if (_rigidbody.isKinematic)
-                _rigidbody.isKinematic = false;
+            _rigidbody.constraints = RigidbodyConstraints.None;
+            _rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             _exitBox.enabled = true;
             base.OnHackEnter();
             
@@ -119,11 +128,34 @@ namespace Malicious.Hackable
         }
         public override void OnHackExit()
         {
-            _onHackExitEvent?.Invoke();
-            if (_rigidbody.isKinematic == false)
-                _rigidbody.isKinematic = true;
-            base.OnHackExit();
+            _rigidbody.constraints =
+                RigidbodyConstraints.FreezePositionX |
+                RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+                _onHackExitEvent?.Invoke();
+                base.OnHackExit();
             _exitBox.enabled = false;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("Block") && !other.isTrigger)
+            {
+                Vector3 directionToObject =
+                    (other.gameObject.transform.position - transform.position).normalized;
+
+                if (Vector3.Dot(directionToObject, Vector3.up) > _dotAllowanceForStacking &&
+                    Vector3.Distance(other.gameObject.transform.position, _stackingArea.transform.position) < 3f)
+                {
+                    other.transform.parent = transform;
+                    _stackedObject = other.gameObject;
+                }
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.gameObject == _stackedObject)
+                _stackedObject.transform.parent = null;
         }
 #if UNITY_EDITOR
         private void OnDrawGizmos()

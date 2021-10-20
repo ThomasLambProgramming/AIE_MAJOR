@@ -22,7 +22,13 @@ namespace Malicious.Core
         [SerializeField] private float _animationSwapSpeed = 3f;
         [SerializeField] private Animator _playerAnimator = null;
         private readonly int _animatorRunVariable = Animator.StringToHash("RunAmount");
-        private static readonly int _Jumped = Animator.StringToHash("Jumped");
+        //private static readonly int _Jumped = Animator.StringToHash("Jumped");
+        //private static readonly int _Falling = Animator.StringToHash("Falling");
+        //private static readonly int _Landed = Animator.StringToHash("Landed");
+        //private static readonly int _ResetToRun = Animator.StringToHash("ResetToRun");
+        //[SerializeField] private float _jumpDuration = 1.5f;
+        //[SerializeField] private float _landResetDuration = 1.5f;
+        //[SerializeField] private float _landDuration = 1.5f;
         
         //private readonly int _jumpingVariable = Animator.StringToHash("Jumping");
         //private float _currentRunAmount = 0f;
@@ -44,6 +50,7 @@ namespace Malicious.Core
         private bool _canJump = true;
         private bool _hasDoubleJumped = false;
         private bool _holdingJump = false;
+        //private bool _isJumping = false;
 
         [SerializeField] private float _groundCheckDelay = 0.2f;
         //--------------------------------//
@@ -81,7 +88,13 @@ namespace Malicious.Core
                     Vector3.SqrMagnitude(transform.position - _currentHackableField.transform.position);
                 float distanceToNew =
                     Vector3.SqrMagnitude(transform.position - a_field.transform.position);
-                if (distanceToNew < distanceToCurrent)
+
+                if (Mathf.Abs(distanceToCurrent - distanceToNew) < 25)
+                {
+                    if (_currentHackableField.transform.position.y > a_field.transform.position.y)
+                        _currentHackableField = a_field;
+                }
+                else if (distanceToNew < distanceToCurrent)
                     _currentHackableField = a_field;
             }
             else
@@ -250,11 +263,10 @@ namespace Malicious.Core
                 Vector3 prevVel = _rigidbody.velocity;
                 prevVel.y = _jumpForce;
                 _rigidbody.velocity = prevVel;
-                
-               _playerAnimator.SetTrigger(_Jumped);
-                
+
                 if (_canJump == false)
                     _hasDoubleJumped = true;
+                
                 _canJump = false;
             }
         }
@@ -263,9 +275,7 @@ namespace Malicious.Core
         {
             Collider[] collisions = Physics.OverlapSphere(_groundCheck.position, 0.5f, _groundMask);
             if (collisions == null || collisions.Length == 0)
-            {
                 _canJump = false;
-            }
         }
 
         #endregion
@@ -326,7 +336,8 @@ namespace Malicious.Core
             else if (other.gameObject.CompareTag("Environment") || 
                      other.gameObject.CompareTag("Hackable") || 
                      other.gameObject.CompareTag("Interactable") ||
-                     other.gameObject.CompareTag("CheckPoint"))
+                     other.gameObject.CompareTag("CheckPoint") ||
+                     other.gameObject.CompareTag("Block"))
             {
                 List<ContactPoint> contacts = new List<ContactPoint>(); 
                 other.GetContacts(contacts);
@@ -406,7 +417,6 @@ namespace Malicious.Core
             yield return new WaitForSeconds(_groundCheckDelay);
             
         }
-
         private IEnumerator DisableMoveInput()
         {
             _movementDisabled = true;
