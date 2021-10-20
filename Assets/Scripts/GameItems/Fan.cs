@@ -25,15 +25,58 @@ namespace Malicious.GameItems
         [SerializeField] private float _blockForceScale = 1f;
         private void OnTriggerEnter(Collider other)
         {
+            if (other.isTrigger)
+                return; 
+            
             Rigidbody objectRb = other.gameObject.GetComponent<Rigidbody>();
             if (objectRb != null && (_objectsAllowed & (1 << other.gameObject.layer)) > 0)
                 _activeObjects.Add(objectRb);
         }
 
-        private void OnTriggerStay(Collider other)
+        private void OnTriggerExit(Collider other)
+        {
+            foreach (var VARIABLE in _activeObjects)
+            {
+                if (VARIABLE.gameObject == other.gameObject)
+                {
+                    //since trigger is done per object we can exit out with break as the one has been found
+                    _activeObjects.Remove(VARIABLE);
+                    break;
+                }
+            }
+        }
+        public void RotateFan(Vector3 a_goalRotation)
+        {
+            //insurance that its not overlapping rotates
+            StopCoroutine(RotateFanEnumerator(Vector3.zero));
+            StartCoroutine(RotateFanEnumerator(a_goalRotation));
+        }
+        private IEnumerator RotateFanEnumerator(Vector3 a_target)
+        {
+            Quaternion goalRot = Quaternion.Euler(a_target);
+
+            while (transform.rotation != goalRot)
+            {
+                transform.rotation = Quaternion.RotateTowards(
+                    transform.rotation, 
+                    goalRot, 
+                    _rotateFanSpeed * Time.deltaTime);
+                _launchDirection = transform.up;
+                yield return null;
+            }
+        }
+
+        private void Update()
+        {
+            if (_isActive)
+                _rotateObject.transform.Rotate(0,_rotateSpeed * Time.deltaTime,0);
+                
+        }
+
+        private void FixedUpdate()
         {
             if (!_isActive)
-                return;
+                return; 
             
             foreach (var rigidbody in _activeObjects)
             {
@@ -104,46 +147,6 @@ namespace Malicious.GameItems
                     }
                 }
             }
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            foreach (var VARIABLE in _activeObjects)
-            {
-                if (VARIABLE.gameObject == other.gameObject)
-                {
-                    //since trigger is done per object we can exit out with break as the one has been found
-                    _activeObjects.Remove(VARIABLE);
-                    break;
-                }
-            }
-        }
-        public void RotateFan(Vector3 a_goalRotation)
-        {
-            //insurance that its not overlapping rotates
-            StopCoroutine(RotateFanEnumerator(Vector3.zero));
-            StartCoroutine(RotateFanEnumerator(a_goalRotation));
-        }
-        private IEnumerator RotateFanEnumerator(Vector3 a_target)
-        {
-            Quaternion goalRot = Quaternion.Euler(a_target);
-
-            while (transform.rotation != goalRot)
-            {
-                transform.rotation = Quaternion.RotateTowards(
-                    transform.rotation, 
-                    goalRot, 
-                    _rotateFanSpeed * Time.deltaTime);
-                _launchDirection = transform.up;
-                yield return null;
-            }
-        }
-
-        private void Update()
-        {
-            if (_isActive)
-                _rotateObject.transform.Rotate(0,_rotateSpeed * Time.deltaTime,0);
-                
         }
 
         public void Deactivate() => _isActive = false;

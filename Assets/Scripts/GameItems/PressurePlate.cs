@@ -18,6 +18,9 @@ namespace Malicious.GameItems
             //the & checks if both masks have the same bit then give a resulting number
             //made out of the bits that both share if the result has any bits similar it will
             //return greater than 0
+            if (other.isTrigger)
+                return; 
+            
             if ((_mask & (1 << other.gameObject.layer)) > 0)
             {
                 _containedObjects.Add(other.gameObject);

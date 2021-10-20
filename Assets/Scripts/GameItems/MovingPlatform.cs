@@ -102,7 +102,9 @@ namespace Malicious.GameItems
             if (other.gameObject.CompareTag("Player") || 
                 other.gameObject.CompareTag("Hackable") || 
                 other.gameObject.CompareTag("Enemy") || 
-                other.gameObject.CompareTag("Interactable"))
+                other.gameObject.CompareTag("Interactable") || 
+                other.gameObject.CompareTag("Block")|| 
+                other.gameObject.CompareTag("FlyingEnemy"))
             {
                 _playerObject = other.gameObject;
                 other.transform.parent = this.transform;
@@ -127,7 +129,9 @@ namespace Malicious.GameItems
             if (other.gameObject.CompareTag("Player") || 
                 other.gameObject.CompareTag("Hackable") || 
                 other.gameObject.CompareTag("Enemy") || 
-                other.gameObject.CompareTag("Interactable"))
+                other.gameObject.CompareTag("Interactable") || 
+                other.gameObject.CompareTag("Block")|| 
+                other.gameObject.CompareTag("FlyingEnemy"))
             {
                 other.transform.parent = null;
                 _playerObject = null;

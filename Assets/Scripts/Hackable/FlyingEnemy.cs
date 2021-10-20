@@ -157,12 +157,17 @@ namespace Malicious.Hackable
             
             _player.transform.rotation = Quaternion.LookRotation(exitDirection);
             _player.transform.position = _exitLocation.position;
-            
+
+            StartCoroutine(WaitToReset());
+        }
+
+        private IEnumerator WaitToReset()
+        {
+            yield return new WaitForSeconds(3);
             transform.position = _flightPath[0];
             _rigidbody.velocity = Vector3.zero;
             _pathIndex = 1;
         }
-
         public bool isHacked()
         {
             return _isHacked;
