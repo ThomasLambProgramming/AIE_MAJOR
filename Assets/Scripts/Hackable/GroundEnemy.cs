@@ -45,6 +45,12 @@ namespace Malicious.Hackable
             
             if (_huntPlayer)
             {
+                if (!_playerObject.activeInHierarchy)
+                {
+                    _huntPlayer = false;
+                    _pathIndex = FindClosestPoint();
+                    return;
+                }
                 if (Mathf.Abs(transform.position.y - _playerObject.transform.position.y) > 3f)
                 {
                     _huntPlayer = false;
@@ -54,6 +60,8 @@ namespace Malicious.Hackable
             }
             else
             {
+                if (_groundPath.Count == 0)
+                    return;
                 
                 Vector3 directionToTarget = _groundPath[_pathIndex] - transform.position;
                 if (Vector3.SqrMagnitude(directionToTarget) > _goNextDistance)

@@ -89,7 +89,7 @@ namespace Malicious.Core
                 float distanceToNew =
                     Vector3.SqrMagnitude(transform.position - a_field.transform.position);
 
-                if (Mathf.Abs(distanceToCurrent - distanceToNew) < 25)
+                if (Mathf.Abs(distanceToCurrent - distanceToNew) < 2)
                 {
                     if (_currentHackableField.transform.position.y > a_field.transform.position.y)
                         _currentHackableField = a_field;
@@ -337,7 +337,8 @@ namespace Malicious.Core
                      other.gameObject.CompareTag("Hackable") || 
                      other.gameObject.CompareTag("Interactable") ||
                      other.gameObject.CompareTag("CheckPoint") ||
-                     other.gameObject.CompareTag("Block"))
+                     other.gameObject.CompareTag("Block") || 
+                     other.gameObject.CompareTag("FlyingEnemy"))
             {
                 List<ContactPoint> contacts = new List<ContactPoint>(); 
                 other.GetContacts(contacts);
