@@ -98,7 +98,7 @@ namespace Malicious.Hackable
         {
             _directionToTarget = a_target - transform.position;
 
-            
+            _directionToTarget.y = 0;
             _directionToTarget = _directionToTarget.normalized;
 
             Vector3 desiredVelocity = _directionToTarget * _maxSteeringForce;

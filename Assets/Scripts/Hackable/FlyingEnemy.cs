@@ -25,6 +25,8 @@ namespace Malicious.Hackable
         private bool _isHacked = false;
         private GameObject _playerObject = null;
         private float _sqrMaxTurningSpeed = 0;
+
+        private bool _wait = false;
         // Start is called before the first frame update
         void Start()
         {
@@ -35,6 +37,9 @@ namespace Malicious.Hackable
 
         void AiUpdate()
         {
+            if (_wait)
+                return;
+            
             if (_playerObject != null && 
                 Vector3.SqrMagnitude(transform.position - _playerObject.transform.position) > 9)
             {
@@ -163,10 +168,12 @@ namespace Malicious.Hackable
 
         private IEnumerator WaitToReset()
         {
+            _wait = true;
             yield return new WaitForSeconds(_resetWaitTime);
             transform.position = _flightPath[0];
             _rigidbody.velocity = Vector3.zero;
             _pathIndex = 1;
+            _wait = false;
         }
         public bool isHacked()
         {
