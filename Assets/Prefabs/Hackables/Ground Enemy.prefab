@@ -417,7 +417,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 501.62
+  m_Radius: 600
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &951164796
 MonoBehaviour:
@@ -431,14 +431,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd34ca7a1204a734daef8c739ac65cd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 3
+  _moveSpeed: 4
   _maxSpeed: 10
   _spinSpeed: 20
   _cameraTransform: {fileID: 365240353}
   _player: {fileID: 0}
   _hasHoldOption: 0
   _holdChargeTime: 2
-  _playerSpeed: 30
+  _playerSpeed: 10
   _playerMaxSpeed: 10
   _playerRotateSpeed: 90
   _aiRotateSpeed: 7.25
