@@ -23,6 +23,11 @@ namespace Malicious.Tools
         {
             Application.Quit();
         }
-        
+
+        public void LoadCurrentLevel()
+        {
+            GameEventManager.Reset();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 }

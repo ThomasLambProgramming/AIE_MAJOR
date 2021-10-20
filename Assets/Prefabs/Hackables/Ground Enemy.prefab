@@ -399,7 +399,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5710618670995363162}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 803cf6ee6bff37244a83637411ca2317, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 26.53
@@ -432,7 +432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 4
-  _maxSpeed: 10
+  _maxSpeed: 5
   _spinSpeed: 20
   _cameraTransform: {fileID: 365240353}
   _player: {fileID: 0}
@@ -442,7 +442,7 @@ MonoBehaviour:
   _playerMaxSpeed: 10
   _playerRotateSpeed: 90
   _aiRotateSpeed: 7.25
-  _maxSteeringForce: 19
+  _maxSteeringForce: 25
   _goNextDistance: 2
   _angleOfVision: 45
   _groundPath:

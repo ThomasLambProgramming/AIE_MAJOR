@@ -98,10 +98,10 @@ namespace Malicious.Hackable
         {
             _directionToTarget = a_target - transform.position;
 
-            _directionToTarget.y = 0.01f;
+            
             _directionToTarget = _directionToTarget.normalized;
 
-            Vector3 desiredVelocity = _directionToTarget * _maxSpeed;
+            Vector3 desiredVelocity = _directionToTarget * _maxSteeringForce;
             Vector3 steeringForce = desiredVelocity - _rigidbody.velocity;
 
             if (steeringForce.sqrMagnitude > _sqrMaxSteeringForce)
@@ -117,7 +117,7 @@ namespace Malicious.Hackable
             }
 
             Quaternion lookDirection = Quaternion.LookRotation(_directionToTarget);
-
+            
             transform.rotation = Quaternion.RotateTowards(transform.rotation, lookDirection, _aiRotateSpeed);
         }
 

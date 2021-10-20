@@ -20,7 +20,7 @@ namespace Malicious.Hackable
         [Tooltip("Exit location z (blue one) is used for the direction to launch player")]
         [SerializeField] private Transform _exitLocation = null;
 
-        [SerializeField] private float _yHitAmount = 1f;
+        [SerializeField] private float _resetWaitTime = 4f;
         [SerializeField] private float _hitForce = 5;
         private bool _isHacked = false;
         private GameObject _playerObject = null;
@@ -163,7 +163,7 @@ namespace Malicious.Hackable
 
         private IEnumerator WaitToReset()
         {
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(_resetWaitTime);
             transform.position = _flightPath[0];
             _rigidbody.velocity = Vector3.zero;
             _pathIndex = 1;
