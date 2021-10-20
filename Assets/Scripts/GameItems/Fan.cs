@@ -91,7 +91,7 @@ namespace Malicious.GameItems
                 
                 float forceToApply = Mathf.Lerp(_maxPropelForce, _minPropelForce, posDifference);
 
-                if (rigidbody.gameObject.CompareTag("Enemy"))
+                if (rigidbody.gameObject.CompareTag("Enemy") || rigidbody.gameObject.CompareTag("FlyingEnemy"))
                 {
                     Vector3 force = forceToApply * _launchDirection;
                     Vector3 currentVelocity = rigidbody.velocity;
@@ -129,7 +129,7 @@ namespace Malicious.GameItems
                 }
                 else if (rigidbody.gameObject.CompareTag("Player"))
                 {
-                    Vector3 force = forceToApply * _launchDirection * _maxPropelForce;
+                    Vector3 force = _launchDirection * (_maxPropelForce * forceToApply);
                     rigidbody.AddForce(force);
                 }
                 else
