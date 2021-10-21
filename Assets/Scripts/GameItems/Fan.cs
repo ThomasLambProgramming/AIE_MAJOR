@@ -23,6 +23,7 @@ namespace Malicious.GameItems
         [SerializeField] private LayerMask _objectsAllowed = ~0;
         [SerializeField] private List<Rigidbody> _activeObjects = new List<Rigidbody>();
         [SerializeField] private float _blockForceScale = 1f;
+        [SerializeField] private float _horizontalDifferenceAllow = 2f;
         private void OnTriggerEnter(Collider other)
         {
             if (other.isTrigger)
@@ -84,7 +85,15 @@ namespace Malicious.GameItems
                 //acc at lower but more hover on end of height
                 //float yDifference = Mathf.Abs(rigidbody.gameObject.transform.position.y - transform.position.y) / _fanHeight;
 
-                float posDifference = Mathf.Abs((rigidbody.gameObject.transform.position - transform.position).magnitude / _fanHeight);
+                Vector3 directionToObject = rigidbody.gameObject.transform.position - transform.position;
+
+                Vector2 horizontalDifference = new Vector2(directionToObject.x, directionToObject.z);
+                if (horizontalDifference.SqrMagnitude() > _horizontalDifferenceAllow)
+                {
+                    _activeObjects.Remove(rigidbody);
+                    return;
+                }
+                float posDifference = Mathf.Abs((directionToObject).magnitude / _fanHeight);
                 
                 float maxVelocity = Mathf.Lerp(_velocityLimitAtBottom, _velocityLimitAtPeak, posDifference);
                 float maxSqrVelocity = maxVelocity * maxVelocity;
