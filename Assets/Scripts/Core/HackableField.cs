@@ -16,6 +16,7 @@ namespace Malicious.Core
         [SerializeField] private float _dotAllowance = 0.8f;
         [SerializeField] private float _maxDistanceAway = 5f;
         [SerializeField] private float _maxTapHoldLength = 0.4f;
+        private float _sqrMaxDistanceAway = 0;
         private bool _holdingHackButton = false;
         private float _holdTime = 0;
         [SerializeField] private bool _requiresSameYHeight = false;
@@ -44,6 +45,7 @@ namespace Malicious.Core
         {
             _hackable = GetComponent<BasePlayer>();
             _interactable = GetComponent<IInteractable>();
+            
         }
 
         public void OnHackValid()
@@ -95,7 +97,8 @@ namespace Malicious.Core
             
             if (Vector2.Dot(horizontalDirection, playerLookDirection) > _dotAllowance)
             {
-                if (Vector3.SqrMagnitude(transform.position - _player.transform.position) < _maxDistanceAway)
+                _sqrMaxDistanceAway = _maxDistanceAway * _maxDistanceAway;
+                if (Vector3.SqrMagnitude(transform.position - _player.transform.position) < _sqrMaxDistanceAway)
                     return true;
             }
 
