@@ -431,15 +431,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd34ca7a1204a734daef8c739ac65cd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 4
+  _moveSpeed: 20
   _maxSpeed: 5
   _spinSpeed: 20
   _cameraTransform: {fileID: 365240353}
   _player: {fileID: 0}
   _hasHoldOption: 0
   _holdChargeTime: 2
-  _playerSpeed: 10
-  _playerMaxSpeed: 10
+  _playerSpeed: 40
+  _playerMaxSpeed: 5
   _playerRotateSpeed: 90
   _aiRotateSpeed: 7.25
   _maxSteeringForce: 25
