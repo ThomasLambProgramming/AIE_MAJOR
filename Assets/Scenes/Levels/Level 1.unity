@@ -10019,11 +10019,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 951164796, guid: 5a5637db0c25e094fb93c86aa0e86e81, type: 3}
       propertyPath: _maxSpeed
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 951164796, guid: 5a5637db0c25e094fb93c86aa0e86e81, type: 3}
       propertyPath: _moveSpeed
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 951164796, guid: 5a5637db0c25e094fb93c86aa0e86e81, type: 3}
       propertyPath: _playerSpeed
@@ -10063,7 +10063,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 951164797, guid: 5a5637db0c25e094fb93c86aa0e86e81, type: 3}
       propertyPath: _maxDistanceAway
-      value: 10
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 951164797, guid: 5a5637db0c25e094fb93c86aa0e86e81, type: 3}
       propertyPath: _yDifferenceAllowed
@@ -19410,6 +19410,10 @@ PrefabInstance:
     - target: {fileID: 951164796, guid: 5a5637db0c25e094fb93c86aa0e86e81, type: 3}
       propertyPath: _groundPath.Array.data[1].z
       value: -117.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 951164797, guid: 5a5637db0c25e094fb93c86aa0e86e81, type: 3}
+      propertyPath: _maxDistanceAway
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 951164801, guid: 5a5637db0c25e094fb93c86aa0e86e81, type: 3}
       propertyPath: m_Radius
@@ -61070,11 +61074,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3453307705036951514, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.00014077767
+      value: 0.00014077302
       objectReference: {fileID: 0}
     - target: {fileID: 3453307705036951514, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.000047279984
+      value: -0.000047278423
       objectReference: {fileID: 0}
     - target: {fileID: 3453307705184082761, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: m_Name
@@ -130206,7 +130210,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 890798058, guid: df534b8e0601b3249aeeded5d3f94adc, type: 3}
       propertyPath: _targetLocation.y
-      value: 19.1
+      value: 19.3
       objectReference: {fileID: 0}
     - target: {fileID: 890798058, guid: df534b8e0601b3249aeeded5d3f94adc, type: 3}
       propertyPath: _targetLocation.z
