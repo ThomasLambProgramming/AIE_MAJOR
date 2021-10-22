@@ -155,16 +155,24 @@ namespace Malicious.Hackable
             }
             if (_moveInput.y == 0)
             {
-                _rigidbody.velocity = _rigidbody.velocity * 0.98f;
+                float currentYVel = _rigidbody.velocity.y;
+                Vector3 newVelocity = _rigidbody.velocity;
+                newVelocity.y = 0;
+                
+                newVelocity = newVelocity * 0.98f;
+                
 
-                float sqrMagnitude = _rigidbody.velocity.sqrMagnitude;
+                float sqrMagnitude = newVelocity.sqrMagnitude;
                 if (sqrMagnitude < 3f)
                 {
                     if (sqrMagnitude > 0.5f)
-                        _rigidbody.velocity = _rigidbody.velocity * 0.90f;
+                        newVelocity = newVelocity * 0.90f;
                     else
-                        _rigidbody.velocity = Vector3.zero;
+                        newVelocity = Vector3.zero;
                 }
+
+                newVelocity.y = currentYVel;
+                _rigidbody.velocity = newVelocity;
             }
             if (_moveInput.x == 0) 
                 _rigidbody.angularVelocity = Vector3.zero;
