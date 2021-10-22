@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Malicious.Core;
 using UnityEngine;
 
@@ -14,12 +15,15 @@ namespace Malicious.GameItems
         [SerializeField] private bool _waitPlayer = false;
         [SerializeField] private bool _waitForTime = false;
         [SerializeField] private float _waitTime = 3f;
-
+        [SerializeField] private float _horizontalAllowance = 3f;
+        private float _sqrHorizontalAllowance = 9f;
         private GameObject _playerObject = null;
         
         private float _timer = 0;
         private bool waiting = false;
         private bool _moveToTarget = true;
+
+        private List<GameObject> _attachedObjects = new List<GameObject>();
         
         private Vector3 _sceneStartLocation = Vector3.zero;
         
@@ -31,6 +35,8 @@ namespace Malicious.GameItems
             
             if (_waitPlayer)
                 waiting = true;
+
+            _sqrHorizontalAllowance = _horizontalAllowance * _horizontalAllowance;
         }
 
         [ContextMenu("SetPositions")]
@@ -43,6 +49,17 @@ namespace Malicious.GameItems
         
         void FixedUpdate()
         {
+            for(int i = 0; i <_attachedObjects.Count; i++)
+            {
+                Vector3 directionTo = _attachedObjects[i].transform.position - transform.position;
+                directionTo.y = 0;
+                if (directionTo.sqrMagnitude > _sqrHorizontalAllowance)
+                {
+                    _attachedObjects[i].transform.parent = null;
+                    _attachedObjects.RemoveAt(i);
+                    i--;
+                }
+            }
             if (_playerObject != null)
             {
                 if (Vector3.SqrMagnitude(_playerObject.transform.position - transform.position) > 5)
@@ -99,6 +116,9 @@ namespace Malicious.GameItems
         }
         private void OnTriggerEnter(Collider other)
         {
+            if (other.isTrigger)
+                return;
+            
             if (other.gameObject.CompareTag("Player") || 
                 other.gameObject.CompareTag("Hackable") || 
                 other.gameObject.CompareTag("Enemy") || 
@@ -112,6 +132,7 @@ namespace Malicious.GameItems
                 {
                     waiting = false;
                 }
+                _attachedObjects.Add(other.gameObject);
             }
         }
         void ResetToStart()
@@ -126,6 +147,9 @@ namespace Malicious.GameItems
         }
         private void OnTriggerExit(Collider other)
         {
+            if (other.isTrigger)
+                return;
+            
             if (other.gameObject.CompareTag("Player") || 
                 other.gameObject.CompareTag("Hackable") || 
                 other.gameObject.CompareTag("Enemy") || 
