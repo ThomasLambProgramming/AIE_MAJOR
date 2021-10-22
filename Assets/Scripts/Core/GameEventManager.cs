@@ -88,6 +88,7 @@ namespace Malicious.Core
             GlobalData.InputManager.Player.Pause.performed += PausePressed;
             _CurrentManager = this;
             _fadeTransition = _fadeTransitionInit;
+            _fadeTransition.FadeIn();
         }
 
         private void PausePressed(InputAction.CallbackContext a_context)
@@ -179,6 +180,7 @@ namespace Malicious.Core
             PlayerHit           = null;
             PlayerHealed        = null;
             PlayerDead          = null;
+            Time.timeScale = 1f;
         }
     }
 }

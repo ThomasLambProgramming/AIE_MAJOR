@@ -14,7 +14,6 @@ namespace Malicious.Interactables
         [SerializeField] private float _dotCheck = 0.6f;
         private Animator _launchAnimation = null;
         
-       
         
         private bool _resetting;
         private static readonly int _Launched = Animator.StringToHash("Launched");
@@ -36,6 +35,9 @@ namespace Malicious.Interactables
 
         private void OnTriggerEnter(Collider other)
         {
+            if (other.isTrigger)
+                return;
+            
             Vector3 directionToObject = other.gameObject.transform.position - transform.position;
             directionToObject = directionToObject.normalized;
 
