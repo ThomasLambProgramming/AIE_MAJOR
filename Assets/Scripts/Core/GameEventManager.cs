@@ -138,6 +138,13 @@ namespace Malicious.Core
             }
             
         }
+
+        public static void PlayerResetAlphaTest()
+        {
+            _playerHealth = 0;
+            PlayerHitFunc();
+            ResumePlay();
+        }
         private void WaitForFade()
         {
             StartCoroutine(FadeWait());

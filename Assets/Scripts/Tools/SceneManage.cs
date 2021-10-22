@@ -29,5 +29,10 @@ namespace Malicious.Tools
             GameEventManager.Reset();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+
+        public void KillPlayer()
+        {
+            GameEventManager.PlayerResetAlphaTest();
+        }
     }
 }
