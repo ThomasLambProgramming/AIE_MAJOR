@@ -10,40 +10,103 @@ namespace Malicious.GameItems
     public class Fan : MonoBehaviour
     {
         [SerializeField] private bool _isActive = true;
+
         [SerializeField] private GameObject _rotateObject = null;
         [SerializeField] private float _rotateFanSpeed = 10f;
-        [SerializeField] private Vector3 _launchDirection = Vector3.up;
-        [SerializeField] private float _velocityLimitAtPeak = 4f;
-        [SerializeField] private float _velocityLimitAtBottom = 10f;
-        [Tooltip("I dont know why im keeping the two propel forces but im too tired to fix im scared to break")]
-        [SerializeField] private float _maxPropelForce = 30f;
-        [SerializeField] private float _minPropelForce = 9.83f;
-        [SerializeField] private float _fanHeight = 5f;
         [SerializeField] private float _rotateSpeed = 10f;
-        [SerializeField] private LayerMask _objectsAllowed = ~0;
-        [SerializeField] private List<Rigidbody> _activeObjects = new List<Rigidbody>();
-        [SerializeField] private float _blockForceScale = 1f;
+    
+        [SerializeField] private float _fanHeight = 5f;
         [SerializeField] private float _horizontalDifferenceAllow = 2f;
+        private float _sqrhorizontalDifferenceAllow = 2f;
+
+
+        [SerializeField] private LayerMask _objectsAllowed = ~0;
+        [SerializeField] private Vector3 _launchDirection = Vector3.up;
+
+        [SerializeField] private float _minPlayerForce = 3f;
+        [SerializeField] private float _minBlockForce = 3f;
+        [SerializeField] private float _minGroundEnemyForce = 3f;
+        [SerializeField] private float _minFlyingEnemyForce = 3f;
+        [SerializeField] private float _minSpringForce = 3f;
+
+        [SerializeField] private float _maxPlayerForce = 10f;
+        [SerializeField] private float _maxBlockForce = 10f;
+        [SerializeField] private float _maxGroundEnemyForce = 10f;
+        [SerializeField] private float _maxFlyingEnemyForce = 10f;
+        [SerializeField] private float _maxSpringForce = 10f;
+
+        private List<Rigidbody> _playerList = new List<Rigidbody>();
+        private List<Rigidbody> _blockList = new List<Rigidbody>();
+        private List<Rigidbody> _groundEnemyList = new List<Rigidbody>();
+        private List<Rigidbody> _flyingEnemyList = new List<Rigidbody>();
+        private List<Rigidbody> _springList = new List<Rigidbody>();
+
+        private void Start()
+        {
+            _sqrhorizontalDifferenceAllow = _horizontalDifferenceAllow * _horizontalDifferenceAllow;
+
+        }
         private void OnTriggerEnter(Collider other)
         {
             if (other.isTrigger)
                 return; 
             
             Rigidbody objectRb = other.gameObject.GetComponent<Rigidbody>();
+
             if (objectRb != null && (_objectsAllowed & (1 << other.gameObject.layer)) > 0)
-                _activeObjects.Add(objectRb);
+            {
+                    Debug.Log(other.gameObject.layer);
+                switch(other.gameObject.layer)
+                {
+                    case 10:
+                        _playerList.Add(objectRb);
+                        break;
+                    case 11:
+                        _groundEnemyList.Add(objectRb);
+                        break;
+                    case 14:
+                        _flyingEnemyList.Add(objectRb);
+                        break;
+                    //case 10:
+                    //    _playerList.Add(objectRb);
+                    //case 10:
+                    //    _playerList.Add(objectRb);
+                    //    break;
+                }
+            }
+
+
+          
         }
 
-        private void OnTriggerExit(Collider other)
+        private void FixedUpdate()
         {
-            foreach (var VARIABLE in _activeObjects)
+            if (!_isActive)
+                return;
+
+            ApplyForces(ref _playerList, _minPlayerForce, _maxPlayerForce);
+            ApplyForces(ref _groundEnemyList, _minGroundEnemyForce, _maxGroundEnemyForce);
+            ApplyForces(ref _flyingEnemyList, _minFlyingEnemyForce, _maxFlyingEnemyForce);
+
+
+        }
+        private void ApplyForces(ref List<Rigidbody> a_list, float a_minForce, float a_maxForce)
+        {
+            for (int i = 0; i < a_list.Count; i++)
             {
-                if (VARIABLE.gameObject == other.gameObject)
+                Vector3 difference = a_list[i].transform.position - transform.position;
+                Vector2 horizontalDiff = new Vector2(difference.x, difference.z);
+
+                if (horizontalDiff.sqrMagnitude > _sqrhorizontalDifferenceAllow || difference.y > _fanHeight)
                 {
-                    //since trigger is done per object we can exit out with break as the one has been found
-                    _activeObjects.Remove(VARIABLE);
-                    break;
+                    a_list.RemoveAt(i);
+                    i--;
                 }
+
+                float forceScale = Mathf.Lerp(a_minForce, a_maxForce, difference.y / _fanHeight);
+
+                Vector3 forceToApply = _launchDirection * forceScale;
+                a_list[i].AddForce(forceToApply);
             }
         }
         public void RotateFan(Vector3 a_goalRotation)
@@ -70,92 +133,7 @@ namespace Malicious.GameItems
         private void Update()
         {
             if (_isActive)
-                _rotateObject.transform.Rotate(0,_rotateSpeed * Time.deltaTime,0);
-                
-        }
-
-        private void FixedUpdate()
-        {
-            if (!_isActive)
-                return; 
-            
-            foreach (var rigidbody in _activeObjects)
-            {
-                //um so scale force applied by height then percentage of velocity to take away on height as well so fast
-                //acc at lower but more hover on end of height
-                //float yDifference = Mathf.Abs(rigidbody.gameObject.transform.position.y - transform.position.y) / _fanHeight;
-
-                Vector3 directionToObject = rigidbody.gameObject.transform.position - transform.position;
-
-                Vector2 horizontalDifference = new Vector2(directionToObject.x, directionToObject.z);
-                if (horizontalDifference.SqrMagnitude() > _horizontalDifferenceAllow)
-                {
-                    _activeObjects.Remove(rigidbody);
-                    return;
-                }
-                float posDifference = Mathf.Abs((directionToObject).magnitude / _fanHeight);
-                
-                float maxVelocity = Mathf.Lerp(_velocityLimitAtBottom, _velocityLimitAtPeak, posDifference);
-                float maxSqrVelocity = maxVelocity * maxVelocity;
-                
-                float forceToApply = Mathf.Lerp(_maxPropelForce, _minPropelForce, posDifference);
-
-                if (rigidbody.gameObject.CompareTag("Enemy") || rigidbody.gameObject.CompareTag("FlyingEnemy"))
-                {
-                    Vector3 force = forceToApply * _launchDirection;
-                    Vector3 currentVelocity = rigidbody.velocity;
-                    if (currentVelocity.sqrMagnitude > maxSqrVelocity)
-                    {
-                        currentVelocity = currentVelocity.normalized * maxVelocity;
-                        rigidbody.velocity = currentVelocity;
-                    }
-                    else
-                    {
-                        rigidbody.velocity += force;
-                    }
-                }
-                else if (rigidbody.gameObject.CompareTag("Block"))
-                {
-                    Vector3 force = forceToApply * _launchDirection;
-                    Vector3 currentVelocity = rigidbody.velocity;
-                    if (currentVelocity.sqrMagnitude > maxSqrVelocity)
-                    {
-                        currentVelocity = currentVelocity.normalized * maxVelocity;
-                        rigidbody.velocity = currentVelocity;
-                    }
-                    else
-                    {
-                        rigidbody.AddForce(force * _blockForceScale);
-                    }
-                }
-                else if (_launchDirection == Vector3.up)
-                {
-                    float currentYVel = rigidbody.velocity.y;
-                    if (currentYVel > maxVelocity)
-                        rigidbody.AddForce(0, maxVelocity, 0);
-                    else
-                        rigidbody.AddForce(0, forceToApply, 0);
-                }
-                else if (rigidbody.gameObject.CompareTag("Player"))
-                {
-                    Vector3 force = _launchDirection * (_maxPropelForce * forceToApply);
-                    rigidbody.AddForce(force);
-                }
-                else
-                {
-                    Vector3 force = forceToApply * _launchDirection;
-                    Vector3 currentVelocity = rigidbody.velocity;
-                    if (currentVelocity.sqrMagnitude > maxSqrVelocity)
-                    {
-                        currentVelocity = currentVelocity.normalized * maxVelocity;
-                        rigidbody.velocity = currentVelocity;
-                    }
-                    else
-                    {
-                        rigidbody.AddForce(force);
-                    }
-                }
-            }
+                _rotateObject.transform.Rotate(0,_rotateSpeed * Time.deltaTime,0);  
         }
 
         public void Deactivate() => _isActive = false;
