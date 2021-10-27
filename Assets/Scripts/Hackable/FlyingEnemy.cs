@@ -26,6 +26,8 @@ namespace Malicious.Hackable
         private GameObject _playerObject = null;
         private float _sqrMaxTurningSpeed = 0;
 
+        [SerializeField] private LayerMask _raycastMask = ~0;
+
         private bool _wait = false;
         // Start is called before the first frame update
         void Start()
@@ -214,6 +216,13 @@ namespace Malicious.Hackable
                 averagedNormal.y = 0;
                 averagedNormal = averagedNormal.normalized;
                 _rigidbody.velocity = (averagedNormal * _hitForce);
+
+                Ray ray = new Ray(transform.position, _rigidbody.velocity.normalized);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, _raycastMask))
+                {
+
+                }
             }
         }
 

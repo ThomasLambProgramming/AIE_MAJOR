@@ -52,18 +52,18 @@ namespace Malicious.Hackable
                 camRight.y = 0;
                 camRight = camRight.normalized;
 
-                float currentYAmount = _rigidbody.velocity.y;
                 Vector3 newVel =
                     camForward * (_moveInput.y * _moveSpeed * Time.deltaTime) +
                     camRight * (_moveInput.x * _moveSpeed * Time.deltaTime);
 
-                newVel.y = currentYAmount;
+                newVel.y += 0.11f;
+                _rigidbody.velocity += newVel;
 
-                Vector3 movementDirection = newVel;
-                movementDirection.y = 0;
-                movementDirection = movementDirection.normalized;
-                if (!Physics.Raycast(transform.position, movementDirection, 3, _collisionMask))
-                    _rigidbody.velocity = newVel;
+                Vector3 currentVel = _rigidbody.velocity;
+                if (Vector3.SqrMagnitude(currentVel) > _maxSpeed)
+                {
+                    _rigidbody.velocity = currentVel.normalized * _maxSpeed;
+                }
             }
 
             if (Mathf.Abs(_moveInput.magnitude) < 0.1f)
