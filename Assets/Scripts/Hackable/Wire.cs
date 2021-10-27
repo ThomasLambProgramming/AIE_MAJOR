@@ -223,6 +223,9 @@ namespace Malicious.Hackable
         }
         private void AddPoint(Vector3 a_direction)
         {
+            if (_chargesLeft <= 0)
+                return;
+
             if (CheckDirection(a_direction))
             {
                 Vector3 newWirePoint = _wirePath[_wirePath.Count - 1];

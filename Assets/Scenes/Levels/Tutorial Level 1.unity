@@ -4159,6 +4159,30 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.2738452
       objectReference: {fileID: 0}
+    - target: {fileID: 3453307705654956584, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_FollowOffset.y
+      value: 2.205693
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453307705654956584, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_FollowOffset.z
+      value: -4.193789
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453307705872216989, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_FollowOffset.y
+      value: 2.205693
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453307705872216989, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_FollowOffset.z
+      value: -4.193789
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453307706216963133, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_FollowOffset.y
+      value: 2.205693
+      objectReference: {fileID: 0}
+    - target: {fileID: 3453307706216963133, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_FollowOffset.z
+      value: -4.193789
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
 --- !u!1 &222702939
@@ -28882,6 +28906,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 977148307}
     m_Modifications:
+    - target: {fileID: 2738323214136695576, guid: 874b20921da5a324fa277f4e2a6c6fcf, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 803cf6ee6bff37244a83637411ca2317, type: 2}
+    - target: {fileID: 3849897260502346791, guid: 874b20921da5a324fa277f4e2a6c6fcf, type: 3}
+      propertyPath: _maxSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3942975234409721656, guid: 874b20921da5a324fa277f4e2a6c6fcf, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 803cf6ee6bff37244a83637411ca2317, type: 2}
     - target: {fileID: 5017007373643885965, guid: 874b20921da5a324fa277f4e2a6c6fcf, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -28930,6 +28966,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: 1.5m Hackable Block
       objectReference: {fileID: 0}
+    - target: {fileID: 5437105543605784937, guid: 874b20921da5a324fa277f4e2a6c6fcf, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 803cf6ee6bff37244a83637411ca2317, type: 2}
+    - target: {fileID: 8850567990543153209, guid: 874b20921da5a324fa277f4e2a6c6fcf, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 803cf6ee6bff37244a83637411ca2317, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 874b20921da5a324fa277f4e2a6c6fcf, type: 3}
 --- !u!1 &1617771971

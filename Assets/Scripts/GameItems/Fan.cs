@@ -44,7 +44,8 @@ namespace Malicious.GameItems
         private void Start()
         {
             _sqrhorizontalDifferenceAllow = _horizontalDifferenceAllow * _horizontalDifferenceAllow;
-
+            if (_launchDirection == Vector3.zero)
+                _launchDirection = transform.up;
         }
         private void OnTriggerEnter(Collider other)
         {
@@ -100,7 +101,10 @@ namespace Malicious.GameItems
                 if (horizontalDiff.sqrMagnitude > _sqrhorizontalDifferenceAllow || difference.y > _fanHeight)
                 {
                     a_list.RemoveAt(i);
-                    i--;
+                    if (a_list.Count > 0)
+                        i--;
+
+                    continue;
                 }
 
                 float forceScale = Mathf.Lerp(a_minForce, a_maxForce, difference.y / _fanHeight);
