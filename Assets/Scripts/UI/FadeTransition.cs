@@ -7,6 +7,9 @@ namespace Malicious.UI
         private Animator _animator;
         private static readonly int _inParameter = Animator.StringToHash("FadeIn");
         private static readonly int _outParameter = Animator.StringToHash("FadeOut");
+        [SerializeField] private float _fadeInSpeed = 1;
+        [SerializeField] private float _fadeOutSpeed = 1;
+
 
         //int for the id of the parameter to set active or not active with fade
         //int for the id of the parameter to set active or not active with fade
@@ -14,20 +17,29 @@ namespace Malicious.UI
         {
             _animator = GetComponent<Animator>();
             FadeIn();
+
+            _animator.SetFloat("FadeOutSpeed", _fadeOutSpeed);
+            _animator.SetFloat("FadeInSpeed", _fadeInSpeed);
         }
 
         [ContextMenu("Fade In")]
         public void FadeIn()
         {
-            _animator.SetBool(_inParameter, true);
-            _animator.SetBool(_outParameter, false);
+            if (_animator != null)
+            {
+                _animator.SetBool(_inParameter, true);
+                _animator.SetBool(_outParameter, false);
+            }
         }
 
         [ContextMenu("Fade Out")]
         public void FadeOut()
         {
-            _animator.SetBool(_inParameter, false);
-            _animator.SetBool(_outParameter, true);
+            if (_animator != null)
+            {
+                _animator.SetBool(_inParameter, false);
+                _animator.SetBool(_outParameter, true);
+            }
         }
     }
 }
