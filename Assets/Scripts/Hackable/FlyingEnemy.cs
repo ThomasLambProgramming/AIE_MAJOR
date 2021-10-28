@@ -205,24 +205,17 @@ namespace Malicious.Hackable
         {
             if (other.gameObject.CompareTag("Laser"))
             {
-                List<ContactPoint> contacts = new List<ContactPoint>(); 
-                other.GetContacts(contacts);
-
-                Vector3 averagedNormal = Vector3.zero;
-                foreach (var contactPoint in contacts)
-                {
-                    averagedNormal += contactPoint.normal;
-                }
-                averagedNormal.y = 0;
-                averagedNormal = averagedNormal.normalized;
-                _rigidbody.velocity = (averagedNormal * _hitForce);
-
-                Ray ray = new Ray(transform.position, _rigidbody.velocity.normalized);
+                Vector3 movementDirection = (other.transform.position - transform.position).normalized;
+                Ray ray = new Ray(transform.position, movementDirection);
                 RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, _raycastMask))
+                Vector3 forceDirection = Vector3.zero;
+                if (Physics.Raycast(ray, out hit, 10, _raycastMask))
                 {
-
+                    forceDirection = hit.normal;
                 }
+                forceDirection.y = 0;
+                forceDirection = forceDirection.normalized;
+                _rigidbody.velocity = (forceDirection * _hitForce);
             }
         }
 
