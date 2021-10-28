@@ -215,10 +215,10 @@ GameObject:
   - component: {fileID: 5017007373643885966}
   - component: {fileID: 3849897260502346791}
   - component: {fileID: 3849897260502346781}
-  - component: {fileID: 2961106963667411147}
-  - component: {fileID: 2961106963667411140}
-  - component: {fileID: 2961106963667411141}
-  - component: {fileID: 2961106963667411142}
+  - component: {fileID: 2738323214136695576}
+  - component: {fileID: 3942975234409721656}
+  - component: {fileID: 5437105543605784937}
+  - component: {fileID: 8850567990543153209}
   m_Layer: 16
   m_Name: 1.5m Hackable Block
   m_TagString: Block
@@ -350,8 +350,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4027b0f6d8e34ed79daf3d8395d6298e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 170
-  _maxSpeed: 1
+  _moveSpeed: 100
+  _maxSpeed: 4
   _spinSpeed: 40
   _cameraTransform: {fileID: 5017007374315222182}
   _player: {fileID: 0}
@@ -402,20 +402,6 @@ MonoBehaviour:
   _onHackFalseEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!136 &3942975234409721656
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5017007373643885975}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.1
-  m_Height: 1.5
-  m_Direction: 2
-  m_Center: {x: 0.7, y: 0.07, z: 0}
 --- !u!136 &2738323214136695576
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -430,7 +416,7 @@ CapsuleCollider:
   m_Height: 1.5
   m_Direction: 2
   m_Center: {x: -0.7, y: 0.07, z: 0}
---- !u!136 &8850567990543153209
+--- !u!136 &3942975234409721656
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -442,8 +428,8 @@ CapsuleCollider:
   m_Enabled: 1
   m_Radius: 0.1
   m_Height: 1.5
-  m_Direction: 0
-  m_Center: {x: 0, y: 0.07, z: 0.7}
+  m_Direction: 2
+  m_Center: {x: 0.7, y: 0.07, z: 0}
 --- !u!136 &5437105543605784937
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -458,6 +444,20 @@ CapsuleCollider:
   m_Height: 1.5
   m_Direction: 0
   m_Center: {x: 0, y: 0.07, z: -0.7}
+--- !u!136 &8850567990543153209
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5017007373643885975}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.1
+  m_Height: 1.5
+  m_Direction: 0
+  m_Center: {x: 0, y: 0.07, z: 0.7}
 --- !u!1 &5017007373645133944
 GameObject:
   m_ObjectHideFlags: 0
