@@ -8,6 +8,7 @@ namespace Malicious.Core
 {
     public class Player : MonoBehaviour
     {
+
         #region Variables
         
         //Speed Variables//

@@ -65,9 +65,9 @@ namespace Malicious.GameItems
                 }
             }
 
-            if (Physics.Raycast(_middlePosition.transform.position, (_targetLocation - transform.position).normalized,
-                _checkDistance))
-                return;
+            //if (Physics.Raycast(_middlePosition.transform.position, (_targetLocation - transform.position).normalized,
+            //    _checkDistance))
+            //    return;
             
             if (_playerObject != null)
             {
