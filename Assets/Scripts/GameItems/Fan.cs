@@ -96,15 +96,19 @@ namespace Malicious.GameItems
             for (int i = 0; i < a_list.Count; i++)
             {
                 Vector3 difference = a_list[i].transform.position - transform.position;
-                Vector2 horizontalDiff = new Vector2(difference.x, difference.z);
-
-                if (horizontalDiff.sqrMagnitude > _sqrhorizontalDifferenceAllow || difference.y > _fanHeight)
+                
+                if (_launchDirection == Vector3.up)
                 {
-                    a_list.RemoveAt(i);
-                    if (a_list.Count > 0)
-                        i--;
+                    Vector2 horizontalDiff = new Vector2(difference.x, difference.z);
 
-                    continue;
+                    if (horizontalDiff.sqrMagnitude > _sqrhorizontalDifferenceAllow || difference.y > _fanHeight)
+                    {
+                        a_list.RemoveAt(i);
+                        if (a_list.Count > 0)
+                            i--;
+
+                        continue;
+                    }
                 }
 
                 float forceScale = Mathf.Lerp(a_minForce, a_maxForce, difference.y / _fanHeight);
