@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1363803958}
   - component: {fileID: 1363803959}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: StackableArea
   m_TagString: Block
   m_Icon: {fileID: 0}
@@ -54,7 +54,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3849897260753747606}
   - component: {fileID: 3849897260753747593}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: ExitLocationObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3849897260953366322}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: PlayerExitLocation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 3497743828049861919}
   - component: {fileID: 514994683247923898}
   - component: {fileID: 2360264052311451248}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: 1.5m Hackable Block
   m_TagString: Hackable
   m_Icon: {fileID: 0}
@@ -215,11 +215,11 @@ GameObject:
   - component: {fileID: 5017007373643885966}
   - component: {fileID: 3849897260502346791}
   - component: {fileID: 3849897260502346781}
-  - component: {fileID: 3942975234409721656}
-  - component: {fileID: 2738323214136695576}
-  - component: {fileID: 8850567990543153209}
-  - component: {fileID: 5437105543605784937}
-  m_Layer: 11
+  - component: {fileID: 2961106963667411147}
+  - component: {fileID: 2961106963667411140}
+  - component: {fileID: 2961106963667411141}
+  - component: {fileID: 2961106963667411142}
+  m_Layer: 16
   m_Name: 1.5m Hackable Block
   m_TagString: Block
   m_Icon: {fileID: 0}
@@ -470,7 +470,7 @@ GameObject:
   - component: {fileID: 5017007373645133940}
   - component: {fileID: 5017007373645133947}
   - component: {fileID: 5017007373645133946}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: NodeObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -562,7 +562,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5017007374315222182}
-  m_Layer: 11
+  m_Layer: 16
   m_Name: CameraOffset (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -656,7 +656,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f990e88ee90725b4dac2f38520640b2b, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f990e88ee90725b4dac2f38520640b2b, type: 3}
       propertyPath: m_TagString

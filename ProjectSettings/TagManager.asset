@@ -12,9 +12,13 @@ TagManager:
   - Environment
   - Laser
   - Fan
-  - EnemyNonMove
   - Block
   - FlyingEnemy
+  - MovingPlatform
+  - GroundEnemy
+  - Spring
+  - DamagePlayer
+  - DamagePlayerNoKnockback
   layers:
   - Default
   - TransparentFX
@@ -22,22 +26,22 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - WireController
   - Environment
   - Wire
   - Ground
   - Player
-  - Enemy
+  - GroundEnemy
   - Laser
   - Glass
   - FlyingEnemy
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Spring
+  - Block
+  - PressurePlate
+  - MovingPlatform
+  - Fan
+  - DamagePlayer
+  - DamagePlayerNoKnockback
   - 
   - 
   - 

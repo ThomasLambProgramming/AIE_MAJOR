@@ -18,7 +18,11 @@ namespace Malicious.GameItems
         [SerializeField] private float _horizontalAllowance = 3f;
         private float _sqrHorizontalAllowance = 9f;
         private GameObject _playerObject = null;
-        
+
+        [SerializeField] private GameObject _middlePosition = null;
+        [SerializeField] private float _checkDistance = 4;
+        [SerializeField] private LayerMask _stopMask = ~0;
+
         private float _timer = 0;
         private bool waiting = false;
         private bool _moveToTarget = true;
@@ -60,6 +64,11 @@ namespace Malicious.GameItems
                     i--;
                 }
             }
+
+            if (Physics.Raycast(_middlePosition.transform.position, (_targetLocation - transform.position).normalized,
+                _checkDistance))
+                return;
+            
             if (_playerObject != null)
             {
                 if (Vector3.SqrMagnitude(_playerObject.transform.position - transform.position) > 5)
