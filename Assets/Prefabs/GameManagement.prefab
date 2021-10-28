@@ -1467,7 +1467,7 @@ MonoBehaviour:
   _additionalGravity: -9.81
   _groundMask:
     serializedVersion: 2
-    m_Bits: 27319
+    m_Bits: 518839
   _groundCheck: {fileID: 3453307706236470828}
   _groundCheckAngleAllowance: 0.7
   _groundCheckDelay: 1
@@ -4130,6 +4130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 367d8544225143f58ae7ae3044b7f114, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _fadeInSpeed: 1
+  _fadeOutSpeed: 1
 --- !u!95 &3453307705462060270
 Animator:
   serializedVersion: 3
