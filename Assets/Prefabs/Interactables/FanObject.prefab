@@ -81,19 +81,23 @@ MonoBehaviour:
   _isActive: 1
   _rotateObject: {fileID: 4391081271132482931}
   _rotateFanSpeed: 10
-  _launchDirection: {x: 0, y: 1, z: 0}
-  _velocityLimitAtPeak: 2
-  _velocityLimitAtBottom: 20
-  _maxPropelForce: 40
-  _minPropelForce: 40
-  _fanHeight: 5
   _rotateSpeed: 300
+  _fanHeight: 5
+  _horizontalDifferenceAllow: 7
   _objectsAllowed:
     serializedVersion: 2
     m_Bits: 4294967295
-  _activeObjects: []
-  _blockForceScale: 1
-  _horizontalDifferenceAllow: 7
+  _launchDirection: {x: 0, y: 1, z: 0}
+  _minPlayerForce: 3
+  _minBlockForce: 3
+  _minGroundEnemyForce: 3
+  _minFlyingEnemyForce: 3
+  _minSpringForce: 3
+  _maxPlayerForce: 10
+  _maxBlockForce: 10
+  _maxGroundEnemyForce: 10
+  _maxFlyingEnemyForce: 10
+  _maxSpringForce: 10
 --- !u!65 &938614588948011791
 BoxCollider:
   m_ObjectHideFlags: 0
