@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 890798060}
   m_Layer: 7
   m_Name: MovingPlatform
-  m_TagString: Environment
+  m_TagString: MovingPlatform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -133,6 +133,12 @@ MonoBehaviour:
   _waitPlayer: 0
   _waitForTime: 1
   _waitTime: 0.8
+  _horizontalAllowance: 3
+  _middlePosition: {fileID: 0}
+  _checkDistance: 4
+  _stopMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!65 &890798059
 BoxCollider:
   m_ObjectHideFlags: 0
