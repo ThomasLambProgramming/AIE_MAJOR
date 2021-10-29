@@ -56,13 +56,18 @@ namespace Malicious.Hackable
                     camForward * (_moveInput.y * _moveSpeed * Time.deltaTime) +
                     camRight * (_moveInput.x * _moveSpeed * Time.deltaTime);
 
-                newVel.y += 0.11f;
+                
                 _rigidbody.velocity += newVel;
 
                 Vector3 currentVel = _rigidbody.velocity;
+                float currentY = currentVel.y;
+                currentVel.y = 0;
                 if (Vector3.SqrMagnitude(currentVel) > _maxSpeed && !_inFanHoriz)
                 {
-                    _rigidbody.velocity = currentVel.normalized * _maxSpeed;
+                    currentVel = currentVel.normalized * _maxSpeed;
+                    currentVel.y = currentY;
+                    _rigidbody.velocity = currentVel;
+
                 }
             }
 
