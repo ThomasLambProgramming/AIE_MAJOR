@@ -36,6 +36,9 @@ namespace Malicious.GameItems
 
         private void OnTriggerExit(Collider other)
         {
+            if (other.isTrigger)
+                return;
+
             if (_containedObjects.Contains(other.gameObject))
             {
                 _containedObjects.Remove(other.gameObject);
