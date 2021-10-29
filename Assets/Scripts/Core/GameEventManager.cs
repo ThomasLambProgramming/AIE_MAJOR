@@ -81,26 +81,30 @@ namespace Malicious.Core
             GeneralFixedUpdate?.Invoke();
         }
 
-        private void Start()
+        private void Awake()
         {
-            GlobalData.InputManager.Enable();
-            GlobalData.InputManager.Player.Enable();
-            GlobalData.InputManager.Player.Pause.performed += PausePressed;
+            Cursor.lockState = CursorLockMode.Locked;
             _CurrentManager = this;
+            GlobalData.MakeNewInput();
+            GlobalData.EnableInputMaster();
+            GlobalData.InputManager.Player.Pause.performed += PausePressed;
             _fadeTransition = _fadeTransitionInit;
             _fadeTransition.FadeIn();
+           
         }
 
         private void PausePressed(InputAction.CallbackContext a_context)
         {
             if (!_paused)
             {
+                Cursor.lockState = CursorLockMode.Confined;
                 Time.timeScale = 0;
                 GamePauseStart?.Invoke();
                 _paused = true;
             }
             else
             {
+                Cursor.lockState = CursorLockMode.Locked;
                 Time.timeScale = 1f;
                 GamePauseExit?.Invoke();
                 _paused = false;
@@ -176,6 +180,7 @@ namespace Malicious.Core
 
         public static void Reset()
         {
+            GlobalData.InputManager.Dispose();
             PlayerUpdate        = null;
             PlayerFixedUpdate   = null;
             EnemyUpdate         = null;
@@ -187,6 +192,9 @@ namespace Malicious.Core
             PlayerHit           = null;
             PlayerHealed        = null;
             PlayerDead          = null;
+
+
+
             Time.timeScale = 1f;
         }
     }
