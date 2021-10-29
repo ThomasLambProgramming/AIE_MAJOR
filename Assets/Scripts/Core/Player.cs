@@ -383,24 +383,8 @@ namespace Malicious.Core
                 _canJump = true;
                 _hasDoubleJumped = false;
             }
-            else if (other.gameObject.CompareTag("Environment") || 
-                     other.gameObject.CompareTag("Hackable") || 
-                     other.gameObject.CompareTag("Interactable") ||
-                     other.gameObject.CompareTag("CheckPoint") ||
-                     other.gameObject.CompareTag("Block") || 
-                     other.gameObject.CompareTag("FlyingEnemy"))
+            else
             {
-                // List<ContactPoint> contacts = new List<ContactPoint>(); 
-                // other.GetContacts(contacts);
-                //
-                // Vector3 averagedNormal = Vector3.zero;
-                // foreach (var contactPoint in contacts)
-                // {
-                //     averagedNormal += contactPoint.normal;
-                // }
-                // averagedNormal = averagedNormal / contacts.Count;
-                // averagedNormal = averagedNormal.normalized;
-
                 Ray ray = new Ray(_groundCheck.position, Vector3.down);
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, 1, _groundMask))

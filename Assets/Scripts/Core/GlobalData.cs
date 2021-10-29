@@ -10,12 +10,12 @@ namespace Malicious.Core
     {
         public static MasterInput InputManager;
 
-        private void Awake()
+        public static void MakeNewInput()
         {
             InputManager = new MasterInput();
         }
 
-        private void Start()
+        public static void EnableInputMaster()
         {
             InputManager.Enable();
             InputManager.Player.Enable();
