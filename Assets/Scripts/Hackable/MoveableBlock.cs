@@ -60,13 +60,13 @@ namespace Malicious.Hackable
                 _rigidbody.velocity += newVel;
 
                 Vector3 currentVel = _rigidbody.velocity;
-                if (Vector3.SqrMagnitude(currentVel) > _maxSpeed)
+                if (Vector3.SqrMagnitude(currentVel) > _maxSpeed && !_inFanHoriz)
                 {
                     _rigidbody.velocity = currentVel.normalized * _maxSpeed;
                 }
             }
 
-            if (Mathf.Abs(_moveInput.magnitude) < 0.1f)
+            if (Mathf.Abs(_moveInput.magnitude) < 0.1f && !_inFanHoriz)
             {
                 //if we are actually moving 
                 if (Mathf.Abs(_rigidbody.velocity.x) > 0.2f || Mathf.Abs(_rigidbody.velocity.z) > 0.2f)

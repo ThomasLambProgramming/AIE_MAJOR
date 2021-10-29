@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Malicious.Hackable;
 using UnityEngine;
+using Malicious.Core;
 
 namespace Malicious.GameItems
 {
@@ -35,6 +36,12 @@ namespace Malicious.GameItems
         [SerializeField] private float _maxFlyingEnemyForce = 10f;
         [SerializeField] private float _maxSpringForce = 10f;
 
+        [SerializeField] private float _playerVelLimit = 10f;
+        [SerializeField] private float _blockVelLimit = 10f;
+        [SerializeField] private float _groundEnemyVelLimit = 10f;
+        [SerializeField] private float _flyingEnemyVelLimit = 10f;
+        [SerializeField] private float _springVelLimit = 10f;
+
         private List<Rigidbody> _playerList = new List<Rigidbody>();
         private List<Rigidbody> _blockList = new List<Rigidbody>();
         private List<Rigidbody> _groundEnemyList = new List<Rigidbody>();
@@ -56,42 +63,96 @@ namespace Malicious.GameItems
 
             if (objectRb != null && (_objectsAllowed & (1 << other.gameObject.layer)) > 0)
             {
-                    Debug.Log(other.gameObject.layer);
                 switch(other.gameObject.layer)
                 {
                     case 10:
                         _playerList.Add(objectRb);
+                        if (_launchDirection != Vector3.up)
+                            other.gameObject.GetComponent<Player>().EnteredFan(false);
+                        else
+                            other.gameObject.GetComponent<Player>().EnteredFan(true);
                         break;
                     case 11:
                         _groundEnemyList.Add(objectRb);
+                        SetFan(other.gameObject);
                         break;
                     case 14:
                         _flyingEnemyList.Add(objectRb);
+                        SetFan(other.gameObject);
                         break;
-                    //case 10:
-                    //    _playerList.Add(objectRb);
-                    //case 10:
-                    //    _playerList.Add(objectRb);
-                    //    break;
+                    case 15:
+                        _springList.Add(objectRb);
+                        SetFan(other.gameObject);
+                        break;
+                    case 16:
+                        _blockList.Add(objectRb);
+                        SetFan(other.gameObject);
+                        break;
                 }
             }
-
-
-          
         }
-
+        private void SetFan(GameObject a_object)
+        {
+            if (_launchDirection != Vector3.up)
+                a_object.GetComponent<BasePlayer>().EnteredFan(false);
+            else
+                a_object.GetComponent<BasePlayer>().EnteredFan(true);
+        }
+        private void DeSetFan(GameObject a_object)
+        {
+            if (_launchDirection != Vector3.up)
+                a_object.GetComponent<BasePlayer>().ExitedFan(false);
+            else
+                a_object.GetComponent<BasePlayer>().ExitedFan(true);
+        }
+        private void OnTriggerExit(Collider other)
+        {
+            if (CheckList(ref _playerList, other.gameObject))
+                return;
+            if (CheckList(ref _blockList, other.gameObject))
+                return;
+            if (CheckList(ref _groundEnemyList, other.gameObject))
+                return;
+            if (CheckList(ref _flyingEnemyList, other.gameObject))
+                return;
+            if (CheckList(ref _springList, other.gameObject))
+                return;
+        }
+        private bool CheckList(ref List<Rigidbody> a_list, GameObject a_object)
+        {
+            for (int i = 0; i < a_list.Count; i++)
+            {
+                if (a_list[i].gameObject == a_object)
+                {
+                    if (a_list[i].gameObject.layer == 10)
+                    {
+                        if (_launchDirection != Vector3.up)
+                            a_object.GetComponent<Player>().ExitedFan(false);
+                        else
+                            a_object.GetComponent<Player>().ExitedFan(true);
+                    }
+                    else
+                    {
+                        DeSetFan(a_object);
+                    }
+                    a_list.RemoveAt(i);
+                    return true;
+                }
+            }
+            return false;
+        }
         private void FixedUpdate()
         {
             if (!_isActive)
                 return;
 
-            ApplyForces(ref _playerList, _minPlayerForce, _maxPlayerForce);
-            ApplyForces(ref _groundEnemyList, _minGroundEnemyForce, _maxGroundEnemyForce);
-            ApplyForces(ref _flyingEnemyList, _minFlyingEnemyForce, _maxFlyingEnemyForce);
-
-
+            ApplyForces(ref _playerList, _minPlayerForce, _maxPlayerForce, _playerVelLimit);
+            ApplyForces(ref _groundEnemyList, _minGroundEnemyForce, _maxGroundEnemyForce, _groundEnemyVelLimit);
+            ApplyForces(ref _flyingEnemyList, _minFlyingEnemyForce, _maxFlyingEnemyForce, _flyingEnemyVelLimit);
+            ApplyForces(ref _blockList, _minBlockForce, _maxBlockForce, _blockVelLimit);
+            ApplyForces(ref _springList, _minSpringForce, _maxSpringForce, _springVelLimit);
         }
-        private void ApplyForces(ref List<Rigidbody> a_list, float a_minForce, float a_maxForce)
+        private void ApplyForces(ref List<Rigidbody> a_list, float a_minForce, float a_maxForce, float a_velLimit)
         {
             for (int i = 0; i < a_list.Count; i++)
             {
@@ -111,10 +172,41 @@ namespace Malicious.GameItems
                     }
                 }
 
-                float forceScale = Mathf.Lerp(a_minForce, a_maxForce, difference.y / _fanHeight);
+                float lerpAmount = difference.y / _fanHeight;
+                if (lerpAmount < 0.1f)
+                    lerpAmount = 0.1f;
+
+                float forceScale = Mathf.Lerp(a_minForce, a_maxForce, lerpAmount);
+                
+                if (_launchDirection != Vector3.up)
+                {
+                    forceScale = Mathf.Lerp(a_minForce, a_maxForce, Vector3.SqrMagnitude(difference) / (_fanHeight * _fanHeight));
+                }
 
                 Vector3 forceToApply = _launchDirection * forceScale;
                 a_list[i].AddForce(forceToApply);
+
+                if (_launchDirection == Vector3.up)
+                {
+                    if (a_list[i].velocity.y > a_velLimit)
+                    {
+                        Vector3 currentVel = a_list[i].velocity;
+                        currentVel.y = a_velLimit;
+                        a_list[i].velocity = currentVel;
+                    }
+                }
+                else
+                {
+                    Vector3 currentVel = a_list[i].velocity;
+                    float currentY = currentVel.y;
+                    currentVel.y = 0;
+                    if (currentVel.sqrMagnitude > a_velLimit)
+                    {
+                        currentVel= currentVel.normalized * a_velLimit;
+                        currentVel.y = currentY;
+                        a_list[i].velocity = currentVel;
+                    }
+                }
             }
         }
         public void RotateFan(Vector3 a_goalRotation)

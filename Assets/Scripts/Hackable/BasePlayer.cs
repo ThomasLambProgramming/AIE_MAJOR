@@ -32,6 +32,7 @@ namespace Malicious.Hackable
         //-------------------------------------//
 
         
+
         protected virtual void Tick()
         {
         }
@@ -61,6 +62,49 @@ namespace Malicious.Hackable
         {
             
         }
+
+        protected bool _inFanUp = false;
+        protected bool _inFanHoriz = false;
+        protected int _amountOfUpFans = 0;
+        protected int _amountOfHozFans = 0;
+
+        public void EnteredFan(bool a_isUp)
+        {
+            if (a_isUp)
+            {
+                _inFanUp = true;
+                _amountOfUpFans++;
+            }
+            else
+            {
+                _amountOfHozFans++;
+                _inFanHoriz = true;
+            }
+        }
+
+        public void ExitedFan(bool a_isUp)
+        {
+            if (a_isUp)
+            {
+                _amountOfUpFans--;
+                if (_amountOfUpFans <= 0)
+                {
+                    //redundancy setting to 0 just in case
+                    _amountOfUpFans = 0;
+                    _inFanUp = false;
+                }
+            }
+            else
+            {
+                _amountOfHozFans--;
+                if (_amountOfHozFans <= 0)
+                {
+                    _amountOfHozFans = 0;
+                    _inFanHoriz = false;
+                }
+            }
+        }
+
         protected virtual void OnPauseEnter()
         {
         }
