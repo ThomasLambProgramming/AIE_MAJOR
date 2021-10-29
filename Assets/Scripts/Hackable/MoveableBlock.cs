@@ -19,12 +19,17 @@ namespace Malicious.Hackable
         [SerializeField] private float _exitForce = 4f;
         [SerializeField] private float _dotAllowanceForStacking = 0.7f;
         [SerializeField] private Transform _stackingArea = null;
+        [SerializeField] private float _slowDownSpeed = 0.85f;
+
+        //[SerializeField] private Transform _rampCheck = null;
+        //[SerializeField] private float _yAngle = -2f;
+        //[SerializeField] private float _rampCheckDistance = 3f;
         
         [SerializeField] private UnityEvent _onHackEnterEvent = null;
         [SerializeField] private UnityEvent _onHackExitEvent = null;
         private Vector3 _startingPosition = Vector3.zero;
         private GameObject _stackedObject = null;
-        [SerializeField] private LayerMask _collisionMask;
+        
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
@@ -74,14 +79,23 @@ namespace Malicious.Hackable
             if (Mathf.Abs(_moveInput.magnitude) < 0.1f && !_inFanHoriz)
             {
                 //if we are actually moving 
-                if (Mathf.Abs(_rigidbody.velocity.x) > 0.2f || Mathf.Abs(_rigidbody.velocity.z) > 0.2f)
+                if (Mathf.Abs(_rigidbody.velocity.x) > 0f || Mathf.Abs(_rigidbody.velocity.z) > 0)
                 {
                     Vector3 adjustedVel = _rigidbody.velocity;
                     //takes off 5% of the current vel every physics update so the player can land on a platform without overshooting
                     //because the velocity doesnt stop
-                    adjustedVel.z = adjustedVel.z * 0.95f;
-                    adjustedVel.x = adjustedVel.x * 0.95f;
+                    adjustedVel.z = adjustedVel.z * _slowDownSpeed;
+                    adjustedVel.x = adjustedVel.x * _slowDownSpeed;
                     _rigidbody.velocity = adjustedVel;
+                }
+                Vector3 currentVel = _rigidbody.velocity;
+
+                currentVel.y = 0;
+                if (currentVel.sqrMagnitude < 0.2f)
+                {
+                    currentVel = Vector3.zero;
+                    currentVel.y = _rigidbody.velocity.y;
+                    _rigidbody.velocity = currentVel;
                 }
             }
         }

@@ -19,9 +19,7 @@ namespace Malicious.GameItems
         private float _sqrHorizontalAllowance = 9f;
         private GameObject _playerObject = null;
 
-        [SerializeField] private GameObject _middlePosition = null;
-        [SerializeField] private float _checkDistance = 4;
-        [SerializeField] private LayerMask _stopMask = ~0;
+        
 
         private float _timer = 0;
         private bool waiting = false;
