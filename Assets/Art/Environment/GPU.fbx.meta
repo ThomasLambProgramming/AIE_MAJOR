@@ -3,7 +3,22 @@ guid: b5d19e0e833531045a768d8a403870d7
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GPU_Parts_MAT
+    second: {fileID: 2100000, guid: c81f916194d1d314dad7fd5b2b2d88dd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gpu_Fan_Mat
+    second: {fileID: 2100000, guid: f9a08752d9daf5846868a64f6084a805, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Top_Cover_Mat
+    second: {fileID: 2100000, guid: 002a379b4cf939a4f9ec527ac7a9d89c, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
