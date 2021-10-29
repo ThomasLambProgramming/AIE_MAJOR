@@ -66,8 +66,15 @@ namespace Malicious.Core
         [SerializeField] private float _yHitAmount = 3f;
         [SerializeField] private GameObject _modelContainer = null;
         //--------------------------------//
-        
-        
+
+        //Fan Variables//
+        private bool _inFanUp = false;
+        private bool _inFanHoriz = false;
+        private int _amountOfUpFans = 0;
+        private int _amountOfHozFans = 0;
+        //--------------------------------//
+
+
         //Misc Variables That couldnt be grouped
         [SerializeField] private Transform _cameraTransform = null;
         private Rigidbody _rigidbody = null;
@@ -131,7 +138,48 @@ namespace Malicious.Core
         public void LaunchPlayer(Vector3 a_force)
         {
             _rigidbody.velocity = a_force;
+
         }
+
+        
+
+        public void EnteredFan(bool a_isUp)
+        {
+            if (a_isUp)
+            {
+                _inFanUp = true;
+                _amountOfUpFans++;
+            }
+            else
+            {
+                _amountOfHozFans++;
+                _inFanHoriz = true;
+            }
+        }
+
+        public void ExitedFan(bool a_isUp)
+        {
+            if (a_isUp)
+            {
+                _amountOfUpFans--;
+                if (_amountOfUpFans <= 0)
+                {
+                    //redundancy setting to 0 just in case
+                    _amountOfUpFans = 0;
+                    _inFanUp = false;
+                }
+            }
+            else
+            {
+                _amountOfHozFans--;
+                if (_amountOfHozFans <= 0)
+                {
+                    _amountOfHozFans = 0;
+                    _inFanHoriz = false;
+                }
+            }
+        }
+
         public void OnHackEnter()
         {
             EnableInput();
@@ -185,17 +233,18 @@ namespace Malicious.Core
                 tempVelocity.y = 0;
 
                 float scaledMaxSpeed = _maxSpeed * scaleAmount;
+                bool greaterThanMax = false;
                 if (tempVelocity.magnitude > scaledMaxSpeed)
                 {
+                    greaterThanMax = true;
                     tempVelocity = tempVelocity.normalized * scaledMaxSpeed;
                 }
 
-                tempVelocity.y = currentYAmount;
-                if (!_inFan)
-                    _rigidbody.velocity = tempVelocity;
-                else
-                    _rigidbody.velocity += tempVelocity.normalized * (_moveSpeed * Time.deltaTime);
+                if (greaterThanMax && _inFanHoriz)
+                    return;
 
+                tempVelocity.y = currentYAmount;
+                _rigidbody.velocity = tempVelocity;
             }
             
             if (Mathf.Abs(_moveInput.magnitude) < 0.1f)
@@ -296,7 +345,7 @@ namespace Malicious.Core
         #region Collisions
         private void OnCollisionEnter(Collision other)
         {
-            if (other.collider.gameObject.CompareTag("EnemyNonMove"))
+            if (other.collider.gameObject.CompareTag("DamagePlayerNoKnockback"))
             {
                 GameEventManager.PlayerHitFunc();
                 StartCoroutine(IFrame());

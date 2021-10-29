@@ -111,9 +111,14 @@ namespace Malicious.Hackable
 
             _rigidbody.velocity += steeringForce * Time.deltaTime;
 
-            if (_rigidbody.velocity.magnitude > _maxSpeed)
+            Vector3 currentVel = _rigidbody.velocity;
+            float currentY = currentVel.y;
+            currentVel.y = 0;
+            if (currentVel.magnitude > _maxSpeed && !_inFanHoriz)
             {
-                _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
+                currentVel = currentVel.normalized * _maxSpeed;
+                currentVel.y = currentY;
+                _rigidbody.velocity = currentVel;
             }
 
             Quaternion lookDirection = Quaternion.LookRotation(_directionToTarget);
@@ -153,7 +158,7 @@ namespace Malicious.Hackable
                     _rigidbody.velocity += transform.forward * (_moveInput.y * Time.deltaTime * _playerSpeed);
                 }
             }
-            if (_moveInput.y == 0)
+            if (_moveInput.y == 0 && !_inFanHoriz)
             {
                 float currentYVel = _rigidbody.velocity.y;
                 Vector3 newVelocity = _rigidbody.velocity;
@@ -176,9 +181,17 @@ namespace Malicious.Hackable
             }
             if (_moveInput.x == 0) 
                 _rigidbody.angularVelocity = Vector3.zero;
-            
-            if (_rigidbody.velocity.magnitude > _playerMaxSpeed) 
-                _rigidbody.velocity = _rigidbody.velocity.normalized * _playerMaxSpeed;
+
+
+            Vector3 currentVel = _rigidbody.velocity;
+            float currentY = currentVel.y;
+            currentVel.y = 0;
+            if (currentVel.magnitude > _playerMaxSpeed && !_inFanHoriz)
+            {
+                currentVel = currentVel.normalized * _playerMaxSpeed;
+                currentVel.y = currentY;
+                _rigidbody.velocity = currentVel;
+            }
         }
 
         public override void OnHackEnter()
