@@ -58,6 +58,7 @@ namespace Malicious.Core
         
         
         //IFrame Variables//
+        private bool _playerDead = false;
         private bool _isPaused = false;
         private bool _iFrameActive = false;
         private bool _movementDisabled = false;
@@ -126,7 +127,7 @@ namespace Malicious.Core
             GameEventManager.PlayerUpdate += Tick;
             GameEventManager.PlayerFixedUpdate += FixedTick;
             //_currentRunAmount = 0;
-
+            GameEventManager.PlayerStopInput += PlayerDied;
             GameEventManager.PlayerDead += PlayerDead;
 
             if (_inFanUp)
@@ -289,11 +290,11 @@ namespace Malicious.Core
                     _rigidbody.velocity.z);
             }
         }
-
         private void PlayerDead()
         {
             transform.position = _activeCheckpoint._returnPosition;
             transform.rotation = Quaternion.LookRotation(_activeCheckpoint._facingDirection);
+            EnableInput();
         }
         #region Pausing
         private void PauseEnter()
@@ -354,6 +355,11 @@ namespace Malicious.Core
             _prevRunAnimAmount = Mathf.Lerp(_prevRunAnimAmount, animatorAmount, Time.deltaTime * _animationSwapSpeed);
             
             _playerAnimator.SetFloat(_animatorRunVariable, _prevRunAnimAmount);
+        }
+
+        private void PlayerDied()
+        {
+            DisableInput();
         }
         #region Collisions
         private void OnCollisionEnter(Collision other)

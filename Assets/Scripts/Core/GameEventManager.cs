@@ -22,7 +22,8 @@ namespace Malicious.Core
         /// Player Fixed update event
         /// </summary>
         public static event Action PlayerFixedUpdate;
-    
+
+        public static event Action PlayerStopInput;
         /// <summary>
         /// Update event for all enemies
         /// </summary>
@@ -138,6 +139,7 @@ namespace Malicious.Core
                 //fade to black
                 //Player shader for death play 
                 _fadeTransition.FadeOut();
+                PlayerStopInput?.Invoke();
                 _CurrentManager.WaitForFade();
             }
             
