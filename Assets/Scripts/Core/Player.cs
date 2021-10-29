@@ -15,7 +15,7 @@ namespace Malicious.Core
         [SerializeField] private float _moveSpeed = 100f;
         [SerializeField] private float _maxSpeed = 4f;
         [SerializeField] private float _spinSpeed = 5f;
-        private bool _inFan = false;
+        [SerializeField] private float _slowDownSpeed = 0.85f;
         //-------------------------------------//
         
         
@@ -85,6 +85,9 @@ namespace Malicious.Core
         #endregion
         public void SetHackableField(HackableField a_field)
         {
+            if (_currentHackableField == a_field)
+                return;
+
             if (a_field == null)
             {
                 _currentHackableField = null;
@@ -125,6 +128,9 @@ namespace Malicious.Core
             //_currentRunAmount = 0;
 
             GameEventManager.PlayerDead += PlayerDead;
+
+            if (_inFanUp)
+                _rigidbody.velocity += Vector3.zero;
         }
         private void Tick()
         {
@@ -246,17 +252,24 @@ namespace Malicious.Core
                 tempVelocity.y = currentYAmount;
                 _rigidbody.velocity = tempVelocity;
             }
-            
+
             if (Mathf.Abs(_moveInput.magnitude) < 0.1f)
             {
+                Vector3 newVel = _rigidbody.velocity;
                 //if we are actually moving 
-                if (Mathf.Abs(_rigidbody.velocity.x) > 0.2f || Mathf.Abs(_rigidbody.velocity.z) > 0.2f)
+                if (Mathf.Abs(_rigidbody.velocity.x) > 0 || Mathf.Abs(_rigidbody.velocity.z) > 0)
                 {
-                    Vector3 newVel = _rigidbody.velocity;
                     //takes off 5% of the current vel every physics update so the player can land on a platform without overshooting
                     //because the velocity doesnt stop
-                    newVel.z = newVel.z * 0.90f;
-                    newVel.x = newVel.x * 0.90f;
+                    newVel.z = newVel.z * _slowDownSpeed;
+                    newVel.x = newVel.x * _slowDownSpeed;
+                    _rigidbody.velocity = newVel;
+                }
+                newVel.y = 0;
+                if (newVel.sqrMagnitude < 0.2f)
+                {
+                    newVel = Vector3.zero;
+                    newVel.y = _rigidbody.velocity.y;
                     _rigidbody.velocity = newVel;
                 }
             }

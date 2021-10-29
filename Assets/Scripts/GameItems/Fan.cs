@@ -164,6 +164,7 @@ namespace Malicious.GameItems
 
                     if (horizontalDiff.sqrMagnitude > _sqrhorizontalDifferenceAllow || difference.y > _fanHeight)
                     {
+                        
                         a_list.RemoveAt(i);
                         if (a_list.Count > 0)
                             i--;
