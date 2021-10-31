@@ -43,6 +43,7 @@ namespace Malicious.Core
         
         
         //Jumping Variables//
+        [SerializeField] private float _maxVelocityToJump = 0.6f;
         [SerializeField] private float _jumpForce = 10f;
         [SerializeField] private float _additionalGravity = -9.81f;
         [SerializeField] private LayerMask _groundMask = ~0;
@@ -58,7 +59,6 @@ namespace Malicious.Core
         
         
         //IFrame Variables//
-        private bool _playerDead = false;
         private bool _isPaused = false;
         private bool _iFrameActive = false;
         private bool _movementDisabled = false;
@@ -152,6 +152,9 @@ namespace Malicious.Core
 
         public void EnteredFan(bool a_isUp)
         {
+            _canJump = false;
+            _hasDoubleJumped = false;
+            
             if (a_isUp)
             {
                 _inFanUp = true;
@@ -321,7 +324,7 @@ namespace Malicious.Core
             if (_movementDisabled)
                 return;
             //the 2 y velocity check is so the player can jump just before the arc of their jump
-            if ((_canJump || _hasDoubleJumped == false) && _rigidbody.velocity.y < 2)
+            if ((_canJump || _hasDoubleJumped == false) && _rigidbody.velocity.y < _maxVelocityToJump)
             {
                 StartCoroutine(JumpWait());
                 Vector3 prevVel = _rigidbody.velocity;
@@ -360,6 +363,7 @@ namespace Malicious.Core
         private void PlayerDied()
         {
             DisableInput();
+            _moveInput = Vector2.zero;
         }
         #region Collisions
         private void OnCollisionEnter(Collision other)
@@ -434,9 +438,30 @@ namespace Malicious.Core
                 //}
             }
 
-            if (a_other.gameObject.CompareTag("Fan"))
+            if (a_other.gameObject.CompareTag("Laser"))
             {
+                Vector3 directionToPlayer = (transform.position - a_other.gameObject.transform.position).normalized;
+
+                float dotResult = Vector3.Dot(directionToPlayer, a_other.transform.forward);
                 
+                
+                if (dotResult > 0)
+                    LaunchPlayer(a_other.transform.forward * _hitForce);
+                else
+                    LaunchPlayer(-a_other.transform.forward * _hitForce);
+                
+                
+                
+                GameEventManager.PlayerHitFunc();
+                if (GameEventManager.CurrentHealth() <= 0)
+                {
+                    //Run shader for dissolve
+                }
+                else
+                {
+                    StartCoroutine(IFrame());
+                    StartCoroutine(DisableMoveInput());
+                }
             }
         }
 
