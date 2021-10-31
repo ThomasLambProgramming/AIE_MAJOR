@@ -72,6 +72,12 @@ namespace Malicious.GameItems
             if (_launchDirection == Vector3.zero)
                 _launchDirection = transform.up;
         }
+
+        [ContextMenu("Set fan direction")]
+        private void SetFanDirection()
+        {
+            _launchDirection = transform.up;
+        }
         private void OnTriggerEnter(Collider other)
         {
             if (other.isTrigger)
@@ -274,7 +280,7 @@ namespace Malicious.GameItems
         private void OnDrawGizmos()
         {
             Vector3 currentPosition = transform.position;
-            currentPosition.y += _fanHeight;
+            currentPosition = currentPosition + _launchDirection * _fanHeight;
             Gizmos.DrawLine(transform.position, currentPosition);
             Gizmos.DrawLine(transform.position, transform.position + _launchDirection * 4);
         }

@@ -23,8 +23,9 @@ namespace Malicious.Core
         [SerializeField] private float _yDifferenceAllowed = 1f;
         private BasePlayer _hackable = null;
         private IInteractable _interactable = null;
-        
+        public bool _isHacked = false;
         private Player _player = null;
+        private Rigidbody _playerRigid = null;
         private bool _hackValid = false;
 
         [SerializeField] private Transform _lookGoal = null;
@@ -167,13 +168,19 @@ namespace Malicious.Core
         
         private void OnTriggerEnter(Collider other)
         {
+            if (other.isTrigger)
+                return;
+
             if (other.gameObject.CompareTag("Player"))
+            {
                 _player = other.gameObject.GetComponent<Player>();
+                _playerRigid = other.attachedRigidbody;
+            }
         }
 
         private void OnTriggerStay(Collider other)
         {
-            if (_player == null)
+            if (_player == null || other.isTrigger)
                 return;
             
             _player.SetHackableField(this); 
@@ -188,13 +195,18 @@ namespace Malicious.Core
 
         private void OnTriggerExit(Collider other)
         {
-            //There were alot of added nulls that are needed
-            //as the player gets setactived alot
-            if (_player != null)
-                _player.SetHackableField(null);
-            
-            OnHackFalse();
-            _player = null;
+            if (_playerRigid != null && other.attachedRigidbody == _playerRigid)
+            {
+                //There were alot of added nulls that are needed
+                //as the player gets setactived alot
+                if (_player != null)
+                    _player.SetHackableField(null);
+                
+                _playerRigid = null;
+
+                OnHackFalse();
+                _player = null;
+            }
         }
     }
 }

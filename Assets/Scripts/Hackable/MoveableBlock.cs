@@ -22,9 +22,9 @@ namespace Malicious.Hackable
         [SerializeField] private Transform _stackingArea = null;
         [SerializeField] private float _slowDownSpeed = 0.85f;
         [SerializeField] private float _hitForce = 4f;
-        //[SerializeField] private Transform _rampCheck = null;
-        //[SerializeField] private float _yAngle = -2f;
-        //[SerializeField] private float _rampCheckDistance = 3f;
+        [SerializeField] private Transform _rampCheck = null;
+        [SerializeField] private float _yAngle = -2f;
+        [SerializeField] private float _rampCheckDistance = 3f;
         
         [SerializeField] private UnityEvent _onHackEnterEvent = null;
         [SerializeField] private UnityEvent _onHackExitEvent = null;
@@ -73,8 +73,11 @@ namespace Malicious.Hackable
                     currentVel = currentVel.normalized * _maxSpeed;
                     currentVel.y = currentY;
                     _rigidbody.velocity = currentVel;
-
                 }
+                
+                
+                
+                //Ray ray = new Ray(_rampCheck.position, )
             }
             
             if (Mathf.Abs(_moveInput.magnitude) < 0.1f && !_inFanHoriz)
