@@ -25,6 +25,8 @@ namespace Malicious.Core
         public static float _spinSpeedCamY = 5f;
         public static bool _invertCamX = false;
         public static bool _invertCamY = false;
+
+        [SerializeField] private Transform _cameraOffset = null;
         //-------------------------------------//
         
         //Animator Variables//
@@ -47,6 +49,7 @@ namespace Malicious.Core
         
         //Input Variables//
         private Vector2 _moveInput = Vector2.zero;
+        private Vector2 _cameraInput = Vector2.zero;
         //-------------------------------------//
         
         
@@ -149,6 +152,7 @@ namespace Malicious.Core
         private void Tick()
         {
             UpdateAnimator();
+            //SpinMovement();
         }
         private void FixedTick()
         {
@@ -161,7 +165,22 @@ namespace Malicious.Core
 
         }
 
-        
+        private void SpinMovement()
+        {
+            if (_cameraInput != Vector2.zero)
+            {
+                if (_invertCamX)
+                {
+                    _cameraOffset.RotateAround(transform.position, Vector3.up,
+                        _cameraInput.x * -_spinSpeedCamX * Time.deltaTime);
+                }
+                else
+                {
+                    _cameraOffset.RotateAround(transform.position, Vector3.up,
+                        _cameraInput.x * _spinSpeedCamX * Time.deltaTime);
+                }
+            }
+        }
 
         public void EnteredFan(bool a_isUp)
         {

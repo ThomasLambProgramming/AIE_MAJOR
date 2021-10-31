@@ -188,20 +188,24 @@ namespace Malicious.Hackable
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("Laser"))
-            {
-                _rigidbody.velocity = other.gameObject.GetComponent<BrokenWire>().DirectionToHit(transform.position) * _hitForce;
-            }
+            //if (other.gameObject.CompareTag("Laser"))
+            //{
+            //    _rigidbody.velocity = other.gameObject.GetComponent<BrokenWire>().DirectionToHit(transform.position) * _hitForce;
+            //}
             if (other.gameObject.CompareTag("Block") && !other.isTrigger)
             {
                 Vector3 directionToObject =
                     (other.gameObject.transform.position - transform.position).normalized;
 
-                if (Vector3.Dot(directionToObject, Vector3.up) > _dotAllowanceForStacking &&
-                    Vector3.Distance(other.gameObject.transform.position, _stackingArea.transform.position) < 3f)
+                if (_stackingArea != null)
                 {
-                    other.transform.parent = transform;
-                    _stackedObject = other.gameObject;
+
+                    if (Vector3.Dot(directionToObject, Vector3.up) > _dotAllowanceForStacking &&
+                        Vector3.Distance(other.gameObject.transform.position, _stackingArea.transform.position) < 3f)
+                    {
+                        other.transform.parent = transform;
+                        _stackedObject = other.gameObject;
+                    }
                 }
             }
         }
