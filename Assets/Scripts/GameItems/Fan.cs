@@ -241,8 +241,8 @@ namespace Malicious.GameItems
                     {
                         currentVel= currentVel.normalized * a_velLimit;
                         currentVel.y = currentY;
-                        a_list[i].velocity = currentVel;
                     }
+                    a_list[i].velocity = currentVel;
                 }
             }
         }

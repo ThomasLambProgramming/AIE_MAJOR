@@ -15,6 +15,7 @@ namespace Malicious.Core
         //Speed Variables//
         [SerializeField] private float _moveSpeed = 100f;
         [SerializeField] private float _maxSpeed = 4f;
+        [SerializeField] private float _fanMoveSpeedScale = 0.5f;
         [SerializeField] private float _spinSpeed = 5f;
         [SerializeField] private float _slowDownSpeed = 0.85f;
         //-------------------------------------//
@@ -242,6 +243,8 @@ namespace Malicious.Core
                 //We are checking if the horizontal speed is too great 
                 Vector3 tempVelocity = _rigidbody.velocity + newVel;
                 tempVelocity.y = 0;
+                if (_inFanHoriz)
+                    tempVelocity *= _fanMoveSpeedScale;
 
                 float scaledMaxSpeed = _maxSpeed * scaleAmount;
                 bool greaterThanMax = false;
