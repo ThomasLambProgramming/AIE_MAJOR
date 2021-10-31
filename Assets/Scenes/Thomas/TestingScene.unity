@@ -140,7 +140,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 454142636963299764, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0
+      value: 0.72
       objectReference: {fileID: 0}
     - target: {fileID: 454142636963299764, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
       propertyPath: m_LocalPosition.z
@@ -148,11 +148,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 454142636963299764, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 454142636963299764, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 454142636963299764, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
       propertyPath: m_LocalRotation.y
@@ -164,7 +164,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 454142636963299764, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 454142636963299764, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -175,16 +175,92 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _blockVelLimit
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
       propertyPath: _maxBlockForce
-      value: 18.89
+      value: 110
       objectReference: {fileID: 0}
     - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
       propertyPath: _minBlockForce
-      value: 50.01
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _maxPlayerForce
+      value: 110
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _maxSpringForce
+      value: 110
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _minPlayerForce
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _minSpringForce
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _playerVelLimit
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _springVelLimit
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
       propertyPath: _launchDirection.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _flyingEnemyVelLimit
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _groundEnemyVelLimit
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _maxFlyingEnemyForce
+      value: 110
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _maxGroundEnemyForce
+      value: 110
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _minFlyingEnemyForce
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _minGroundEnemyForce
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _correctionBlockForce
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _correctionSpringForce
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _correctionDotAllowance
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _velocityPreservePlayer
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _correctionFlyingEnemyForce
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
+      propertyPath: _correctionGroundEnemyForce
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 938614588948011790, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
       propertyPath: m_Name
@@ -830,7 +906,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3466853749773726540, guid: 205556953c5a37a4c8bb8b28fa10b888, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1.354
       objectReference: {fileID: 0}
     - target: {fileID: 3466853749773726540, guid: 205556953c5a37a4c8bb8b28fa10b888, type: 3}
       propertyPath: m_LocalPosition.z

@@ -75,7 +75,7 @@ namespace Malicious.Hackable
 
                 }
             }
-
+            
             if (Mathf.Abs(_moveInput.magnitude) < 0.1f && !_inFanHoriz)
             {
                 //if we are actually moving 

@@ -257,7 +257,7 @@ namespace Malicious.Core
                 _rigidbody.velocity = tempVelocity;
             }
 
-            if (Mathf.Abs(_moveInput.magnitude) < 0.1f)
+            if (Mathf.Abs(_moveInput.magnitude) < 0.1f && !_inFanHoriz)
             {
                 Vector3 newVel = _rigidbody.velocity;
                 //if we are actually moving 
@@ -368,7 +368,7 @@ namespace Malicious.Core
         #region Collisions
         private void OnCollisionEnter(Collision other)
         {
-            if (other.collider.gameObject.CompareTag("DamagePlayerNoKnockback"))
+            if (other.collider.gameObject.CompareTag("DamagePlayerNoKnockback") && _iFrameActive == false)
             {
                 GameEventManager.PlayerHitFunc();
                 StartCoroutine(IFrame());

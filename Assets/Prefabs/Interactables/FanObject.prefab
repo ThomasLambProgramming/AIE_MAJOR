@@ -88,16 +88,32 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   _launchDirection: {x: 0, y: 1, z: 0}
-  _minPlayerForce: 3
-  _minBlockForce: 3
-  _minGroundEnemyForce: 3
-  _minFlyingEnemyForce: 3
-  _minSpringForce: 3
-  _maxPlayerForce: 10
-  _maxBlockForce: 10
-  _maxGroundEnemyForce: 10
-  _maxFlyingEnemyForce: 10
-  _maxSpringForce: 10
+  _minPlayerForce: 10
+  _minBlockForce: 40
+  _minGroundEnemyForce: 20
+  _minFlyingEnemyForce: 20
+  _minSpringForce: 40
+  _maxPlayerForce: 110
+  _maxBlockForce: 110
+  _maxGroundEnemyForce: 110
+  _maxFlyingEnemyForce: 110
+  _maxSpringForce: 110
+  _correctionDotAllowance: 0.7
+  _correctionPlayerForce: 0.7
+  _correctionBlockForce: 0.1
+  _correctionGroundEnemyForce: 0.4
+  _correctionFlyingEnemyForce: 0.4
+  _correctionSpringForce: 0.1
+  _velocityPreservePlayer: 0.8
+  _velocityPreserveBlock: 1
+  _velocityPreserveGroundEnemy: 1
+  _velocityPreserveFlyingEnemy: 1
+  _velocityPreserveSpring: 1
+  _playerVelLimit: 5
+  _blockVelLimit: 5
+  _groundEnemyVelLimit: 5
+  _flyingEnemyVelLimit: 5
+  _springVelLimit: 5
 --- !u!65 &938614588948011791
 BoxCollider:
   m_ObjectHideFlags: 0
