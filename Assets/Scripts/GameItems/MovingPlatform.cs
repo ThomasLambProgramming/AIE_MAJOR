@@ -17,7 +17,7 @@ namespace Malicious.GameItems
         [SerializeField] private float _waitTime = 3f;
         [SerializeField] private float _horizontalAllowance = 3f;
         private float _sqrHorizontalAllowance = 9f;
-        private GameObject _playerObject = null;
+        
 
         private float _timer = 0;
         private bool waiting = false;

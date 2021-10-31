@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Malicious.Core;
+using Malicious.GameItems;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -192,6 +193,11 @@ namespace Malicious.Hackable
             if (other.gameObject.CompareTag("Fan"))
             {
             }
+
+            if (other.gameObject.CompareTag("Laser"))
+            {
+                _rigidbody.velocity = other.gameObject.GetComponent<BrokenWire>().DirectionToHit(transform.position) * _hitForce;
+            }
             if (other.gameObject.CompareTag("Player"))
             {
                 other.gameObject.transform.parent = transform;
@@ -207,23 +213,23 @@ namespace Malicious.Hackable
             }
         }
 
-        private void OnCollisionEnter(Collision other)
-        {
-            if (other.gameObject.CompareTag("Laser"))
-            {
-                Vector3 movementDirection = (other.transform.position - transform.position).normalized;
-                Ray ray = new Ray(transform.position, movementDirection);
-                RaycastHit hit;
-                Vector3 forceDirection = Vector3.zero;
-                if (Physics.Raycast(ray, out hit, 10, _raycastMask))
-                {
-                    forceDirection = hit.normal;
-                }
-                forceDirection.y = 0;
-                forceDirection = forceDirection.normalized;
-                _rigidbody.velocity = (forceDirection * _hitForce);
-            }
-        }
+        //private void OnCollisionEnter(Collision other)
+        //{
+        //    //if (other.gameObject.CompareTag("Laser"))
+        //    //{
+        //    //    Vector3 movementDirection = (other.transform.position - transform.position).normalized;
+        //    //    Ray ray = new Ray(transform.position, movementDirection);
+        //    //    RaycastHit hit;
+        //    //    Vector3 forceDirection = Vector3.zero;
+        //    //    if (Physics.Raycast(ray, out hit, 10, _raycastMask))
+        //    //    {
+        //    //        forceDirection = hit.normal;
+        //    //    }
+        //    //    forceDirection.y = 0;
+        //    //    forceDirection = forceDirection.normalized;
+        //    //    _rigidbody.velocity = (forceDirection * _hitForce);
+        //    //}
+        //}
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()

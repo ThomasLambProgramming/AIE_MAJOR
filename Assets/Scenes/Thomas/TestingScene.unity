@@ -174,94 +174,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _blockVelLimit
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _maxBlockForce
-      value: 110
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _minBlockForce
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _maxPlayerForce
-      value: 110
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _maxSpringForce
-      value: 110
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _minPlayerForce
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _minSpringForce
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _playerVelLimit
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _springVelLimit
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _launchDirection.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _flyingEnemyVelLimit
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _groundEnemyVelLimit
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _maxFlyingEnemyForce
-      value: 110
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _maxGroundEnemyForce
-      value: 110
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _minFlyingEnemyForce
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _minGroundEnemyForce
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _correctionBlockForce
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _correctionSpringForce
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _correctionDotAllowance
-      value: 0.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _velocityPreservePlayer
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _correctionFlyingEnemyForce
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 938614588948011776, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
-      propertyPath: _correctionGroundEnemyForce
-      value: 0.4
-      objectReference: {fileID: 0}
     - target: {fileID: 938614588948011790, guid: 3dd735de955186d4fb5ab870ecb63261, type: 3}
       propertyPath: m_Name
       value: FanObject
@@ -394,11 +306,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5017007373643885965, guid: 874b20921da5a324fa277f4e2a6c6fcf, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.49
+      value: -8.014
       objectReference: {fileID: 0}
     - target: {fileID: 5017007373643885965, guid: 874b20921da5a324fa277f4e2a6c6fcf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: -0.02
       objectReference: {fileID: 0}
     - target: {fileID: 5017007373643885965, guid: 874b20921da5a324fa277f4e2a6c6fcf, type: 3}
       propertyPath: m_LocalPosition.z
@@ -996,10 +908,6 @@ PrefabInstance:
     - target: {fileID: 6028694796345584565, guid: 785d7d622495c3a45b062190cd2fa8cd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7917781148067110653, guid: 785d7d622495c3a45b062190cd2fa8cd, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7936706077831208264, guid: 785d7d622495c3a45b062190cd2fa8cd, type: 3}
       propertyPath: m_Name

@@ -169,7 +169,7 @@ namespace Malicious.GameItems
 
             ApplyForces(ref _playerList, _minPlayerForce, _maxPlayerForce, _playerVelLimit, _correctionPlayerForce, _velocityPreservePlayer);
             ApplyForces(ref _groundEnemyList, _minGroundEnemyForce, _maxGroundEnemyForce, _groundEnemyVelLimit, _correctionGroundEnemyForce, _velocityPreserveGroundEnemy);
-            ApplyForces(ref _flyingEnemyList, _minFlyingEnemyForce, _maxFlyingEnemyForce, _flyingEnemyVelLimit, _correctionFlyingEnemyForce, _velocityPreserveGroundEnemy);
+            ApplyForces(ref _flyingEnemyList, _minFlyingEnemyForce, _maxFlyingEnemyForce, _flyingEnemyVelLimit, _correctionFlyingEnemyForce, _velocityPreserveFlyingEnemy);
             ApplyForces(ref _blockList, _minBlockForce, _maxBlockForce, _blockVelLimit, _correctionBlockForce, _velocityPreserveBlock);
             ApplyForces(ref _springList, _minSpringForce, _maxSpringForce, _springVelLimit, _correctionSpringForce, _velocityPreserveSpring);
         }

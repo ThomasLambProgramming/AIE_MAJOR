@@ -21,7 +21,8 @@ namespace Malicious.GameItems
 
         [SerializeField] private Transform _leftSidePosition = null;
         [SerializeField] private Transform _rightSidePosition = null;
-
+        [SerializeField] private Vector3 _hitDirection = Vector3.zero;
+        
         [Tooltip("For electric arcs with line renderer")]
         [SerializeField] private float _minYHeight = 0;
         [SerializeField] private float _maxYHeight = 5f;
@@ -126,6 +127,21 @@ namespace Malicious.GameItems
             }
         }
 
+        public Vector3 DirectionToHit(Vector3 a_position)
+        {
+            Vector3 middlePos = (_leftSidePosition.position - _rightSidePosition.position) / 2 +
+                                _rightSidePosition.position;
+
+            Vector3 directionTo = a_position - middlePos;
+            directionTo = directionTo.normalized;
+
+            if (Vector3.Dot(directionTo, _hitDirection) > 0)
+                return _hitDirection;
+            else
+                return -_hitDirection;
+
+        }
+
         public void TurnOff()
         {
             _areaCollider.enabled = false;
@@ -143,5 +159,15 @@ namespace Malicious.GameItems
             _leftSide.Play();
             _rightSide.Play();
         }
+
+        #if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            Vector3 middlePos = (_leftSidePosition.position - _rightSidePosition.position) / 2 +
+                                _rightSidePosition.position;
+            
+            Gizmos.DrawLine(middlePos, middlePos + _hitDirection * 2);
+        }
+        #endif
     }
 }

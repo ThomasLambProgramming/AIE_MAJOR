@@ -6,6 +6,7 @@ using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using Malicious.Core;
 using UnityEditor;
+using Malicious.GameItems;
 
 namespace Malicious.Hackable
 {
@@ -24,6 +25,7 @@ namespace Malicious.Hackable
         [SerializeField] private Transform _exitLocation = null;
         [SerializeField] private float _exitForce = 5f;
         [SerializeField] private float _waitTimeOnExit = 1.5f;
+        [SerializeField] private float _hitForce = 4f;
         private int direction = 1;
         private bool _huntPlayer = false;
         private GameObject _playerObject = null;
@@ -230,6 +232,14 @@ namespace Malicious.Hackable
         {
             yield return new WaitForSeconds(_waitTimeOnExit);
             _wait = false;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("Laser"))
+            {
+                _rigidbody.velocity = other.gameObject.GetComponent<BrokenWire>().DirectionToHit(transform.position) * _hitForce;
+            }
         }
 
         private void OnTriggerStay(Collider other)
