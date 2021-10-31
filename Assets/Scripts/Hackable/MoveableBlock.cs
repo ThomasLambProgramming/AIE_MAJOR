@@ -1,5 +1,6 @@
 ﻿using System;
 using Malicious.Core;
+using Malicious.GameItems;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -20,7 +21,7 @@ namespace Malicious.Hackable
         [SerializeField] private float _dotAllowanceForStacking = 0.7f;
         [SerializeField] private Transform _stackingArea = null;
         [SerializeField] private float _slowDownSpeed = 0.85f;
-
+        [SerializeField] private float _hitForce = 4f;
         //[SerializeField] private Transform _rampCheck = null;
         //[SerializeField] private float _yAngle = -2f;
         //[SerializeField] private float _rampCheckDistance = 3f;
@@ -75,7 +76,7 @@ namespace Malicious.Hackable
 
                 }
             }
-
+            
             if (Mathf.Abs(_moveInput.magnitude) < 0.1f && !_inFanHoriz)
             {
                 //if we are actually moving 
@@ -157,6 +158,10 @@ namespace Malicious.Hackable
 
         private void OnTriggerEnter(Collider other)
         {
+            if (other.gameObject.CompareTag("Laser"))
+            {
+                _rigidbody.velocity = other.gameObject.GetComponent<BrokenWire>().DirectionToHit(transform.position) * _hitForce;
+            }
             if (other.gameObject.CompareTag("Block") && !other.isTrigger)
             {
                 Vector3 directionToObject =

@@ -24,18 +24,36 @@ namespace Malicious.GameItems
         [SerializeField] private LayerMask _objectsAllowed = ~0;
         [SerializeField] private Vector3 _launchDirection = Vector3.up;
 
+        [Header("End of fan Variables")]
         [SerializeField] private float _minPlayerForce = 3f;
         [SerializeField] private float _minBlockForce = 3f;
         [SerializeField] private float _minGroundEnemyForce = 3f;
         [SerializeField] private float _minFlyingEnemyForce = 3f;
         [SerializeField] private float _minSpringForce = 3f;
-
+        
+        [Header("Front of fan Variables")]
         [SerializeField] private float _maxPlayerForce = 10f;
         [SerializeField] private float _maxBlockForce = 10f;
         [SerializeField] private float _maxGroundEnemyForce = 10f;
         [SerializeField] private float _maxFlyingEnemyForce = 10f;
         [SerializeField] private float _maxSpringForce = 10f;
 
+        [Header("Correction Variables")]
+        [SerializeField] private float _correctionDotAllowance = 0.5f;
+        
+        [SerializeField] private float _correctionPlayerForce = 0.7f;
+        [SerializeField] private float _correctionBlockForce = 1f;
+        [SerializeField] private float _correctionGroundEnemyForce = 1f;
+        [SerializeField] private float _correctionFlyingEnemyForce = 1f;
+        [SerializeField] private float _correctionSpringForce = 1f;
+        
+        [SerializeField] private float _velocityPreservePlayer = 0.7f;
+        [SerializeField] private float _velocityPreserveBlock = 1f;
+        [SerializeField] private float _velocityPreserveGroundEnemy = 1f;
+        [SerializeField] private float _velocityPreserveFlyingEnemy = 1f;
+        [SerializeField] private float _velocityPreserveSpring = 1f;
+
+        [Header("Velocity limit variables")]
         [SerializeField] private float _playerVelLimit = 10f;
         [SerializeField] private float _blockVelLimit = 10f;
         [SerializeField] private float _groundEnemyVelLimit = 10f;
@@ -107,6 +125,9 @@ namespace Malicious.GameItems
         }
         private void OnTriggerExit(Collider other)
         {
+            if (other.isTrigger)
+                return;
+            
             if (CheckList(ref _playerList, other.gameObject))
                 return;
             if (CheckList(ref _blockList, other.gameObject))
@@ -146,13 +167,13 @@ namespace Malicious.GameItems
             if (!_isActive)
                 return;
 
-            ApplyForces(ref _playerList, _minPlayerForce, _maxPlayerForce, _playerVelLimit);
-            ApplyForces(ref _groundEnemyList, _minGroundEnemyForce, _maxGroundEnemyForce, _groundEnemyVelLimit);
-            ApplyForces(ref _flyingEnemyList, _minFlyingEnemyForce, _maxFlyingEnemyForce, _flyingEnemyVelLimit);
-            ApplyForces(ref _blockList, _minBlockForce, _maxBlockForce, _blockVelLimit);
-            ApplyForces(ref _springList, _minSpringForce, _maxSpringForce, _springVelLimit);
+            ApplyForces(ref _playerList, _minPlayerForce, _maxPlayerForce, _playerVelLimit, _correctionPlayerForce, _velocityPreservePlayer);
+            ApplyForces(ref _groundEnemyList, _minGroundEnemyForce, _maxGroundEnemyForce, _groundEnemyVelLimit, _correctionGroundEnemyForce, _velocityPreserveGroundEnemy);
+            ApplyForces(ref _flyingEnemyList, _minFlyingEnemyForce, _maxFlyingEnemyForce, _flyingEnemyVelLimit, _correctionFlyingEnemyForce, _velocityPreserveFlyingEnemy);
+            ApplyForces(ref _blockList, _minBlockForce, _maxBlockForce, _blockVelLimit, _correctionBlockForce, _velocityPreserveBlock);
+            ApplyForces(ref _springList, _minSpringForce, _maxSpringForce, _springVelLimit, _correctionSpringForce, _velocityPreserveSpring);
         }
-        private void ApplyForces(ref List<Rigidbody> a_list, float a_minForce, float a_maxForce, float a_velLimit)
+        private void ApplyForces(ref List<Rigidbody> a_list, float a_minForce, float a_maxForce, float a_velLimit, float a_correctionForce, float a_preserveForce)
         {
             for (int i = 0; i < a_list.Count; i++)
             {
@@ -164,11 +185,9 @@ namespace Malicious.GameItems
 
                     if (horizontalDiff.sqrMagnitude > _sqrhorizontalDifferenceAllow || difference.y > _fanHeight)
                     {
-                        
                         a_list.RemoveAt(i);
                         if (a_list.Count > 0)
                             i--;
-
                         continue;
                     }
                 }
@@ -177,16 +196,16 @@ namespace Malicious.GameItems
                 if (lerpAmount < 0.1f)
                     lerpAmount = 0.1f;
 
-                float forceScale = Mathf.Lerp(a_minForce, a_maxForce, lerpAmount);
+                float forceScale = Mathf.Lerp(a_maxForce, a_minForce, lerpAmount);
                 
                 if (_launchDirection != Vector3.up)
                 {
-                    forceScale = Mathf.Lerp(a_minForce, a_maxForce, Vector3.SqrMagnitude(difference) / (_fanHeight * _fanHeight));
+                    forceScale = Mathf.Lerp(a_maxForce, a_minForce, Vector3.SqrMagnitude(difference) / (_fanHeight * _fanHeight));
                 }
 
                 Vector3 forceToApply = _launchDirection * forceScale;
                 a_list[i].AddForce(forceToApply);
-
+                
                 if (_launchDirection == Vector3.up)
                 {
                     if (a_list[i].velocity.y > a_velLimit)
@@ -201,6 +220,17 @@ namespace Malicious.GameItems
                     Vector3 currentVel = a_list[i].velocity;
                     float currentY = currentVel.y;
                     currentVel.y = 0;
+
+                    if (Vector3.Dot(_launchDirection, currentVel.normalized) < _correctionDotAllowance)
+                    {
+                        //i hate this fan, so much division and sqr roots but i cant be bothered anymore
+                        //take the current length take 10% of that off, then add the launch direction equal to 10% of the original
+                        float correctionForce = currentVel.magnitude;
+                        currentVel *= a_preserveForce;
+                        currentVel += _launchDirection * (correctionForce * a_correctionForce);
+                    }
+                    
+                    
                     if (currentVel.sqrMagnitude > a_velLimit)
                     {
                         currentVel= currentVel.normalized * a_velLimit;

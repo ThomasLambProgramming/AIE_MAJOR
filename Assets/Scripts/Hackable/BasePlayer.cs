@@ -77,6 +77,7 @@ namespace Malicious.Hackable
             }
             else
             {
+                _moveSpeed = _moveSpeed * 0.5f;
                 _amountOfHozFans++;
                 _inFanHoriz = true;
             }
@@ -99,6 +100,7 @@ namespace Malicious.Hackable
                 _amountOfHozFans--;
                 if (_amountOfHozFans <= 0)
                 {
+                    _moveSpeed *= 2;
                     _amountOfHozFans = 0;
                     _inFanHoriz = false;
                 }
