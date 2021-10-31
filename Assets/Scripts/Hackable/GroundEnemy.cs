@@ -32,7 +32,7 @@ namespace Malicious.Hackable
         private float _sqrMaxSteeringForce = 0;
         private bool _wait = false;
         private Vector3 _directionToTarget = Vector3.zero;
-        private bool _currentlyHacked = false;
+        
         
         void Start()
         {
@@ -202,7 +202,6 @@ namespace Malicious.Hackable
             base.OnHackEnter();
             GameEventManager.EnemyFixedUpdate -= AiUpdate;
             CameraController.ChangeCamera(ObjectType.GroundEnemy, _cameraTransform);
-            _currentlyHacked = true;
             _huntPlayer = false;
         }
         protected override void InteractionInputEnter(InputAction.CallbackContext a_context)
@@ -221,8 +220,7 @@ namespace Malicious.Hackable
             Vector3 exitDirection = _exitLocation.forward;
             exitDirection.y = 0;
             exitDirection = exitDirection.normalized;
-
-            _currentlyHacked = false;
+            
             _player.transform.rotation = Quaternion.LookRotation(exitDirection);
             _player.transform.position = _exitLocation.position;
 

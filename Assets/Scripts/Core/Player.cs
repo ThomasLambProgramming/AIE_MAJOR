@@ -16,10 +16,16 @@ namespace Malicious.Core
         [SerializeField] private float _moveSpeed = 100f;
         [SerializeField] private float _maxSpeed = 4f;
         [SerializeField] private float _fanMoveSpeedScale = 0.5f;
-        [SerializeField] private float _spinSpeed = 5f;
+        [SerializeField] private float _spinSpeedModel = 5f;
         [SerializeField] private float _slowDownSpeed = 0.85f;
         //-------------------------------------//
         
+        //Camera Variables//
+        public static float _spinSpeedCamX = 5f;
+        public static float _spinSpeedCamY = 5f;
+        public static bool _invertCamX = false;
+        public static bool _invertCamY = false;
+        //-------------------------------------//
         
         //Animator Variables//
         [SerializeField] private float _animationSwapSpeed = 3f;
@@ -134,6 +140,11 @@ namespace Malicious.Core
 
             if (_inFanUp)
                 _rigidbody.velocity += Vector3.zero;
+
+            _spinSpeedCamX = GlobalData._cameraSettings.CameraXSpeed;
+            _spinSpeedCamY = GlobalData._cameraSettings.CameraYSpeed;
+            _invertCamX = GlobalData._cameraSettings.InvertX;
+            _invertCamY = GlobalData._cameraSettings.InvertY;
         }
         private void Tick()
         {
@@ -224,7 +235,7 @@ namespace Malicious.Core
                 //Rotate player towards current input
                 Quaternion targetRotation = Quaternion.Euler(0, targetAngle, 0);
                 transform.rotation =
-                    Quaternion.Lerp(transform.rotation, targetRotation, _spinSpeed * Time.deltaTime);
+                    Quaternion.Lerp(transform.rotation, targetRotation, _spinSpeedModel * Time.deltaTime);
                 
                 
                 float scaleAmount = _moveInput.magnitude;

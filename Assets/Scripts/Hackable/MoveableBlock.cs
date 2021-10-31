@@ -30,12 +30,18 @@ namespace Malicious.Hackable
         [SerializeField] private UnityEvent _onHackExitEvent = null;
         private Vector3 _startingPosition = Vector3.zero;
         private GameObject _stackedObject = null;
+
+        public static bool _invertCamX = false;
+        public static float _spinSpeedCamX = 5f;
+        //public static float _spinSpeedCamY = 5f;
         
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
             _cameraTransform = _cameraOffset;
             _startingPosition = transform.position;
+            _invertCamX = GlobalData._cameraSettings.InvertX;
+            _spinSpeedCamX = GlobalData._cameraSettings.CameraXSpeed;
         }
 
         protected override void Tick()
@@ -126,8 +132,16 @@ namespace Malicious.Hackable
         {
             if (_spinInput != Vector2.zero)
             {
-                _cameraOffset.RotateAround(transform.position, Vector3.up,
-                    _spinInput.x * _spinSpeed * Time.deltaTime);
+                if (_invertCamX)
+                {
+                    _cameraOffset.RotateAround(transform.position, Vector3.up,
+                    _spinInput.x * -_spinSpeedCamX * Time.deltaTime);
+                }
+                else
+                {
+                    _cameraOffset.RotateAround(transform.position, Vector3.up,
+                        _spinInput.x * _spinSpeedCamX * Time.deltaTime);
+                }
             }
         }
 
