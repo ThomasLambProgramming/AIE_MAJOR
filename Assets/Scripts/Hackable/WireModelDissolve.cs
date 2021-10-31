@@ -26,6 +26,7 @@ namespace Malicious.Hackable
             StopCoroutine(DissolveToVoid(false));
             StartCoroutine(DissolveIntoMaterial());
         }
+        
         [ContextMenu("DissolveOut")]
         public void DissolveOut(bool a_delete)
         {

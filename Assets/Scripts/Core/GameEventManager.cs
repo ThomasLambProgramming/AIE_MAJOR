@@ -21,6 +21,7 @@ namespace Malicious.Core
         /// <summary>
         /// Player Fixed update event
         /// </summary>
+        
         public static event Action PlayerFixedUpdate;
 
         public static event Action PlayerStopInput;
@@ -105,6 +106,7 @@ namespace Malicious.Core
             }
             else
             {
+                GlobalData.SaveSettings();
                 Cursor.lockState = CursorLockMode.Locked;
                 Time.timeScale = 1f;
                 GamePauseExit?.Invoke();
@@ -120,6 +122,7 @@ namespace Malicious.Core
                 GamePauseExit?.Invoke();
                 Time.timeScale = 1f;
                 _paused = false;
+                GlobalData.SaveSettings();
             }
         }
 

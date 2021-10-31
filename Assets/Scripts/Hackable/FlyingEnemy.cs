@@ -71,8 +71,14 @@ namespace Malicious.Hackable
                     _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
                 }
                 Quaternion lookDirection = Quaternion.LookRotation(_rigidbody.velocity.normalized);
-                
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, lookDirection, _maxTurningSpeed);
+
+                if (transform.rotation != lookDirection)
+                {
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, lookDirection, _maxTurningSpeed);
+
+                    //if (_playerObject != null)
+                    //    _playerObject.transform.RotateAround(transform.position, Vector3.up, _maxTurningSpeed);
+                }
             }
             else
             {
@@ -108,7 +114,9 @@ namespace Malicious.Hackable
             if (_moveInput != Vector2.zero)
             {
                 if (Mathf.Abs(_moveInput.x) > 0.1f)
+                {
                     transform.Rotate(0, _moveInput.x * _playerRotateSpeed * Time.deltaTime, 0);
+                }
                 
                 if (Mathf.Abs(_moveInput.y) > 0.1f) 
                 {

@@ -15,10 +15,19 @@ namespace Malicious.Core
         //Speed Variables//
         [SerializeField] private float _moveSpeed = 100f;
         [SerializeField] private float _maxSpeed = 4f;
-        [SerializeField] private float _spinSpeed = 5f;
+        [SerializeField] private float _fanMoveSpeedScale = 0.5f;
+        [SerializeField] private float _spinSpeedModel = 5f;
         [SerializeField] private float _slowDownSpeed = 0.85f;
         //-------------------------------------//
         
+        //Camera Variables//
+        public static float _spinSpeedCamX = 5f;
+        public static float _spinSpeedCamY = 5f;
+        public static bool _invertCamX = false;
+        public static bool _invertCamY = false;
+
+        [SerializeField] private Transform _cameraOffset = null;
+        //-------------------------------------//
         
         //Animator Variables//
         [SerializeField] private float _animationSwapSpeed = 3f;
@@ -40,6 +49,7 @@ namespace Malicious.Core
         
         //Input Variables//
         private Vector2 _moveInput = Vector2.zero;
+        private Vector2 _cameraInput = Vector2.zero;
         //-------------------------------------//
         
         
@@ -133,10 +143,16 @@ namespace Malicious.Core
 
             if (_inFanUp)
                 _rigidbody.velocity += Vector3.zero;
+
+            _spinSpeedCamX = GlobalData._cameraSettings.CameraXSpeed;
+            _spinSpeedCamY = GlobalData._cameraSettings.CameraYSpeed;
+            _invertCamX = GlobalData._cameraSettings.InvertX;
+            _invertCamY = GlobalData._cameraSettings.InvertY;
         }
         private void Tick()
         {
             UpdateAnimator();
+            //SpinMovement();
         }
         private void FixedTick()
         {
@@ -149,7 +165,22 @@ namespace Malicious.Core
 
         }
 
-        
+        private void SpinMovement()
+        {
+            if (_cameraInput != Vector2.zero)
+            {
+                if (_invertCamX)
+                {
+                    _cameraOffset.RotateAround(transform.position, Vector3.up,
+                        _cameraInput.x * -_spinSpeedCamX * Time.deltaTime);
+                }
+                else
+                {
+                    _cameraOffset.RotateAround(transform.position, Vector3.up,
+                        _cameraInput.x * _spinSpeedCamX * Time.deltaTime);
+                }
+            }
+        }
 
         public void EnteredFan(bool a_isUp)
         {
@@ -223,7 +254,7 @@ namespace Malicious.Core
                 //Rotate player towards current input
                 Quaternion targetRotation = Quaternion.Euler(0, targetAngle, 0);
                 transform.rotation =
-                    Quaternion.Lerp(transform.rotation, targetRotation, _spinSpeed * Time.deltaTime);
+                    Quaternion.Lerp(transform.rotation, targetRotation, _spinSpeedModel * Time.deltaTime);
                 
                 
                 float scaleAmount = _moveInput.magnitude;
@@ -242,6 +273,8 @@ namespace Malicious.Core
                 //We are checking if the horizontal speed is too great 
                 Vector3 tempVelocity = _rigidbody.velocity + newVel;
                 tempVelocity.y = 0;
+                if (_inFanHoriz)
+                    tempVelocity *= _fanMoveSpeedScale;
 
                 float scaledMaxSpeed = _maxSpeed * scaleAmount;
                 bool greaterThanMax = false;

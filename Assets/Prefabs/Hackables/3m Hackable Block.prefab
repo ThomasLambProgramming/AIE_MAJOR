@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1144390776
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1144390777}
+  m_Layer: 16
+  m_Name: RampCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1144390777
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144390776}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.83100003, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1573277490330877008}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1558200804593602544
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,6 +186,7 @@ Transform:
   - {fileID: 7288811029717118795}
   - {fileID: 2221409092649866570}
   - {fileID: 9085328169761247147}
+  - {fileID: 1144390777}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -277,15 +308,20 @@ MonoBehaviour:
   _exitForce: 20
   _dotAllowanceForStacking: 0.7
   _stackingArea: {fileID: 9085328169761247147}
+  _slowDownSpeed: 0.85
+  _hitForce: 4
+  _rampCheck: {fileID: 1144390777}
+  _yAngle: -0.73
+  _rampCheckDistance: 5
+  _rampMask:
+    serializedVersion: 2
+    m_Bits: 393344
   _onHackEnterEvent:
     m_PersistentCalls:
       m_Calls: []
   _onHackExitEvent:
     m_PersistentCalls:
       m_Calls: []
-  _collisionMask:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!114 &7288811029968518592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -303,6 +339,7 @@ MonoBehaviour:
   _maxTapHoldLength: 0.4
   _requiresSameYHeight: 0
   _yDifferenceAllowed: 1
+  _isHacked: 0
   _lookGoal: {fileID: 0}
   _nodeRenderer: {fileID: 1573277490332772774}
   _defaultMaterial: {fileID: 2100000, guid: 83f8ab50a0baafb47b83584a8881ed10, type: 2}

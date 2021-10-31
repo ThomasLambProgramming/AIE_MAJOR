@@ -25,17 +25,23 @@ namespace Malicious.Hackable
         [SerializeField] private Transform _rampCheck = null;
         [SerializeField] private float _yAngle = -2f;
         [SerializeField] private float _rampCheckDistance = 3f;
-        
+        [SerializeField] private LayerMask _rampMask = ~0;
         [SerializeField] private UnityEvent _onHackEnterEvent = null;
         [SerializeField] private UnityEvent _onHackExitEvent = null;
         private Vector3 _startingPosition = Vector3.zero;
         private GameObject _stackedObject = null;
+
+        public static bool _invertCamX = false;
+        public static float _spinSpeedCamX = 5f;
+        //public static float _spinSpeedCamY = 5f;
         
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
             _cameraTransform = _cameraOffset;
             _startingPosition = transform.position;
+            _invertCamX = GlobalData._cameraSettings.InvertX;
+            _spinSpeedCamX = GlobalData._cameraSettings.CameraXSpeed;
         }
 
         protected override void Tick()
@@ -74,10 +80,23 @@ namespace Malicious.Hackable
                     currentVel.y = currentY;
                     _rigidbody.velocity = currentVel;
                 }
-                
-                
-                
-                //Ray ray = new Ray(_rampCheck.position, )
+
+                Vector3 checkDirection = currentVel;
+                checkDirection.y = 0;
+                checkDirection = checkDirection.normalized;
+                checkDirection.y = _yAngle;
+                Ray ray = new Ray(_rampCheck.position, checkDirection);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, _rampCheckDistance, _rampMask))
+                {
+                    Vector3 currentPos = transform.position;
+
+                    float yHit = hit.point.y;
+                    if (hit.point.y > transform.position.y)
+                        currentPos.y = yHit;
+                    
+                    transform.position = currentPos;
+                }
             }
             
             if (Mathf.Abs(_moveInput.magnitude) < 0.1f && !_inFanHoriz)
@@ -113,8 +132,16 @@ namespace Malicious.Hackable
         {
             if (_spinInput != Vector2.zero)
             {
-                _cameraOffset.RotateAround(transform.position, Vector3.up,
-                    _spinInput.x * _spinSpeed * Time.deltaTime);
+                if (_invertCamX)
+                {
+                    _cameraOffset.RotateAround(transform.position, Vector3.up,
+                    _spinInput.x * -_spinSpeedCamX * Time.deltaTime);
+                }
+                else
+                {
+                    _cameraOffset.RotateAround(transform.position, Vector3.up,
+                        _spinInput.x * _spinSpeedCamX * Time.deltaTime);
+                }
             }
         }
 
@@ -161,20 +188,24 @@ namespace Malicious.Hackable
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("Laser"))
-            {
-                _rigidbody.velocity = other.gameObject.GetComponent<BrokenWire>().DirectionToHit(transform.position) * _hitForce;
-            }
+            //if (other.gameObject.CompareTag("Laser"))
+            //{
+            //    _rigidbody.velocity = other.gameObject.GetComponent<BrokenWire>().DirectionToHit(transform.position) * _hitForce;
+            //}
             if (other.gameObject.CompareTag("Block") && !other.isTrigger)
             {
                 Vector3 directionToObject =
                     (other.gameObject.transform.position - transform.position).normalized;
 
-                if (Vector3.Dot(directionToObject, Vector3.up) > _dotAllowanceForStacking &&
-                    Vector3.Distance(other.gameObject.transform.position, _stackingArea.transform.position) < 3f)
+                if (_stackingArea != null)
                 {
-                    other.transform.parent = transform;
-                    _stackedObject = other.gameObject;
+
+                    if (Vector3.Dot(directionToObject, Vector3.up) > _dotAllowanceForStacking &&
+                        Vector3.Distance(other.gameObject.transform.position, _stackingArea.transform.position) < 3f)
+                    {
+                        other.transform.parent = transform;
+                        _stackedObject = other.gameObject;
+                    }
                 }
             }
         }
@@ -189,7 +220,21 @@ namespace Malicious.Hackable
         {
             if (_exitPosition != null)
                 Gizmos.DrawLine(_exitPosition.position, (_exitPosition.position + _exitDirection * 4f));
+            
+            Vector3 directionOfLine = Vector3.forward;
+            directionOfLine.y = _yAngle;
+            Gizmos.DrawLine(_rampCheck.position, _rampCheck.position + directionOfLine * _rampCheckDistance);
             //draw exit velocities and etc
+
+            if (_rigidbody != null)
+            {
+                Vector3 checkDirection = _rigidbody.velocity;
+                checkDirection.y = 0;
+                checkDirection = checkDirection.normalized;
+                checkDirection.y = _yAngle;
+                Gizmos.DrawLine(_rampCheck.position, _rampCheck.position + checkDirection);
+            }
+
         }
 #endif
     }

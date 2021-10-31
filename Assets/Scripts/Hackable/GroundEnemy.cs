@@ -32,13 +32,15 @@ namespace Malicious.Hackable
         private float _sqrMaxSteeringForce = 0;
         private bool _wait = false;
         private Vector3 _directionToTarget = Vector3.zero;
-        private bool _currentlyHacked = false;
-        
+        private Vector3 _startingPosition = Vector3.zero;
+        private Quaternion _startingRotation = Quaternion.identity;
         void Start()
         {
             GameEventManager.EnemyFixedUpdate += AiUpdate;
             _rigidbody = GetComponent<Rigidbody>();
             _sqrMaxSteeringForce = _maxSteeringForce * _maxSteeringForce;
+            _startingPosition = transform.position;
+            _startingRotation = transform.rotation;
         }
 
         void AiUpdate()
@@ -202,7 +204,6 @@ namespace Malicious.Hackable
             base.OnHackEnter();
             GameEventManager.EnemyFixedUpdate -= AiUpdate;
             CameraController.ChangeCamera(ObjectType.GroundEnemy, _cameraTransform);
-            _currentlyHacked = true;
             _huntPlayer = false;
         }
         protected override void InteractionInputEnter(InputAction.CallbackContext a_context)
@@ -221,13 +222,23 @@ namespace Malicious.Hackable
             Vector3 exitDirection = _exitLocation.forward;
             exitDirection.y = 0;
             exitDirection = exitDirection.normalized;
-
-            _currentlyHacked = false;
+            
             _player.transform.rotation = Quaternion.LookRotation(exitDirection);
             _player.transform.position = _exitLocation.position;
 
             _huntPlayer = false;
-            transform.position = _groundPath[0];
+
+            if (_groundPath.Count > 0)
+            {
+                transform.position = _groundPath[0];
+                transform.rotation = Quaternion.LookRotation(_groundPath[1] - transform.position);   
+            }
+            else
+            {
+                transform.position = _startingPosition;
+                transform.rotation = _startingRotation;
+            }
+            
             _rigidbody.velocity = Vector3.zero;
             _pathIndex = 1;
             _player = null;
