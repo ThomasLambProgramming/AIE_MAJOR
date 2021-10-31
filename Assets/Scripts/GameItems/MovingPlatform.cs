@@ -19,8 +19,6 @@ namespace Malicious.GameItems
         private float _sqrHorizontalAllowance = 9f;
         private GameObject _playerObject = null;
 
-        
-
         private float _timer = 0;
         private bool waiting = false;
         private bool _moveToTarget = true;
@@ -28,7 +26,9 @@ namespace Malicious.GameItems
         private List<GameObject> _attachedObjects = new List<GameObject>();
         
         private Vector3 _sceneStartLocation = Vector3.zero;
-        
+
+        private List<Rigidbody> _stoppingObjects = new List<Rigidbody>();
+        private bool _stopMoving = false;
         void Start()
         {
             GameEventManager.PlayerDead += ResetToStart;
@@ -63,20 +63,15 @@ namespace Malicious.GameItems
                 }
             }
 
-            //if (Physics.Raycast(_middlePosition.transform.position, (_targetLocation - transform.position).normalized,
-            //    _checkDistance))
-            //    return;
-            
-            if (_playerObject != null)
+            if (_stopMoving)
             {
-                if (Vector3.SqrMagnitude(_playerObject.transform.position - transform.position) > 5)
-                {
-                    _playerObject.transform.parent = null;
-                    _playerObject = null;
-                }
+                Debug.Log("stop moving");
+                return;
             }
             if (waiting)
+            {
                 return;
+            }
 
             if (_moveToTarget)
             {
@@ -123,8 +118,18 @@ namespace Malicious.GameItems
         }
         private void OnTriggerEnter(Collider other)
         {
-            if (other.isTrigger)
+            if (other.isTrigger || other.gameObject.CompareTag("Environment"))
                 return;
+            
+            Vector3 posDifference = other.transform.position - transform.position;
+            float posYDifference = posDifference.y;
+            if (posDifference.sqrMagnitude > _sqrHorizontalAllowance || posYDifference < 0)
+            {
+                _stoppingObjects.Add(other.attachedRigidbody);
+                _stopMoving = true;
+                return;
+            }
+            
             
             if (other.gameObject.CompareTag("Player") || 
                 other.gameObject.CompareTag("Hackable") || 
@@ -133,7 +138,6 @@ namespace Malicious.GameItems
                 other.gameObject.CompareTag("Block")|| 
                 other.gameObject.CompareTag("FlyingEnemy"))
             {
-                _playerObject = other.gameObject;
                 other.transform.parent = this.transform;
                 if (_waitPlayer && waiting)
                 {
@@ -156,6 +160,16 @@ namespace Malicious.GameItems
         {
             if (other.isTrigger)
                 return;
+
+            if (_stoppingObjects.Contains(other.attachedRigidbody))
+            {
+                _stoppingObjects.Remove(other.attachedRigidbody);
+                
+                if (_stoppingObjects.Count <= 0)
+                    _stopMoving = false;
+                
+                return;
+            }
             
             if (other.gameObject.CompareTag("Player") || 
                 other.gameObject.CompareTag("Hackable") || 
@@ -165,7 +179,6 @@ namespace Malicious.GameItems
                 other.gameObject.CompareTag("FlyingEnemy"))
             {
                 other.transform.parent = null;
-                _playerObject = null;
             }
         }
         
