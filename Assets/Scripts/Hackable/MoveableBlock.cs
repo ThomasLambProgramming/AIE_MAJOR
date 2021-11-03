@@ -21,7 +21,6 @@ namespace Malicious.Hackable
         [SerializeField] private float _dotAllowanceForStacking = 0.7f;
         [SerializeField] private Transform _stackingArea = null;
         [SerializeField] private float _slowDownSpeed = 0.85f;
-        [SerializeField] private float _hitForce = 4f;
         [SerializeField] private Transform _rampCheck = null;
         [SerializeField] private float _yAngle = -2f;
         [SerializeField] private float _rampCheckDistance = 3f;

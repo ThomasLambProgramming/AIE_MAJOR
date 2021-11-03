@@ -152,7 +152,7 @@ namespace Malicious.Core
         private void Tick()
         {
             UpdateAnimator();
-            //SpinMovement();
+            SpinMovement();
         }
         private void FixedTick()
         {
