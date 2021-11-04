@@ -262,7 +262,7 @@ public void EnteredFan(bool a_isUp)
             //_currentRunAmount = 0;
             _currentHackableField = null;
             gameObject.SetActive(true);
-            CameraController.ChangeCamera(ObjectType.Player);
+            CameraController.ChangeCamera(ObjectType.Player, _cameraOffset);
             _heldInputDown = false;
         }
         public void OnHackExit()

@@ -77,9 +77,11 @@ namespace Malicious.Core
             switch (a_type)
             {
                 case ObjectType.Player:
-                    //The player has to be different as it is not the same type
                     _player.Priority = 20;
-                    //Solve for some solution to get the rotation correct
+                    float newYRot = _mainCamTransform.rotation.eulerAngles.y;
+                    Vector3 eularOffset = a_offset.rotation.eulerAngles;
+                    eularOffset.y = newYRot;
+                    a_offset.rotation = Quaternion.Euler(eularOffset);
                     return;
                 case ObjectType.Moveable:
                     _currentHackableCamera = _moveable;

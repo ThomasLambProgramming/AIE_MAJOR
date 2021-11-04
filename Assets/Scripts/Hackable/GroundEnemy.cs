@@ -10,8 +10,10 @@ using Malicious.GameItems;
 
 namespace Malicious.Hackable
 {
+    [SelectionBase]
     public class GroundEnemy : BasePlayer
     {
+        [SerializeField] private bool _canHuntPlayer = true;
         [SerializeField] private float _playerSpeed = 10f;
         [SerializeField] private float _playerMaxSpeed = 0;
         [SerializeField] private float _playerRotateSpeed = 0;
@@ -48,7 +50,7 @@ namespace Malicious.Hackable
             if (_wait)
                 return;
             
-            if (_huntPlayer)
+            if (_huntPlayer && _canHuntPlayer)
             {
                 if (!_playerObject.activeInHierarchy)
                 {
