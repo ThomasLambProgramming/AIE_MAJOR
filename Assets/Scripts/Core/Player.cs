@@ -174,7 +174,7 @@ namespace Malicious.Core
         {
             if (_isJumping)
             {
-                if (_rigidbody.velocity.y < 0.2f)
+                if (_rigidbody.velocity.y < 0f)
                 {
                     _playerAnimator.SetBool(_Jumped, false);
                     _playerAnimator.SetBool(_Falling, true);
@@ -415,7 +415,9 @@ public void EnteredFan(bool a_isUp)
                 _rigidbody.velocity = prevVel;
 
                 _playerAnimator.SetBool(_Jumped, true);
-
+                _playerAnimator.SetBool(_Landed, false);
+                _playerAnimator.SetBool(_Falling, false);
+                
                 if (_canJump == false)
                     _hasDoubleJumped = true;
                 
@@ -489,6 +491,12 @@ public void EnteredFan(bool a_isUp)
             }
             else if (other.gameObject.CompareTag("Ground"))
             {
+                if (_isJumping)
+                {
+                    _playerAnimator.SetBool(_Landed, true);
+                    _playerAnimator.SetBool(_Falling, false);
+                    _playerAnimator.SetBool(_Jumped, false);
+                }
                 _isJumping = false;
                 _canJump = true;
                 _hasDoubleJumped = false;
@@ -501,6 +509,12 @@ public void EnteredFan(bool a_isUp)
                 {
                     if (Vector3.Dot(hit.normal, Vector3.up) > _groundCheckAngleAllowance)
                     {
+                        if (_isJumping)
+                        {
+                            _playerAnimator.SetBool(_Landed, true);
+                            _playerAnimator.SetBool(_Falling, false);
+                            _playerAnimator.SetBool(_Jumped, false);
+                        }
                         _isJumping = false;
                         _canJump = true;
                         _hasDoubleJumped = false;
