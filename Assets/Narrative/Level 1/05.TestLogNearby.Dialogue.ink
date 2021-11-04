@@ -1,0 +1,2 @@
+Virus: "Local backup memory chip detected nearby. Curious. Must investigate."
+Mad Scientist: "What? Now it's figured out speech? And it's found one of my testing logs. Could this possibly get any worse?"
