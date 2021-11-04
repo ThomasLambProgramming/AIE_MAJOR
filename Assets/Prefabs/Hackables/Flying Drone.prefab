@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 117002166}
   m_Layer: 14
   m_Name: HurtCollider
-  m_TagString: EnemyNonMove
+  m_TagString: DamagePlayerNoKnockback
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -406,6 +406,9 @@ MonoBehaviour:
   _exitLocation: {fileID: 529712657}
   _resetWaitTime: 4
   _hitForce: 10
+  _raycastMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &270638636
 MonoBehaviour:
   m_ObjectHideFlags: 0

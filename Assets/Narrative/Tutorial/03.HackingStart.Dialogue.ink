@@ -1,0 +1,1 @@
+Mad Scientist: "You're a computer virus. You know how to hack into things. Figure it out."

@@ -21,8 +21,10 @@ namespace Malicious.Core
         /// <summary>
         /// Player Fixed update event
         /// </summary>
+        
         public static event Action PlayerFixedUpdate;
-    
+
+        public static event Action PlayerStopInput;
         /// <summary>
         /// Update event for all enemies
         /// </summary>
@@ -81,26 +83,31 @@ namespace Malicious.Core
             GeneralFixedUpdate?.Invoke();
         }
 
-        private void Start()
+        private void Awake()
         {
-            GlobalData.InputManager.Enable();
-            GlobalData.InputManager.Player.Enable();
-            GlobalData.InputManager.Player.Pause.performed += PausePressed;
+            Cursor.lockState = CursorLockMode.Locked;
             _CurrentManager = this;
+            GlobalData.MakeNewInput();
+            GlobalData.EnableInputMaster();
+            GlobalData.InputManager.Player.Pause.performed += PausePressed;
             _fadeTransition = _fadeTransitionInit;
             _fadeTransition.FadeIn();
+           
         }
 
         private void PausePressed(InputAction.CallbackContext a_context)
         {
             if (!_paused)
             {
+                Cursor.lockState = CursorLockMode.Confined;
                 Time.timeScale = 0;
                 GamePauseStart?.Invoke();
                 _paused = true;
             }
             else
             {
+                GlobalData.SaveSettings();
+                Cursor.lockState = CursorLockMode.Locked;
                 Time.timeScale = 1f;
                 GamePauseExit?.Invoke();
                 _paused = false;
@@ -115,6 +122,7 @@ namespace Malicious.Core
                 GamePauseExit?.Invoke();
                 Time.timeScale = 1f;
                 _paused = false;
+                GlobalData.SaveSettings();
             }
         }
 
@@ -134,6 +142,7 @@ namespace Malicious.Core
                 //fade to black
                 //Player shader for death play 
                 _fadeTransition.FadeOut();
+                PlayerStopInput?.Invoke();
                 _CurrentManager.WaitForFade();
             }
             
@@ -176,6 +185,7 @@ namespace Malicious.Core
 
         public static void Reset()
         {
+            GlobalData.InputManager.Dispose();
             PlayerUpdate        = null;
             PlayerFixedUpdate   = null;
             EnemyUpdate         = null;
@@ -187,6 +197,9 @@ namespace Malicious.Core
             PlayerHit           = null;
             PlayerHealed        = null;
             PlayerDead          = null;
+
+
+
             Time.timeScale = 1f;
         }
     }

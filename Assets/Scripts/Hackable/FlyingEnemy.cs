@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Malicious.Core;
+using Malicious.GameItems;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -70,8 +71,14 @@ namespace Malicious.Hackable
                     _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
                 }
                 Quaternion lookDirection = Quaternion.LookRotation(_rigidbody.velocity.normalized);
-                
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, lookDirection, _maxTurningSpeed);
+
+                if (transform.rotation != lookDirection)
+                {
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, lookDirection, _maxTurningSpeed);
+
+                    //if (_playerObject != null)
+                    //    _playerObject.transform.RotateAround(transform.position, Vector3.up, _maxTurningSpeed);
+                }
             }
             else
             {
@@ -107,7 +114,9 @@ namespace Malicious.Hackable
             if (_moveInput != Vector2.zero)
             {
                 if (Mathf.Abs(_moveInput.x) > 0.1f)
+                {
                     transform.Rotate(0, _moveInput.x * _playerRotateSpeed * Time.deltaTime, 0);
+                }
                 
                 if (Mathf.Abs(_moveInput.y) > 0.1f) 
                 {
@@ -115,21 +124,27 @@ namespace Malicious.Hackable
                 }
             }
             
-            if (_rigidbody.velocity.magnitude > _maxSpeed) 
+            if (_rigidbody.velocity.magnitude > _maxSpeed && !_inFanHoriz) 
                 _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
 
-            if (_moveInput.y == 0)
+            if (_moveInput.y == 0 && !_inFanHoriz)
             {
-                _rigidbody.velocity = _rigidbody.velocity * 0.98f;
+                Vector3 newVel = _rigidbody.velocity;
+                float yVel = newVel.y;
 
-                float sqrMagnitude = _rigidbody.velocity.sqrMagnitude;
+                newVel.y = 0;
+                newVel = newVel * 0.98f;
+
+                float sqrMagnitude = newVel.sqrMagnitude;
                 if (sqrMagnitude < 3f)
                 {
                     if (sqrMagnitude > 0.5f)
-                        _rigidbody.velocity = _rigidbody.velocity * 0.90f;
+                        newVel = newVel * 0.90f;
                     else
-                        _rigidbody.velocity = Vector3.zero;
+                        newVel = Vector3.zero;
                 }
+                newVel.y = yVel;
+                _rigidbody.velocity = newVel;
             }
             if (_moveInput.x == 0) 
                 _rigidbody.angularVelocity = Vector3.zero;
@@ -138,6 +153,13 @@ namespace Malicious.Hackable
         protected override void InteractionInputEnter(InputAction.CallbackContext a_context)
         {
             OnHackExit();
+        }
+        public override void ExitedFan(bool a_isUp)
+        {
+            base.ExitedFan(a_isUp);
+            Vector3 objVel = _rigidbody.velocity;
+            objVel.y = 0;
+            _rigidbody.velocity = objVel;
         }
 
         public override void OnHackEnter()
@@ -186,6 +208,11 @@ namespace Malicious.Hackable
             if (other.gameObject.CompareTag("Fan"))
             {
             }
+
+            if (other.gameObject.CompareTag("Laser"))
+            {
+                _rigidbody.velocity = other.gameObject.GetComponent<BrokenWire>().DirectionToHit(transform.position) * _hitForce;
+            }
             if (other.gameObject.CompareTag("Player"))
             {
                 other.gameObject.transform.parent = transform;
@@ -201,23 +228,23 @@ namespace Malicious.Hackable
             }
         }
 
-        private void OnCollisionEnter(Collision other)
-        {
-            if (other.gameObject.CompareTag("Laser"))
-            {
-                Vector3 movementDirection = (other.transform.position - transform.position).normalized;
-                Ray ray = new Ray(transform.position, movementDirection);
-                RaycastHit hit;
-                Vector3 forceDirection = Vector3.zero;
-                if (Physics.Raycast(ray, out hit, 10, _raycastMask))
-                {
-                    forceDirection = hit.normal;
-                }
-                forceDirection.y = 0;
-                forceDirection = forceDirection.normalized;
-                _rigidbody.velocity = (forceDirection * _hitForce);
-            }
-        }
+        //private void OnCollisionEnter(Collision other)
+        //{
+        //    //if (other.gameObject.CompareTag("Laser"))
+        //    //{
+        //    //    Vector3 movementDirection = (other.transform.position - transform.position).normalized;
+        //    //    Ray ray = new Ray(transform.position, movementDirection);
+        //    //    RaycastHit hit;
+        //    //    Vector3 forceDirection = Vector3.zero;
+        //    //    if (Physics.Raycast(ray, out hit, 10, _raycastMask))
+        //    //    {
+        //    //        forceDirection = hit.normal;
+        //    //    }
+        //    //    forceDirection.y = 0;
+        //    //    forceDirection = forceDirection.normalized;
+        //    //    _rigidbody.velocity = (forceDirection * _hitForce);
+        //    //}
+        //}
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()

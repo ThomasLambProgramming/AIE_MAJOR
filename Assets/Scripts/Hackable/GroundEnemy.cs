@@ -6,11 +6,14 @@ using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using Malicious.Core;
 using UnityEditor;
+using Malicious.GameItems;
 
 namespace Malicious.Hackable
 {
+    [SelectionBase]
     public class GroundEnemy : BasePlayer
     {
+        [SerializeField] private bool _canHuntPlayer = true;
         [SerializeField] private float _playerSpeed = 10f;
         [SerializeField] private float _playerMaxSpeed = 0;
         [SerializeField] private float _playerRotateSpeed = 0;
@@ -24,18 +27,22 @@ namespace Malicious.Hackable
         [SerializeField] private Transform _exitLocation = null;
         [SerializeField] private float _exitForce = 5f;
         [SerializeField] private float _waitTimeOnExit = 1.5f;
+        [SerializeField] private float _hitForce = 4f;
         private int direction = 1;
         private bool _huntPlayer = false;
         private GameObject _playerObject = null;
         private float _sqrMaxSteeringForce = 0;
         private bool _wait = false;
         private Vector3 _directionToTarget = Vector3.zero;
-        
+        private Vector3 _startingPosition = Vector3.zero;
+        private Quaternion _startingRotation = Quaternion.identity;
         void Start()
         {
             GameEventManager.EnemyFixedUpdate += AiUpdate;
             _rigidbody = GetComponent<Rigidbody>();
             _sqrMaxSteeringForce = _maxSteeringForce * _maxSteeringForce;
+            _startingPosition = transform.position;
+            _startingRotation = transform.rotation;
         }
 
         void AiUpdate()
@@ -43,7 +50,7 @@ namespace Malicious.Hackable
             if (_wait)
                 return;
             
-            if (_huntPlayer)
+            if (_huntPlayer && _canHuntPlayer)
             {
                 if (!_playerObject.activeInHierarchy)
                 {
@@ -111,9 +118,14 @@ namespace Malicious.Hackable
 
             _rigidbody.velocity += steeringForce * Time.deltaTime;
 
-            if (_rigidbody.velocity.magnitude > _maxSpeed)
+            Vector3 currentVel = _rigidbody.velocity;
+            float currentY = currentVel.y;
+            currentVel.y = 0;
+            if (currentVel.magnitude > _maxSpeed && !_inFanHoriz)
             {
-                _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
+                currentVel = currentVel.normalized * _maxSpeed;
+                currentVel.y = currentY;
+                _rigidbody.velocity = currentVel;
             }
 
             Quaternion lookDirection = Quaternion.LookRotation(_directionToTarget);
@@ -153,7 +165,7 @@ namespace Malicious.Hackable
                     _rigidbody.velocity += transform.forward * (_moveInput.y * Time.deltaTime * _playerSpeed);
                 }
             }
-            if (_moveInput.y == 0)
+            if (_moveInput.y == 0 && !_inFanHoriz)
             {
                 float currentYVel = _rigidbody.velocity.y;
                 Vector3 newVelocity = _rigidbody.velocity;
@@ -176,9 +188,17 @@ namespace Malicious.Hackable
             }
             if (_moveInput.x == 0) 
                 _rigidbody.angularVelocity = Vector3.zero;
-            
-            if (_rigidbody.velocity.magnitude > _playerMaxSpeed) 
-                _rigidbody.velocity = _rigidbody.velocity.normalized * _playerMaxSpeed;
+
+
+            Vector3 currentVel = _rigidbody.velocity;
+            float currentY = currentVel.y;
+            currentVel.y = 0;
+            if (currentVel.magnitude > _playerMaxSpeed && !_inFanHoriz)
+            {
+                currentVel = currentVel.normalized * _playerMaxSpeed;
+                currentVel.y = currentY;
+                _rigidbody.velocity = currentVel;
+            }
         }
 
         public override void OnHackEnter()
@@ -186,6 +206,7 @@ namespace Malicious.Hackable
             base.OnHackEnter();
             GameEventManager.EnemyFixedUpdate -= AiUpdate;
             CameraController.ChangeCamera(ObjectType.GroundEnemy, _cameraTransform);
+            _huntPlayer = false;
         }
         protected override void InteractionInputEnter(InputAction.CallbackContext a_context)
         {
@@ -200,23 +221,43 @@ namespace Malicious.Hackable
             _player.OnHackEnter();
             _player.LaunchPlayer(_exitLocation.forward * _exitForce);
             _player.transform.parent = null;
-
             Vector3 exitDirection = _exitLocation.forward;
             exitDirection.y = 0;
             exitDirection = exitDirection.normalized;
             
             _player.transform.rotation = Quaternion.LookRotation(exitDirection);
             _player.transform.position = _exitLocation.position;
+
+            _huntPlayer = false;
+
+            if (_groundPath.Count > 0)
+            {
+                transform.position = _groundPath[0];
+                transform.rotation = Quaternion.LookRotation(_groundPath[1] - transform.position);   
+            }
+            else
+            {
+                transform.position = _startingPosition;
+                transform.rotation = _startingRotation;
+            }
             
-            transform.position = _groundPath[0];
             _rigidbody.velocity = Vector3.zero;
             _pathIndex = 1;
+            _player = null;
         }
 
         IEnumerator ExitWaitTime()
         {
             yield return new WaitForSeconds(_waitTimeOnExit);
             _wait = false;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("Laser"))
+            {
+                _rigidbody.velocity = other.gameObject.GetComponent<BrokenWire>().DirectionToHit(transform.position) * _hitForce;
+            }
         }
 
         private void OnTriggerStay(Collider other)

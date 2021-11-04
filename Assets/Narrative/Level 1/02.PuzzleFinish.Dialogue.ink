@@ -1,0 +1,1 @@
+Mad Scientist: "…Hmmm, it could’ve solved that one a little faster… interesting. Hey! Get out of there!"

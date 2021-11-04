@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Malicious.GameItems;
 using Malicious.Interactables;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,19 +15,32 @@ namespace Malicious.Core
         //Speed Variables//
         [SerializeField] private float _moveSpeed = 100f;
         [SerializeField] private float _maxSpeed = 4f;
-        [SerializeField] private float _spinSpeed = 5f;
-        private bool _inFan = false;
+        [SerializeField] private float _fanMoveSpeedScale = 0.5f;
+        [SerializeField] private float _spinSpeedModel = 5f;
+        [SerializeField] private float _slowDownSpeed = 0.85f;
         //-------------------------------------//
         
+        //Camera Variables//
+        public static float _spinSpeedCamX = 5f;
+        public static float _spinSpeedCamY = 5f;
+        public static bool _invertCamX = false;
+        public static bool _invertCamY = false;
+
+        [SerializeField] private float _minXCameraAngle = 5f;
+        [SerializeField] private float _maxXCameraAngle = 90f;
+
+        [SerializeField] private Transform _cameraOffset = null;
+        [SerializeField] private float _cameraAngleMin = 1f;
+        //-------------------------------------//
         
         //Animator Variables//
         [SerializeField] private float _animationSwapSpeed = 3f;
         [SerializeField] private Animator _playerAnimator = null;
         private readonly int _animatorRunVariable = Animator.StringToHash("RunAmount");
-        //private static readonly int _Jumped = Animator.StringToHash("Jumped");
-        //private static readonly int _Falling = Animator.StringToHash("Falling");
-        //private static readonly int _Landed = Animator.StringToHash("Landed");
-        //private static readonly int _ResetToRun = Animator.StringToHash("ResetToRun");
+        private static readonly int _Jumped = Animator.StringToHash("Jumped");
+        private static readonly int _Falling = Animator.StringToHash("Falling");
+        private static readonly int _Landed = Animator.StringToHash("Landed");
+        private static readonly int _ResetToRun = Animator.StringToHash("ResetToRun");
         //[SerializeField] private float _jumpDuration = 1.5f;
         //[SerializeField] private float _landResetDuration = 1.5f;
         //[SerializeField] private float _landDuration = 1.5f;
@@ -39,10 +53,13 @@ namespace Malicious.Core
         
         //Input Variables//
         private Vector2 _moveInput = Vector2.zero;
+        private Vector2 _spinInput = Vector2.zero;
+
         //-------------------------------------//
         
         
         //Jumping Variables//
+        [SerializeField] private float _maxVelocityToJump = 0.6f;
         [SerializeField] private float _jumpForce = 10f;
         [SerializeField] private float _additionalGravity = -9.81f;
         [SerializeField] private LayerMask _groundMask = ~0;
@@ -51,6 +68,7 @@ namespace Malicious.Core
         private bool _canJump = true;
         private bool _hasDoubleJumped = false;
         private bool _holdingJump = false;
+        private bool _isJumping = false;
         //private bool _isJumping = false;
 
         [SerializeField] private float _groundCheckDelay = 0.2f;
@@ -66,8 +84,15 @@ namespace Malicious.Core
         [SerializeField] private float _yHitAmount = 3f;
         [SerializeField] private GameObject _modelContainer = null;
         //--------------------------------//
-        
-        
+
+        //Fan Variables//
+        private bool _inFanUp = false;
+        private bool _inFanHoriz = false;
+        private int _amountOfUpFans = 0;
+        private int _amountOfHozFans = 0;
+        //--------------------------------//
+
+
         //Misc Variables That couldnt be grouped
         [SerializeField] private Transform _cameraTransform = null;
         private Rigidbody _rigidbody = null;
@@ -78,6 +103,9 @@ namespace Malicious.Core
         #endregion
         public void SetHackableField(HackableField a_field)
         {
+            if (_currentHackableField == a_field)
+                return;
+
             if (a_field == null)
             {
                 _currentHackableField = null;
@@ -103,6 +131,9 @@ namespace Malicious.Core
         }
         private void Start()
         {
+            if (_inFanUp)
+                transform.position += Vector3.zero;
+
             _rigidbody = GetComponent<Rigidbody>();
             _playerAnimator = _modelContainer.GetComponent<Animator>();
             _playerAnimator.SetFloat(_animatorRunVariable, 0);
@@ -116,22 +147,125 @@ namespace Malicious.Core
             GameEventManager.PlayerUpdate += Tick;
             GameEventManager.PlayerFixedUpdate += FixedTick;
             //_currentRunAmount = 0;
-
+            GameEventManager.PlayerStopInput += PlayerDied;
             GameEventManager.PlayerDead += PlayerDead;
+
+            _spinSpeedCamX = GlobalData._cameraSettings.CameraXSpeed;
+            _spinSpeedCamY = GlobalData._cameraSettings.CameraYSpeed;
+            _invertCamX = GlobalData._cameraSettings.InvertX;
+            _invertCamY = GlobalData._cameraSettings.InvertY;
         }
         private void Tick()
         {
             UpdateAnimator();
+            SpinMovement();
         }
         private void FixedTick()
         {
             Movement();
             GroundCheck();
+            JumpManagement();
         }
         public void LaunchPlayer(Vector3 a_force)
         {
             _rigidbody.velocity = a_force;
         }
+        private void JumpManagement()
+        {
+            if (_isJumping)
+            {
+                if (_rigidbody.velocity.y < 0f)
+                {
+                    _playerAnimator.SetBool(_Jumped, false);
+                    _playerAnimator.SetBool(_Falling, true);
+                }
+            }
+        }
+
+        private void SpinMovement()
+        {
+            if (_spinInput != Vector2.zero)
+            {
+                if (_invertCamX && _spinInput.x != 0)
+                {
+                    Vector3 rotationAmount = new Vector3(0, _spinInput.x * -_spinSpeedCamX * Time.deltaTime, 0);
+                    _cameraOffset.Rotate(rotationAmount, Space.World);
+                }
+                else if (_spinInput.x != 0)
+                {
+                    Vector3 rotationAmount = new Vector3(0, _spinInput.x * _spinSpeedCamX * Time.deltaTime, 0);
+                    _cameraOffset.Rotate(rotationAmount, Space.World);
+                }
+
+                if (_invertCamY && _spinInput.y != 0)
+                {
+                    Vector3 eularAmount = _cameraOffset.rotation.eulerAngles;
+                    eularAmount.x += -_spinInput.y * _spinSpeedCamY * Time.deltaTime;
+                    eularAmount.x = ClampAngle(eularAmount.x, _minXCameraAngle, _maxXCameraAngle);
+                    _cameraOffset.rotation = Quaternion.Euler(eularAmount);
+                }
+                else if (_spinInput.y != 0)
+                {
+                    Vector3 eularAmount = _cameraOffset.rotation.eulerAngles;
+                    eularAmount.x += _spinInput.y * _spinSpeedCamY * Time.deltaTime;
+                    eularAmount.x = ClampAngle(eularAmount.x, _minXCameraAngle, _maxXCameraAngle);
+                    _cameraOffset.rotation = Quaternion.Euler(eularAmount);
+                }
+            }
+        }
+        private float ClampAngle(float a_angle, float a_min, float a_max)
+        {
+            if (a_angle < 90 || a_angle > 270)
+            {      
+                if (a_angle > 180) a_angle -= 360; 
+                if (a_max > 180) a_max -= 360;
+                if (a_min > 180) a_min -= 360;
+            }
+            a_angle = Mathf.Clamp(a_angle, a_min, a_max);
+            if (a_angle < 0) a_angle += 360;  
+            return a_angle;
+        }
+
+public void EnteredFan(bool a_isUp)
+        {
+            _canJump = false;
+            _hasDoubleJumped = false;
+            
+            if (a_isUp)
+            {
+                _inFanUp = true;
+                _amountOfUpFans++;
+            }
+            else
+            {
+                _amountOfHozFans++;
+                _inFanHoriz = true;
+            }
+        }
+
+        public void ExitedFan(bool a_isUp)
+        {
+            if (a_isUp)
+            {
+                _amountOfUpFans--;
+                if (_amountOfUpFans <= 0)
+                {
+                    //redundancy setting to 0 just in case
+                    _amountOfUpFans = 0;
+                    _inFanUp = false;
+                }
+            }
+            else
+            {
+                _amountOfHozFans--;
+                if (_amountOfHozFans <= 0)
+                {
+                    _amountOfHozFans = 0;
+                    _inFanHoriz = false;
+                }
+            }
+        }
+
         public void OnHackEnter()
         {
             EnableInput();
@@ -141,7 +275,7 @@ namespace Malicious.Core
             //_currentRunAmount = 0;
             _currentHackableField = null;
             gameObject.SetActive(true);
-            CameraController.ChangeCamera(ObjectType.Player);
+            CameraController.ChangeCamera(ObjectType.Player, _cameraOffset);
             _heldInputDown = false;
         }
         public void OnHackExit()
@@ -157,16 +291,22 @@ namespace Malicious.Core
         {
             if (_moveInput != Vector2.zero && !_movementDisabled)
             {
-                //For controller users this will change the max movespeed according to how small their inputs are
-                float targetAngle = Mathf.Atan2(_moveInput.x, _moveInput.y) * Mathf.Rad2Deg +
-                                    _cameraTransform.rotation.eulerAngles.y;
+                Vector2 normalisedInput = _moveInput.normalized;
+
+                Vector3 movementDirection = _cameraOffset.transform.forward * normalisedInput.y + _cameraOffset.transform.right * normalisedInput.x;
+                movementDirection.y = 0;
+                movementDirection = movementDirection.normalized;
+
+                float angleFromForward = Vector3.SignedAngle(transform.forward, movementDirection, Vector3.up);
+
+                if (Mathf.Abs(angleFromForward) > _cameraAngleMin)
+                {
+                    transform.Rotate(0, angleFromForward * Time.deltaTime * _spinSpeedModel, 0);
+
+                    _cameraOffset.transform.Rotate(0, -angleFromForward * Time.deltaTime * _spinSpeedModel, 0, Space.World);
+                }
                 
-                //Rotate player towards current input
-                Quaternion targetRotation = Quaternion.Euler(0, targetAngle, 0);
-                transform.rotation =
-                    Quaternion.Lerp(transform.rotation, targetRotation, _spinSpeed * Time.deltaTime);
-                
-                
+
                 float scaleAmount = _moveInput.magnitude;
                 
                 if (scaleAmount > 1)
@@ -174,7 +314,6 @@ namespace Malicious.Core
                 
                 float currentYAmount = _rigidbody.velocity.y;
 
-                Vector2 normalisedInput = _moveInput.normalized;
                 
                 Vector3 newVel =
                     _cameraTransform.forward * (normalisedInput.y * _moveSpeed * Time.deltaTime) +
@@ -183,31 +322,41 @@ namespace Malicious.Core
                 //We are checking if the horizontal speed is too great 
                 Vector3 tempVelocity = _rigidbody.velocity + newVel;
                 tempVelocity.y = 0;
+                if (_inFanHoriz)
+                    tempVelocity *= _fanMoveSpeedScale;
 
                 float scaledMaxSpeed = _maxSpeed * scaleAmount;
+                bool greaterThanMax = false;
                 if (tempVelocity.magnitude > scaledMaxSpeed)
                 {
+                    greaterThanMax = true;
                     tempVelocity = tempVelocity.normalized * scaledMaxSpeed;
                 }
 
-                tempVelocity.y = currentYAmount;
-                if (!_inFan)
-                    _rigidbody.velocity = tempVelocity;
-                else
-                    _rigidbody.velocity += tempVelocity.normalized * (_moveSpeed * Time.deltaTime);
+                if (greaterThanMax && _inFanHoriz)
+                    return;
 
+                tempVelocity.y = currentYAmount;
+                _rigidbody.velocity = tempVelocity;
             }
-            
-            if (Mathf.Abs(_moveInput.magnitude) < 0.1f)
+
+            if (Mathf.Abs(_moveInput.magnitude) < 0.1f && !_inFanHoriz)
             {
+                Vector3 newVel = _rigidbody.velocity;
                 //if we are actually moving 
-                if (Mathf.Abs(_rigidbody.velocity.x) > 0.2f || Mathf.Abs(_rigidbody.velocity.z) > 0.2f)
+                if (Mathf.Abs(_rigidbody.velocity.x) > 0 || Mathf.Abs(_rigidbody.velocity.z) > 0)
                 {
-                    Vector3 newVel = _rigidbody.velocity;
                     //takes off 5% of the current vel every physics update so the player can land on a platform without overshooting
                     //because the velocity doesnt stop
-                    newVel.z = newVel.z * 0.90f;
-                    newVel.x = newVel.x * 0.90f;
+                    newVel.z = newVel.z * _slowDownSpeed;
+                    newVel.x = newVel.x * _slowDownSpeed;
+                    _rigidbody.velocity = newVel;
+                }
+                newVel.y = 0;
+                if (newVel.sqrMagnitude < 0.2f)
+                {
+                    newVel = Vector3.zero;
+                    newVel.y = _rigidbody.velocity.y;
                     _rigidbody.velocity = newVel;
                 }
             }
@@ -219,7 +368,7 @@ namespace Malicious.Core
                 _rigidbody.velocity = new Vector3(0, _rigidbody.velocity.y, 0);
             }
 
-            if (!_holdingJump && _canJump == false)
+            if (!_holdingJump && _canJump == false && !_inFanHoriz)
             {
                 _rigidbody.velocity = new Vector3(
                     _rigidbody.velocity.x,
@@ -227,11 +376,11 @@ namespace Malicious.Core
                     _rigidbody.velocity.z);
             }
         }
-
         private void PlayerDead()
         {
             transform.position = _activeCheckpoint._returnPosition;
             transform.rotation = Quaternion.LookRotation(_activeCheckpoint._facingDirection);
+            EnableInput();
         }
         #region Pausing
         private void PauseEnter()
@@ -258,17 +407,22 @@ namespace Malicious.Core
             if (_movementDisabled)
                 return;
             //the 2 y velocity check is so the player can jump just before the arc of their jump
-            if ((_canJump || _hasDoubleJumped == false) && _rigidbody.velocity.y < 2)
+            if ((_canJump || _hasDoubleJumped == false) && _rigidbody.velocity.y < _maxVelocityToJump)
             {
                 StartCoroutine(JumpWait());
                 Vector3 prevVel = _rigidbody.velocity;
                 prevVel.y = _jumpForce;
                 _rigidbody.velocity = prevVel;
 
+                _playerAnimator.SetBool(_Jumped, true);
+                _playerAnimator.SetBool(_Landed, false);
+                _playerAnimator.SetBool(_Falling, false);
+                
                 if (_canJump == false)
                     _hasDoubleJumped = true;
                 
                 _canJump = false;
+                _isJumping = true;
             }
         }
 
@@ -293,10 +447,16 @@ namespace Malicious.Core
             
             _playerAnimator.SetFloat(_animatorRunVariable, _prevRunAnimAmount);
         }
+
+        private void PlayerDied()
+        {
+            DisableInput();
+            _moveInput = Vector2.zero;
+        }
         #region Collisions
         private void OnCollisionEnter(Collision other)
         {
-            if (other.collider.gameObject.CompareTag("EnemyNonMove"))
+            if (other.collider.gameObject.CompareTag("DamagePlayerNoKnockback") && _iFrameActive == false)
             {
                 GameEventManager.PlayerHitFunc();
                 StartCoroutine(IFrame());
@@ -331,33 +491,31 @@ namespace Malicious.Core
             }
             else if (other.gameObject.CompareTag("Ground"))
             {
+                if (_isJumping)
+                {
+                    _playerAnimator.SetBool(_Landed, true);
+                    _playerAnimator.SetBool(_Falling, false);
+                    _playerAnimator.SetBool(_Jumped, false);
+                }
+                _isJumping = false;
                 _canJump = true;
                 _hasDoubleJumped = false;
             }
-            else if (other.gameObject.CompareTag("Environment") || 
-                     other.gameObject.CompareTag("Hackable") || 
-                     other.gameObject.CompareTag("Interactable") ||
-                     other.gameObject.CompareTag("CheckPoint") ||
-                     other.gameObject.CompareTag("Block") || 
-                     other.gameObject.CompareTag("FlyingEnemy"))
+            else
             {
-                // List<ContactPoint> contacts = new List<ContactPoint>(); 
-                // other.GetContacts(contacts);
-                //
-                // Vector3 averagedNormal = Vector3.zero;
-                // foreach (var contactPoint in contacts)
-                // {
-                //     averagedNormal += contactPoint.normal;
-                // }
-                // averagedNormal = averagedNormal / contacts.Count;
-                // averagedNormal = averagedNormal.normalized;
-
                 Ray ray = new Ray(_groundCheck.position, Vector3.down);
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, 1, _groundMask))
                 {
                     if (Vector3.Dot(hit.normal, Vector3.up) > _groundCheckAngleAllowance)
                     {
+                        if (_isJumping)
+                        {
+                            _playerAnimator.SetBool(_Landed, true);
+                            _playerAnimator.SetBool(_Falling, false);
+                            _playerAnimator.SetBool(_Jumped, false);
+                        }
+                        _isJumping = false;
                         _canJump = true;
                         _hasDoubleJumped = false;
                     } 
@@ -382,9 +540,20 @@ namespace Malicious.Core
                 //}
             }
 
-            if (a_other.gameObject.CompareTag("Fan"))
+            if (a_other.gameObject.CompareTag("Laser"))
             {
+                LaunchPlayer(_rigidbody.velocity = a_other.gameObject.GetComponent<BrokenWire>().DirectionToHit(transform.position) * _hitForce);
                 
+                GameEventManager.PlayerHitFunc();
+                if (GameEventManager.CurrentHealth() <= 0)
+                {
+                    //Run shader for dissolve
+                }
+                else
+                {
+                    StartCoroutine(IFrame());
+                    StartCoroutine(DisableMoveInput());
+                }
             }
         }
 
@@ -468,7 +637,15 @@ namespace Malicious.Core
         {
             _moveInput = Vector2.zero;
         }
-        
+        private void CameraInputEnter(InputAction.CallbackContext a_context)
+        {
+            _spinInput = a_context.ReadValue<Vector2>();
+        }
+        private void CameraInputExit(InputAction.CallbackContext a_context)
+        {
+            _spinInput = Vector2.zero;
+        }
+
         private void EnableInput()
         {
             GlobalData.InputManager.Player.Movement.performed += MoveInputEnter;
@@ -479,8 +656,8 @@ namespace Malicious.Core
             GlobalData.InputManager.Player.Interaction.canceled += InteractionInputExit;
             
             //left these just incase i added any controls because retyping them is annoying
-            //GlobalData.InputManager.Player.Camera.performed += CameraInputEnter;
-            //GlobalData.InputManager.Player.Camera.canceled += CameraInputExit;
+            GlobalData.InputManager.Player.Camera.performed += CameraInputEnter;
+            GlobalData.InputManager.Player.Camera.canceled += CameraInputExit;
             //GlobalData.InputManager.Player.Down.performed += DownInputEnter;
             //GlobalData.InputManager.Player.Down.canceled += DownInputExit;
         }
@@ -492,8 +669,8 @@ namespace Malicious.Core
             GlobalData.InputManager.Player.Jump.canceled -= JumpInputExit;
             GlobalData.InputManager.Player.Interaction.performed -= InteractionInputEnter;
             GlobalData.InputManager.Player.Interaction.canceled -= InteractionInputExit;
-            //GlobalData.InputManager.Player.Camera.performed -= CameraInputEnter;
-            //GlobalData.InputManager.Player.Camera.canceled -= CameraInputExit;
+            GlobalData.InputManager.Player.Camera.performed -= CameraInputEnter;
+            GlobalData.InputManager.Player.Camera.canceled -= CameraInputExit;
             //GlobalData.InputManager.Player.Down.performed -= DownInputEnter;
             //GlobalData.InputManager.Player.Down.canceled -= DownInputExit;
         }

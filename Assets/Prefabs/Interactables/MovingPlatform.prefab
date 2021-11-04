@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7719955112712143678}
   - component: {fileID: 1326385395381402634}
   - component: {fileID: 1334339618556758511}
-  m_Layer: 7
+  m_Layer: 18
   m_Name: Cpu
   m_TagString: Environment
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 890798058}
   - component: {fileID: 890798059}
   - component: {fileID: 890798060}
-  m_Layer: 7
+  m_Layer: 18
   m_Name: MovingPlatform
   m_TagString: MovingPlatform
   m_Icon: {fileID: 0}
@@ -134,11 +134,6 @@ MonoBehaviour:
   _waitForTime: 1
   _waitTime: 0.8
   _horizontalAllowance: 3
-  _middlePosition: {fileID: 0}
-  _checkDistance: 4
-  _stopMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!65 &890798059
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -234,7 +229,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: f886f834a05db9d4f9c6b5e985e074fd, type: 2}
     - target: {fileID: -795908349699576852, guid: b85e268756ad6eb4ba9196d1f315ecb5, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b85e268756ad6eb4ba9196d1f315ecb5, type: 3}
       propertyPath: m_Name
@@ -242,7 +237,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b85e268756ad6eb4ba9196d1f315ecb5, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b85e268756ad6eb4ba9196d1f315ecb5, type: 3}
       propertyPath: m_TagString
