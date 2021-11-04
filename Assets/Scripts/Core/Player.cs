@@ -26,7 +26,11 @@ namespace Malicious.Core
         public static bool _invertCamX = false;
         public static bool _invertCamY = false;
 
+        [SerializeField] private float _minXCameraAngle = 5f;
+        [SerializeField] private float _maxXCameraAngle = 90f;
+
         [SerializeField] private Transform _cameraOffset = null;
+        [SerializeField] private float _cameraAngleMin = 1f;
         //-------------------------------------//
         
         //Animator Variables//
@@ -49,7 +53,8 @@ namespace Malicious.Core
         
         //Input Variables//
         private Vector2 _moveInput = Vector2.zero;
-        private Vector2 _cameraInput = Vector2.zero;
+        private Vector2 _spinInput = Vector2.zero;
+
         //-------------------------------------//
         
         
@@ -125,6 +130,9 @@ namespace Malicious.Core
         }
         private void Start()
         {
+            if (_inFanUp)
+                transform.position += Vector3.zero;
+
             _rigidbody = GetComponent<Rigidbody>();
             _playerAnimator = _modelContainer.GetComponent<Animator>();
             _playerAnimator.SetFloat(_animatorRunVariable, 0);
@@ -140,9 +148,6 @@ namespace Malicious.Core
             //_currentRunAmount = 0;
             GameEventManager.PlayerStopInput += PlayerDied;
             GameEventManager.PlayerDead += PlayerDead;
-
-            if (_inFanUp)
-                _rigidbody.velocity += Vector3.zero;
 
             _spinSpeedCamX = GlobalData._cameraSettings.CameraXSpeed;
             _spinSpeedCamY = GlobalData._cameraSettings.CameraYSpeed;
@@ -162,27 +167,53 @@ namespace Malicious.Core
         public void LaunchPlayer(Vector3 a_force)
         {
             _rigidbody.velocity = a_force;
-
         }
 
         private void SpinMovement()
         {
-            if (_cameraInput != Vector2.zero)
+            if (_spinInput != Vector2.zero)
             {
-                if (_invertCamX)
+                if (_invertCamX && _spinInput.x != 0)
                 {
-                    _cameraOffset.RotateAround(transform.position, Vector3.up,
-                        _cameraInput.x * -_spinSpeedCamX * Time.deltaTime);
+                    Vector3 rotationAmount = new Vector3(0, _spinInput.x * -_spinSpeedCamX * Time.deltaTime, 0);
+                    _cameraOffset.Rotate(rotationAmount, Space.World);
                 }
-                else
+                else if (_spinInput.x != 0)
                 {
-                    _cameraOffset.RotateAround(transform.position, Vector3.up,
-                        _cameraInput.x * _spinSpeedCamX * Time.deltaTime);
+                    Vector3 rotationAmount = new Vector3(0, _spinInput.x * _spinSpeedCamX * Time.deltaTime, 0);
+                    _cameraOffset.Rotate(rotationAmount, Space.World);
+                }
+
+                if (_invertCamY && _spinInput.y != 0)
+                {
+                    Vector3 eularAmount = _cameraOffset.rotation.eulerAngles;
+                    eularAmount.x += -_spinInput.y * _spinSpeedCamY * Time.deltaTime;
+                    eularAmount.x = ClampAngle(eularAmount.x, _minXCameraAngle, _maxXCameraAngle);
+                    _cameraOffset.rotation = Quaternion.Euler(eularAmount);
+                }
+                else if (_spinInput.y != 0)
+                {
+                    Vector3 eularAmount = _cameraOffset.rotation.eulerAngles;
+                    eularAmount.x += _spinInput.y * _spinSpeedCamY * Time.deltaTime;
+                    eularAmount.x = ClampAngle(eularAmount.x, _minXCameraAngle, _maxXCameraAngle);
+                    _cameraOffset.rotation = Quaternion.Euler(eularAmount);
                 }
             }
         }
+        private float ClampAngle(float a_angle, float a_min, float a_max)
+        {
+            if (a_angle < 90 || a_angle > 270)
+            {      
+                if (a_angle > 180) a_angle -= 360; 
+                if (a_max > 180) a_max -= 360;
+                if (a_min > 180) a_min -= 360;
+            }
+            a_angle = Mathf.Clamp(a_angle, a_min, a_max);
+            if (a_angle < 0) a_angle += 360;  
+            return a_angle;
+        }
 
-        public void EnteredFan(bool a_isUp)
+public void EnteredFan(bool a_isUp)
         {
             _canJump = false;
             _hasDoubleJumped = false;
@@ -247,16 +278,22 @@ namespace Malicious.Core
         {
             if (_moveInput != Vector2.zero && !_movementDisabled)
             {
-                //For controller users this will change the max movespeed according to how small their inputs are
-                float targetAngle = Mathf.Atan2(_moveInput.x, _moveInput.y) * Mathf.Rad2Deg +
-                                    _cameraTransform.rotation.eulerAngles.y;
+                Vector2 normalisedInput = _moveInput.normalized;
+
+                Vector3 movementDirection = _cameraOffset.transform.forward * normalisedInput.y + _cameraOffset.transform.right * normalisedInput.x;
+                movementDirection.y = 0;
+                movementDirection = movementDirection.normalized;
+
+                float angleFromForward = Vector3.SignedAngle(transform.forward, movementDirection, Vector3.up);
+
+                if (Mathf.Abs(angleFromForward) > _cameraAngleMin)
+                {
+                    transform.Rotate(0, angleFromForward * Time.deltaTime * _spinSpeedModel, 0);
+
+                    _cameraOffset.transform.Rotate(0, -angleFromForward * Time.deltaTime * _spinSpeedModel, 0, Space.World);
+                }
                 
-                //Rotate player towards current input
-                Quaternion targetRotation = Quaternion.Euler(0, targetAngle, 0);
-                transform.rotation =
-                    Quaternion.Lerp(transform.rotation, targetRotation, _spinSpeedModel * Time.deltaTime);
-                
-                
+
                 float scaleAmount = _moveInput.magnitude;
                 
                 if (scaleAmount > 1)
@@ -264,7 +301,6 @@ namespace Malicious.Core
                 
                 float currentYAmount = _rigidbody.velocity.y;
 
-                Vector2 normalisedInput = _moveInput.normalized;
                 
                 Vector3 newVel =
                     _cameraTransform.forward * (normalisedInput.y * _moveSpeed * Time.deltaTime) +
@@ -569,7 +605,15 @@ namespace Malicious.Core
         {
             _moveInput = Vector2.zero;
         }
-        
+        private void CameraInputEnter(InputAction.CallbackContext a_context)
+        {
+            _spinInput = a_context.ReadValue<Vector2>();
+        }
+        private void CameraInputExit(InputAction.CallbackContext a_context)
+        {
+            _spinInput = Vector2.zero;
+        }
+
         private void EnableInput()
         {
             GlobalData.InputManager.Player.Movement.performed += MoveInputEnter;
@@ -580,8 +624,8 @@ namespace Malicious.Core
             GlobalData.InputManager.Player.Interaction.canceled += InteractionInputExit;
             
             //left these just incase i added any controls because retyping them is annoying
-            //GlobalData.InputManager.Player.Camera.performed += CameraInputEnter;
-            //GlobalData.InputManager.Player.Camera.canceled += CameraInputExit;
+            GlobalData.InputManager.Player.Camera.performed += CameraInputEnter;
+            GlobalData.InputManager.Player.Camera.canceled += CameraInputExit;
             //GlobalData.InputManager.Player.Down.performed += DownInputEnter;
             //GlobalData.InputManager.Player.Down.canceled += DownInputExit;
         }
@@ -593,8 +637,8 @@ namespace Malicious.Core
             GlobalData.InputManager.Player.Jump.canceled -= JumpInputExit;
             GlobalData.InputManager.Player.Interaction.performed -= InteractionInputEnter;
             GlobalData.InputManager.Player.Interaction.canceled -= InteractionInputExit;
-            //GlobalData.InputManager.Player.Camera.performed -= CameraInputEnter;
-            //GlobalData.InputManager.Player.Camera.canceled -= CameraInputExit;
+            GlobalData.InputManager.Player.Camera.performed -= CameraInputEnter;
+            GlobalData.InputManager.Player.Camera.canceled -= CameraInputExit;
             //GlobalData.InputManager.Player.Down.performed -= DownInputEnter;
             //GlobalData.InputManager.Player.Down.canceled -= DownInputExit;
         }
