@@ -319,7 +319,7 @@ namespace Malicious.Core
                 _rigidbody.velocity = new Vector3(0, _rigidbody.velocity.y, 0);
             }
 
-            if (!_holdingJump && _canJump == false)
+            if (!_holdingJump && _canJump == false && !_inFanHoriz)
             {
                 _rigidbody.velocity = new Vector3(
                     _rigidbody.velocity.x,

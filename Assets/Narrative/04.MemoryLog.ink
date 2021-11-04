@@ -1,0 +1,2 @@
+Mad Scientist: "Recording. Subject Eight has been a little bit snippy, and I've been getting a lot of backchat from them. They have no idea what is coming, so I will have my revenge for that."
+"Recording ended."
