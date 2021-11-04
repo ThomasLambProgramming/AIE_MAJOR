@@ -83,7 +83,7 @@ namespace Malicious.Hackable
             }
         }
 
-        public void ExitedFan(bool a_isUp)
+        public virtual void ExitedFan(bool a_isUp)
         {
             if (a_isUp)
             {

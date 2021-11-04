@@ -37,10 +37,10 @@ namespace Malicious.Core
         [SerializeField] private float _animationSwapSpeed = 3f;
         [SerializeField] private Animator _playerAnimator = null;
         private readonly int _animatorRunVariable = Animator.StringToHash("RunAmount");
-        //private static readonly int _Jumped = Animator.StringToHash("Jumped");
-        //private static readonly int _Falling = Animator.StringToHash("Falling");
-        //private static readonly int _Landed = Animator.StringToHash("Landed");
-        //private static readonly int _ResetToRun = Animator.StringToHash("ResetToRun");
+        private static readonly int _Jumped = Animator.StringToHash("Jumped");
+        private static readonly int _Falling = Animator.StringToHash("Falling");
+        private static readonly int _Landed = Animator.StringToHash("Landed");
+        private static readonly int _ResetToRun = Animator.StringToHash("ResetToRun");
         //[SerializeField] private float _jumpDuration = 1.5f;
         //[SerializeField] private float _landResetDuration = 1.5f;
         //[SerializeField] private float _landDuration = 1.5f;
@@ -68,6 +68,7 @@ namespace Malicious.Core
         private bool _canJump = true;
         private bool _hasDoubleJumped = false;
         private bool _holdingJump = false;
+        private bool _isJumping = false;
         //private bool _isJumping = false;
 
         [SerializeField] private float _groundCheckDelay = 0.2f;
@@ -163,10 +164,22 @@ namespace Malicious.Core
         {
             Movement();
             GroundCheck();
+            JumpManagement();
         }
         public void LaunchPlayer(Vector3 a_force)
         {
             _rigidbody.velocity = a_force;
+        }
+        private void JumpManagement()
+        {
+            if (_isJumping)
+            {
+                if (_rigidbody.velocity.y < 0.2f)
+                {
+                    _playerAnimator.SetBool(_Jumped, false);
+                    _playerAnimator.SetBool(_Falling, true);
+                }
+            }
         }
 
         private void SpinMovement()
@@ -401,10 +414,13 @@ public void EnteredFan(bool a_isUp)
                 prevVel.y = _jumpForce;
                 _rigidbody.velocity = prevVel;
 
+                _playerAnimator.SetBool(_Jumped, true);
+
                 if (_canJump == false)
                     _hasDoubleJumped = true;
                 
                 _canJump = false;
+                _isJumping = true;
             }
         }
 
@@ -473,6 +489,7 @@ public void EnteredFan(bool a_isUp)
             }
             else if (other.gameObject.CompareTag("Ground"))
             {
+                _isJumping = false;
                 _canJump = true;
                 _hasDoubleJumped = false;
             }
@@ -484,6 +501,7 @@ public void EnteredFan(bool a_isUp)
                 {
                     if (Vector3.Dot(hit.normal, Vector3.up) > _groundCheckAngleAllowance)
                     {
+                        _isJumping = false;
                         _canJump = true;
                         _hasDoubleJumped = false;
                     } 
