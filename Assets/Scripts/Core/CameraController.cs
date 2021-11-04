@@ -7,7 +7,7 @@ namespace Malicious.Core
     {
         //named init to not accidentally use in functions
         [SerializeField] private Transform init_mainCamTransform = null;
-        [SerializeField] private CinemachineFreeLook init_player = null;
+        [SerializeField] private CinemachineVirtualCamera init_player = null;
         [SerializeField] private CinemachineVirtualCamera init_moveable = null;
         [SerializeField] private CinemachineVirtualCamera init_pointOfInterest = null;
         [SerializeField] private CinemachineVirtualCamera init_wire = null;
@@ -15,7 +15,7 @@ namespace Malicious.Core
         [SerializeField] private CinemachineVirtualCamera init_flyingEnemy = null;
 
         private static Transform _mainCamTransform = null;
-        private static CinemachineFreeLook _player = null;
+        private static CinemachineVirtualCamera _player = null;
         private static CinemachineVirtualCamera _moveable = null;
         private static CinemachineVirtualCamera _pointOfInterest = null;
         private static CinemachineVirtualCamera _wire = null;
@@ -77,9 +77,11 @@ namespace Malicious.Core
             switch (a_type)
             {
                 case ObjectType.Player:
-                    //The player has to be different as it is not the same type
                     _player.Priority = 20;
-                    //Solve for some solution to get the rotation correct
+                    float newYRot = _mainCamTransform.rotation.eulerAngles.y;
+                    Vector3 eularOffset = a_offset.rotation.eulerAngles;
+                    eularOffset.y = newYRot;
+                    a_offset.rotation = Quaternion.Euler(eularOffset);
                     return;
                 case ObjectType.Moveable:
                     _currentHackableCamera = _moveable;

@@ -154,6 +154,13 @@ namespace Malicious.Hackable
         {
             OnHackExit();
         }
+        public override void ExitedFan(bool a_isUp)
+        {
+            base.ExitedFan(a_isUp);
+            Vector3 objVel = _rigidbody.velocity;
+            objVel.y = 0;
+            _rigidbody.velocity = objVel;
+        }
 
         public override void OnHackEnter()
         {

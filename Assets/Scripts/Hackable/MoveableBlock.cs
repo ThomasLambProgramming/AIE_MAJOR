@@ -21,10 +21,10 @@ namespace Malicious.Hackable
         [SerializeField] private float _dotAllowanceForStacking = 0.7f;
         [SerializeField] private Transform _stackingArea = null;
         [SerializeField] private float _slowDownSpeed = 0.85f;
-        [SerializeField] private float _hitForce = 4f;
         [SerializeField] private Transform _rampCheck = null;
         [SerializeField] private float _yAngle = -2f;
         [SerializeField] private float _rampCheckDistance = 3f;
+        [SerializeField] private float _rampAngleAllowance = 0.5f;
         [SerializeField] private LayerMask _rampMask = ~0;
         [SerializeField] private UnityEvent _onHackEnterEvent = null;
         [SerializeField] private UnityEvent _onHackExitEvent = null;
@@ -89,13 +89,17 @@ namespace Malicious.Hackable
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, _rampCheckDistance, _rampMask))
                 {
-                    Vector3 currentPos = transform.position;
+                    if (Vector3.Dot(hit.normal, Vector3.up) > _rampAngleAllowance)
+                    {
 
-                    float yHit = hit.point.y;
-                    if (hit.point.y > transform.position.y)
-                        currentPos.y = yHit;
-                    
-                    transform.position = currentPos;
+                        Vector3 currentPos = transform.position;
+
+                        float yHit = hit.point.y;
+                        if (hit.point.y > transform.position.y)
+                            currentPos.y = yHit;
+
+                        transform.position = currentPos;
+                    }
                 }
             }
             

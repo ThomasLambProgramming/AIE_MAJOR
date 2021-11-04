@@ -65,7 +65,6 @@ namespace Malicious.GameItems
 
             if (_stopMoving)
             {
-                Debug.Log("stop moving");
                 return;
             }
             if (waiting)

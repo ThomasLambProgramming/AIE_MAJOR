@@ -26,17 +26,21 @@ namespace Malicious.Core
         public static bool _invertCamX = false;
         public static bool _invertCamY = false;
 
+        [SerializeField] private float _minXCameraAngle = 5f;
+        [SerializeField] private float _maxXCameraAngle = 90f;
+
         [SerializeField] private Transform _cameraOffset = null;
+        [SerializeField] private float _cameraAngleMin = 1f;
         //-------------------------------------//
         
         //Animator Variables//
         [SerializeField] private float _animationSwapSpeed = 3f;
         [SerializeField] private Animator _playerAnimator = null;
         private readonly int _animatorRunVariable = Animator.StringToHash("RunAmount");
-        //private static readonly int _Jumped = Animator.StringToHash("Jumped");
-        //private static readonly int _Falling = Animator.StringToHash("Falling");
-        //private static readonly int _Landed = Animator.StringToHash("Landed");
-        //private static readonly int _ResetToRun = Animator.StringToHash("ResetToRun");
+        private static readonly int _Jumped = Animator.StringToHash("Jumped");
+        private static readonly int _Falling = Animator.StringToHash("Falling");
+        private static readonly int _Landed = Animator.StringToHash("Landed");
+        private static readonly int _ResetToRun = Animator.StringToHash("ResetToRun");
         //[SerializeField] private float _jumpDuration = 1.5f;
         //[SerializeField] private float _landResetDuration = 1.5f;
         //[SerializeField] private float _landDuration = 1.5f;
@@ -49,7 +53,8 @@ namespace Malicious.Core
         
         //Input Variables//
         private Vector2 _moveInput = Vector2.zero;
-        private Vector2 _cameraInput = Vector2.zero;
+        private Vector2 _spinInput = Vector2.zero;
+
         //-------------------------------------//
         
         
@@ -63,6 +68,7 @@ namespace Malicious.Core
         private bool _canJump = true;
         private bool _hasDoubleJumped = false;
         private bool _holdingJump = false;
+        private bool _isJumping = false;
         //private bool _isJumping = false;
 
         [SerializeField] private float _groundCheckDelay = 0.2f;
@@ -125,6 +131,9 @@ namespace Malicious.Core
         }
         private void Start()
         {
+            if (_inFanUp)
+                transform.position += Vector3.zero;
+
             _rigidbody = GetComponent<Rigidbody>();
             _playerAnimator = _modelContainer.GetComponent<Animator>();
             _playerAnimator.SetFloat(_animatorRunVariable, 0);
@@ -141,9 +150,6 @@ namespace Malicious.Core
             GameEventManager.PlayerStopInput += PlayerDied;
             GameEventManager.PlayerDead += PlayerDead;
 
-            if (_inFanUp)
-                _rigidbody.velocity += Vector3.zero;
-
             _spinSpeedCamX = GlobalData._cameraSettings.CameraXSpeed;
             _spinSpeedCamY = GlobalData._cameraSettings.CameraYSpeed;
             _invertCamX = GlobalData._cameraSettings.InvertX;
@@ -152,37 +158,75 @@ namespace Malicious.Core
         private void Tick()
         {
             UpdateAnimator();
-            //SpinMovement();
+            SpinMovement();
         }
         private void FixedTick()
         {
             Movement();
             GroundCheck();
+            JumpManagement();
         }
         public void LaunchPlayer(Vector3 a_force)
         {
             _rigidbody.velocity = a_force;
-
         }
-
-        private void SpinMovement()
+        private void JumpManagement()
         {
-            if (_cameraInput != Vector2.zero)
+            if (_isJumping)
             {
-                if (_invertCamX)
+                if (_rigidbody.velocity.y < 0f)
                 {
-                    _cameraOffset.RotateAround(transform.position, Vector3.up,
-                        _cameraInput.x * -_spinSpeedCamX * Time.deltaTime);
-                }
-                else
-                {
-                    _cameraOffset.RotateAround(transform.position, Vector3.up,
-                        _cameraInput.x * _spinSpeedCamX * Time.deltaTime);
+                    _playerAnimator.SetBool(_Jumped, false);
+                    _playerAnimator.SetBool(_Falling, true);
                 }
             }
         }
 
-        public void EnteredFan(bool a_isUp)
+        private void SpinMovement()
+        {
+            if (_spinInput != Vector2.zero)
+            {
+                if (_invertCamX && _spinInput.x != 0)
+                {
+                    Vector3 rotationAmount = new Vector3(0, _spinInput.x * -_spinSpeedCamX * Time.deltaTime, 0);
+                    _cameraOffset.Rotate(rotationAmount, Space.World);
+                }
+                else if (_spinInput.x != 0)
+                {
+                    Vector3 rotationAmount = new Vector3(0, _spinInput.x * _spinSpeedCamX * Time.deltaTime, 0);
+                    _cameraOffset.Rotate(rotationAmount, Space.World);
+                }
+
+                if (_invertCamY && _spinInput.y != 0)
+                {
+                    Vector3 eularAmount = _cameraOffset.rotation.eulerAngles;
+                    eularAmount.x += -_spinInput.y * _spinSpeedCamY * Time.deltaTime;
+                    eularAmount.x = ClampAngle(eularAmount.x, _minXCameraAngle, _maxXCameraAngle);
+                    _cameraOffset.rotation = Quaternion.Euler(eularAmount);
+                }
+                else if (_spinInput.y != 0)
+                {
+                    Vector3 eularAmount = _cameraOffset.rotation.eulerAngles;
+                    eularAmount.x += _spinInput.y * _spinSpeedCamY * Time.deltaTime;
+                    eularAmount.x = ClampAngle(eularAmount.x, _minXCameraAngle, _maxXCameraAngle);
+                    _cameraOffset.rotation = Quaternion.Euler(eularAmount);
+                }
+            }
+        }
+        private float ClampAngle(float a_angle, float a_min, float a_max)
+        {
+            if (a_angle < 90 || a_angle > 270)
+            {      
+                if (a_angle > 180) a_angle -= 360; 
+                if (a_max > 180) a_max -= 360;
+                if (a_min > 180) a_min -= 360;
+            }
+            a_angle = Mathf.Clamp(a_angle, a_min, a_max);
+            if (a_angle < 0) a_angle += 360;  
+            return a_angle;
+        }
+
+public void EnteredFan(bool a_isUp)
         {
             _canJump = false;
             _hasDoubleJumped = false;
@@ -231,7 +275,7 @@ namespace Malicious.Core
             //_currentRunAmount = 0;
             _currentHackableField = null;
             gameObject.SetActive(true);
-            CameraController.ChangeCamera(ObjectType.Player);
+            CameraController.ChangeCamera(ObjectType.Player, _cameraOffset);
             _heldInputDown = false;
         }
         public void OnHackExit()
@@ -247,16 +291,22 @@ namespace Malicious.Core
         {
             if (_moveInput != Vector2.zero && !_movementDisabled)
             {
-                //For controller users this will change the max movespeed according to how small their inputs are
-                float targetAngle = Mathf.Atan2(_moveInput.x, _moveInput.y) * Mathf.Rad2Deg +
-                                    _cameraTransform.rotation.eulerAngles.y;
+                Vector2 normalisedInput = _moveInput.normalized;
+
+                Vector3 movementDirection = _cameraOffset.transform.forward * normalisedInput.y + _cameraOffset.transform.right * normalisedInput.x;
+                movementDirection.y = 0;
+                movementDirection = movementDirection.normalized;
+
+                float angleFromForward = Vector3.SignedAngle(transform.forward, movementDirection, Vector3.up);
+
+                if (Mathf.Abs(angleFromForward) > _cameraAngleMin)
+                {
+                    transform.Rotate(0, angleFromForward * Time.deltaTime * _spinSpeedModel, 0);
+
+                    _cameraOffset.transform.Rotate(0, -angleFromForward * Time.deltaTime * _spinSpeedModel, 0, Space.World);
+                }
                 
-                //Rotate player towards current input
-                Quaternion targetRotation = Quaternion.Euler(0, targetAngle, 0);
-                transform.rotation =
-                    Quaternion.Lerp(transform.rotation, targetRotation, _spinSpeedModel * Time.deltaTime);
-                
-                
+
                 float scaleAmount = _moveInput.magnitude;
                 
                 if (scaleAmount > 1)
@@ -264,7 +314,6 @@ namespace Malicious.Core
                 
                 float currentYAmount = _rigidbody.velocity.y;
 
-                Vector2 normalisedInput = _moveInput.normalized;
                 
                 Vector3 newVel =
                     _cameraTransform.forward * (normalisedInput.y * _moveSpeed * Time.deltaTime) +
@@ -365,10 +414,15 @@ namespace Malicious.Core
                 prevVel.y = _jumpForce;
                 _rigidbody.velocity = prevVel;
 
+                _playerAnimator.SetBool(_Jumped, true);
+                _playerAnimator.SetBool(_Landed, false);
+                _playerAnimator.SetBool(_Falling, false);
+                
                 if (_canJump == false)
                     _hasDoubleJumped = true;
                 
                 _canJump = false;
+                _isJumping = true;
             }
         }
 
@@ -437,6 +491,13 @@ namespace Malicious.Core
             }
             else if (other.gameObject.CompareTag("Ground"))
             {
+                if (_isJumping)
+                {
+                    _playerAnimator.SetBool(_Landed, true);
+                    _playerAnimator.SetBool(_Falling, false);
+                    _playerAnimator.SetBool(_Jumped, false);
+                }
+                _isJumping = false;
                 _canJump = true;
                 _hasDoubleJumped = false;
             }
@@ -448,6 +509,13 @@ namespace Malicious.Core
                 {
                     if (Vector3.Dot(hit.normal, Vector3.up) > _groundCheckAngleAllowance)
                     {
+                        if (_isJumping)
+                        {
+                            _playerAnimator.SetBool(_Landed, true);
+                            _playerAnimator.SetBool(_Falling, false);
+                            _playerAnimator.SetBool(_Jumped, false);
+                        }
+                        _isJumping = false;
                         _canJump = true;
                         _hasDoubleJumped = false;
                     } 
@@ -569,7 +637,15 @@ namespace Malicious.Core
         {
             _moveInput = Vector2.zero;
         }
-        
+        private void CameraInputEnter(InputAction.CallbackContext a_context)
+        {
+            _spinInput = a_context.ReadValue<Vector2>();
+        }
+        private void CameraInputExit(InputAction.CallbackContext a_context)
+        {
+            _spinInput = Vector2.zero;
+        }
+
         private void EnableInput()
         {
             GlobalData.InputManager.Player.Movement.performed += MoveInputEnter;
@@ -580,8 +656,8 @@ namespace Malicious.Core
             GlobalData.InputManager.Player.Interaction.canceled += InteractionInputExit;
             
             //left these just incase i added any controls because retyping them is annoying
-            //GlobalData.InputManager.Player.Camera.performed += CameraInputEnter;
-            //GlobalData.InputManager.Player.Camera.canceled += CameraInputExit;
+            GlobalData.InputManager.Player.Camera.performed += CameraInputEnter;
+            GlobalData.InputManager.Player.Camera.canceled += CameraInputExit;
             //GlobalData.InputManager.Player.Down.performed += DownInputEnter;
             //GlobalData.InputManager.Player.Down.canceled += DownInputExit;
         }
@@ -593,8 +669,8 @@ namespace Malicious.Core
             GlobalData.InputManager.Player.Jump.canceled -= JumpInputExit;
             GlobalData.InputManager.Player.Interaction.performed -= InteractionInputEnter;
             GlobalData.InputManager.Player.Interaction.canceled -= InteractionInputExit;
-            //GlobalData.InputManager.Player.Camera.performed -= CameraInputEnter;
-            //GlobalData.InputManager.Player.Camera.canceled -= CameraInputExit;
+            GlobalData.InputManager.Player.Camera.performed -= CameraInputEnter;
+            GlobalData.InputManager.Player.Camera.canceled -= CameraInputExit;
             //GlobalData.InputManager.Player.Down.performed -= DownInputEnter;
             //GlobalData.InputManager.Player.Down.canceled -= DownInputExit;
         }
