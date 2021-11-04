@@ -7,14 +7,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Bridge
+  m_Name: Green_Lever
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
-  m_ShaderKeywords: _DETAIL_MULX2 _EMISSION _METALLICSPECGLOSSMAP _NORMALMAP _OCCLUSIONMAP
-    _PARALLAXMAP
+  m_ShaderKeywords: _DETAIL_MULX2 _EMISSION _METALLICSPECGLOSSMAP _NORMALMAP _PARALLAXMAP
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
+  m_CustomRenderQueue: 2006
   stringTagMap:
     RenderType: Opaque
   disabledShaderPasses: []
@@ -22,43 +21,43 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: d16949ab7fd50bd4bbaaa39852878659, type: 3}
+        m_Texture: {fileID: 2800000, guid: d245d94cd8dfcd34096186e172c43a20, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: e1ab17c9491daec488f5e95c3d5f7155, type: 3}
+        m_Texture: {fileID: 2800000, guid: 660f208865763384e83a1a6c41a19395, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
-        m_Texture: {fileID: 2800000, guid: eb56a5df713048043b46946173082d0e, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailMask:
-        m_Texture: {fileID: 2800000, guid: 481ab01ff2505544f8fc1f5050c01db9, type: 3}
+        m_Texture: {fileID: 2800000, guid: 26e90b9b494d1ee4fb30e03ac9d126eb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailNormalMap:
-        m_Texture: {fileID: 2800000, guid: d6b0f74525f676044b5e73aa90ac9f26, type: 3}
+        m_Texture: {fileID: 2800000, guid: a30be626f3dbbc74aaa2058de19b9d6c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
-        m_Texture: {fileID: 2800000, guid: 9f3c78ba58ef2f5469012bd230945c8b, type: 3}
+        m_Texture: {fileID: 2800000, guid: e8ea0b53228a1014a937835198481034, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: d16949ab7fd50bd4bbaaa39852878659, type: 3}
+        m_Texture: {fileID: 2800000, guid: d245d94cd8dfcd34096186e172c43a20, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
-        m_Texture: {fileID: 2800000, guid: 15601021cb94359488f479c24e826aad, type: 3}
+        m_Texture: {fileID: 2800000, guid: 641b93235338ce34d8f374fe4395d0ef, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
-        m_Texture: {fileID: 2800000, guid: 481ab01ff2505544f8fc1f5050c01db9, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
-        m_Texture: {fileID: 2800000, guid: e1a15a4b24be1ca429a5f9859df52b2d, type: 3}
+        m_Texture: {fileID: 2800000, guid: d74fdeb673a3a5d46859862c4d690246, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -86,7 +85,7 @@ Material:
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
-    - _DetailNormalMapScale: 1
+    - _DetailNormalMapScale: 1.735
     - _DstBlend: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
@@ -95,9 +94,9 @@ Material:
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
-    - _QueueOffset: 0
+    - _QueueOffset: 6
     - _ReceiveShadows: 1
-    - _Smoothness: 0.5
+    - _Smoothness: 0.374
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -110,7 +109,7 @@ Material:
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &244359430499893298
+--- !u!114 &4311714787256447055
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

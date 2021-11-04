@@ -1,0 +1,2 @@
+Mad Scientist: "Recording started. Test five. The subject is getting smarter, I'm sure of it. it attempted a breakout, which I had to shut down... messily. The Data was corrupted, so I'll have to reload from backup. It's undone weeks of work, darn it!"
+"Recording ended."
