@@ -45,6 +45,22 @@ PrefabInstance:
       value: Impact_Particle_System
       objectReference: {fileID: 0}
     - target: {fileID: 6399177712960278611, guid: b8817028785ef6642b2329185d7c9983, type: 3}
+      propertyPath: ShapeModule.m_Scale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6399177712960278611, guid: b8817028785ef6642b2329185d7c9983, type: 3}
+      propertyPath: ShapeModule.m_Scale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6399177712960278611, guid: b8817028785ef6642b2329185d7c9983, type: 3}
+      propertyPath: ShapeModule.m_Scale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6399177712960278611, guid: b8817028785ef6642b2329185d7c9983, type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6399177712960278611, guid: b8817028785ef6642b2329185d7c9983, type: 3}
       propertyPath: InitialModule.startSize.scalar
       value: 0.1
       objectReference: {fileID: 0}
@@ -54,7 +70,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6399177712960278611, guid: b8817028785ef6642b2329185d7c9983, type: 3}
       propertyPath: InitialModule.gravityModifier.scalar
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7299305152136625603, guid: b8817028785ef6642b2329185d7c9983, type: 3}
       propertyPath: m_RootOrder
