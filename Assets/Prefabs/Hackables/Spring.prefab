@@ -148,6 +148,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 101783
   _launchForce: 10
+  _blockLaunchForce: 10
+  _groundEnemyLaunchForce: 10
   _animationTime: 1
   _dotCheck: 0.4
 --- !u!65 &704829934
@@ -237,7 +239,7 @@ MonoBehaviour:
   _yDifferenceAllowed: 0.5
   _isHacked: 0
   _lookGoal: {fileID: 0}
-  _nodeRenderer: {fileID: 0}
+  _nodeRenderer: {fileID: 5086726277779310560}
   _defaultMaterial: {fileID: 2100000, guid: 68e2847a29b20e44e827355a95f8a4d5, type: 2}
   _hackValidMaterial: {fileID: 2100000, guid: d8b86c81f490cdf449608ff46aa82111, type: 2}
   _hackedMaterial: {fileID: 2100000, guid: 248cd4ca2763b604088fac32b3b6ba24, type: 2}
@@ -368,5 +370,10 @@ PrefabInstance:
 --- !u!4 &543450653538174048 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5dd0df20c24505a43906076fd54d1e91, type: 3}
+  m_PrefabInstance: {fileID: 195404683}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &5086726277779310560 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5086726277684782187, guid: 5dd0df20c24505a43906076fd54d1e91, type: 3}
   m_PrefabInstance: {fileID: 195404683}
   m_PrefabAsset: {fileID: 0}
