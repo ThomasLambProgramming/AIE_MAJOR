@@ -81,6 +81,14 @@ public class @MasterInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""BackButton"",
+                    ""type"": ""Button"",
+                    ""id"": ""eefc643a-93b8-43d6-90be-8387e16a1e4e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -292,6 +300,17 @@ public class @MasterInput : IInputActionCollection, IDisposable
                     ""action"": ""RemoveWire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""402fc5fd-1dbf-4138-9e17-c526582d8790"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XboxController"",
+                    ""action"": ""BackButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -336,6 +355,7 @@ public class @MasterInput : IInputActionCollection, IDisposable
         m_Player_Down = m_Player.FindAction("Down", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_RemoveWire = m_Player.FindAction("RemoveWire", throwIfNotFound: true);
+        m_Player_BackButton = m_Player.FindAction("BackButton", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -393,6 +413,7 @@ public class @MasterInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Down;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_RemoveWire;
+    private readonly InputAction m_Player_BackButton;
     public struct PlayerActions
     {
         private @MasterInput m_Wrapper;
@@ -405,6 +426,7 @@ public class @MasterInput : IInputActionCollection, IDisposable
         public InputAction @Down => m_Wrapper.m_Player_Down;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @RemoveWire => m_Wrapper.m_Player_RemoveWire;
+        public InputAction @BackButton => m_Wrapper.m_Player_BackButton;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -438,6 +460,9 @@ public class @MasterInput : IInputActionCollection, IDisposable
                 @RemoveWire.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRemoveWire;
                 @RemoveWire.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRemoveWire;
                 @RemoveWire.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRemoveWire;
+                @BackButton.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBackButton;
+                @BackButton.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBackButton;
+                @BackButton.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBackButton;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -466,6 +491,9 @@ public class @MasterInput : IInputActionCollection, IDisposable
                 @RemoveWire.started += instance.OnRemoveWire;
                 @RemoveWire.performed += instance.OnRemoveWire;
                 @RemoveWire.canceled += instance.OnRemoveWire;
+                @BackButton.started += instance.OnBackButton;
+                @BackButton.performed += instance.OnBackButton;
+                @BackButton.canceled += instance.OnBackButton;
             }
         }
     }
@@ -498,5 +526,6 @@ public class @MasterInput : IInputActionCollection, IDisposable
         void OnDown(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnRemoveWire(InputAction.CallbackContext context);
+        void OnBackButton(InputAction.CallbackContext context);
     }
 }

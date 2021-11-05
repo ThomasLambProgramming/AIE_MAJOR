@@ -68,6 +68,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "BackButton",
+                    "type": "Button",
+                    "id": "eefc643a-93b8-43d6-90be-8387e16a1e4e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -277,6 +285,17 @@
                     "processors": "",
                     "groups": "XboxController",
                     "action": "RemoveWire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "402fc5fd-1dbf-4138-9e17-c526582d8790",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XboxController",
+                    "action": "BackButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
