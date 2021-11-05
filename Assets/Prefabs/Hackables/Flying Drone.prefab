@@ -163,7 +163,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 83f8ab50a0baafb47b83584a8881ed10, type: 2}
+  - {fileID: 2100000, guid: 310a192cc6f2a6047879474c021f8b91, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -426,11 +426,12 @@ MonoBehaviour:
   _maxTapHoldLength: 0.4
   _requiresSameYHeight: 0
   _yDifferenceAllowed: 2
+  _isHacked: 0
   _lookGoal: {fileID: 875079078}
   _nodeRenderer: {fileID: 875079080}
-  _defaultMaterial: {fileID: 2100000, guid: 83f8ab50a0baafb47b83584a8881ed10, type: 2}
-  _hackValidMaterial: {fileID: 2100000, guid: d8b86c81f490cdf449608ff46aa82111, type: 2}
-  _hackedMaterial: {fileID: 2100000, guid: 248cd4ca2763b604088fac32b3b6ba24, type: 2}
+  _defaultMaterial: {fileID: 2100000, guid: 310a192cc6f2a6047879474c021f8b91, type: 2}
+  _hackValidMaterial: {fileID: 2100000, guid: 041a0fa5019f8b34c97ebfbb20e6099c, type: 2}
+  _hackedMaterial: {fileID: 2100000, guid: d5de0c944dfb4444aaf8dbc89a2ac117, type: 2}
   _onHackValidEvent:
     m_PersistentCalls:
       m_Calls: []
