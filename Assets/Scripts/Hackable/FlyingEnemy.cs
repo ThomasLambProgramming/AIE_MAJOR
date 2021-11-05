@@ -27,12 +27,15 @@ namespace Malicious.Hackable
         private GameObject _playerObject = null;
         private float _sqrMaxTurningSpeed = 0;
 
+        private Vector3 originalPosition = Vector3.zero;
+
         [SerializeField] private LayerMask _raycastMask = ~0;
 
         private bool _wait = false;
         // Start is called before the first frame update
         void Start()
         {
+            originalPosition = transform.position;
             GameEventManager.EnemyFixedUpdate += AiUpdate;
             _rigidbody = GetComponent<Rigidbody>();
             _sqrMaxTurningSpeed = _maxTurningSpeed * _maxTurningSpeed;
@@ -194,7 +197,10 @@ namespace Malicious.Hackable
         {
             _wait = true;
             yield return new WaitForSeconds(_resetWaitTime);
-            transform.position = _flightPath[0];
+            if (_flightPath.Count > 0)
+                transform.position = _flightPath[0];
+            else
+                transform.position = originalPosition;
             _rigidbody.velocity = Vector3.zero;
             _pathIndex = 1;
             _wait = false;
