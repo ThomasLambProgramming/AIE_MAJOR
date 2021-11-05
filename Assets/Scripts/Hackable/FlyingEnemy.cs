@@ -186,7 +186,7 @@ namespace Malicious.Hackable
             Vector3 exitDirection = _exitLocation.forward;
             exitDirection.y = 0;
             exitDirection = exitDirection.normalized;
-            
+            _rigidbody.velocity = Vector3.zero;
             _player.transform.rotation = Quaternion.LookRotation(exitDirection);
             _player.transform.position = _exitLocation.position;
 
