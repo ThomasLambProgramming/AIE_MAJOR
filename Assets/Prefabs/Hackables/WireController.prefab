@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2758701430632637852}
   - component: {fileID: 2758701430206633950}
   - component: {fileID: 2758701430206633951}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WireController
   m_TagString: Hackable
   m_Icon: {fileID: 0}
@@ -172,6 +172,7 @@ MonoBehaviour:
   _maxTapHoldLength: 0.4
   _requiresSameYHeight: 0
   _yDifferenceAllowed: 1
+  _isHacked: 0
   _lookGoal: {fileID: 0}
   _nodeRenderer: {fileID: 2758701430988091179}
   _defaultMaterial: {fileID: 2100000, guid: 83f8ab50a0baafb47b83584a8881ed10, type: 2}
@@ -195,7 +196,7 @@ GameObject:
   - component: {fileID: 2758701430988091176}
   - component: {fileID: 2758701430988091179}
   - component: {fileID: 2758701430988091178}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: NodeObject (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -348,6 +349,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f990e88ee90725b4dac2f38520640b2b, type: 3}
       propertyPath: m_Name
       value: HackableNode_Pedastle
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f990e88ee90725b4dac2f38520640b2b, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f990e88ee90725b4dac2f38520640b2b, type: 3}
