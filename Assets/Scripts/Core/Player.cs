@@ -429,8 +429,32 @@ public void EnteredFan(bool a_isUp)
         private void GroundCheck()
         {
             Collider[] collisions = Physics.OverlapSphere(_groundCheck.position, 0.5f, _groundMask);
-            if (collisions == null || collisions.Length == 0)
+
+            List<Collider> colliderContainer = new List<Collider>();
+
+            for(int i = 0; i < collisions.Length; i++)
+            {
+                if (!collisions[i].isTrigger)
+                {
+                    colliderContainer.Add(collisions[i]);
+                }
+            }
+            
+            if (colliderContainer.Count <= 0)
+            {
                 _canJump = false;
+                if (_rigidbody.velocity.y < 0)
+                    _playerAnimator.SetBool(_Falling, true);
+            }
+            else if (_isJumping && _inFanHoriz)
+            {
+                _playerAnimator.SetBool(_Landed, true);
+                _playerAnimator.SetBool(_Falling, false);
+                _playerAnimator.SetBool(_Jumped, false);
+                _isJumping = false;
+                _canJump = true;
+                _hasDoubleJumped = false;
+            }
         }
 
         #endregion
