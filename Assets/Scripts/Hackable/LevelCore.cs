@@ -15,7 +15,7 @@ namespace Malicious.Hackable
         [SerializeField] private UnityEvent _hackedEvent = null;
         [SerializeField] private bool _isLevelChangeCore;
         [SerializeField] private int _buildIndexOfChange = 0;
-        
+        private bool _activated = false;
         private ParticleSystem _particleSystem = null;
 
         [SerializeField] private List<WallLight> _lights = new List<WallLight>();
@@ -40,6 +40,10 @@ namespace Malicious.Hackable
 
         public void Hacked()
         {
+            if (_activated)
+                return;
+
+            _activated = true;
             if (_isLevelChangeCore)
             {
                 StartCoroutine(LoadNextLevel());
