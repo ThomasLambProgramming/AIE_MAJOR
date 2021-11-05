@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 2d6337dd189c31c4bbf6e881b1cb248a
+guid: 323d94184e56afb47aadf5ad35d5abbb
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
   - first:
       74: 1827226128182048838
-    second: RiggedAnim
+    second: SpringLaunchAnim
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -35,7 +35,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: RiggedAnim
+      name: SpringLaunchAnim
       takeName: Take 001
       internalID: 0
       firstFrame: 1
@@ -122,11 +122,11 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 5dd0df20c24505a43906076fd54d1e91, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 2
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   additionalBone: 0
   userData: 

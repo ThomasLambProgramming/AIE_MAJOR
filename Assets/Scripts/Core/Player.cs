@@ -67,6 +67,7 @@ namespace Malicious.Core
         [SerializeField] private float _groundCheckAngleAllowance = 0.7f;
         private bool _canJump = true;
         private bool _hasDoubleJumped = false;
+        private bool _launchedBySpring = false;
         private bool _holdingJump = false;
         private bool _isJumping = false;
         //private bool _isJumping = false;
@@ -226,7 +227,7 @@ namespace Malicious.Core
             return a_angle;
         }
 
-public void EnteredFan(bool a_isUp)
+        public void EnteredFan(bool a_isUp)
         {
             _canJump = false;
             _hasDoubleJumped = false;
@@ -368,7 +369,7 @@ public void EnteredFan(bool a_isUp)
                 _rigidbody.velocity = new Vector3(0, _rigidbody.velocity.y, 0);
             }
 
-            if (!_holdingJump && _canJump == false && !_inFanHoriz)
+            if ((!_holdingJump && _canJump == false && !_inFanHoriz) || _launchedBySpring)
             {
                 _rigidbody.velocity = new Vector3(
                     _rigidbody.velocity.x,
@@ -376,6 +377,7 @@ public void EnteredFan(bool a_isUp)
                     _rigidbody.velocity.z);
             }
         }
+        
         private void PlayerDead()
         {
             transform.position = _activeCheckpoint._returnPosition;
@@ -524,6 +526,7 @@ public void EnteredFan(bool a_isUp)
                 _isJumping = false;
                 _canJump = true;
                 _hasDoubleJumped = false;
+                _launchedBySpring = false;
             }
             else
             {
@@ -542,6 +545,7 @@ public void EnteredFan(bool a_isUp)
                         _isJumping = false;
                         _canJump = true;
                         _hasDoubleJumped = false;
+                        _launchedBySpring = false;
                     } 
                 }
             }
@@ -578,6 +582,11 @@ public void EnteredFan(bool a_isUp)
                     StartCoroutine(IFrame());
                     StartCoroutine(DisableMoveInput());
                 }
+            }
+            if (a_other.gameObject.layer == 15)
+            {
+                _launchedBySpring = true;
+                _hasDoubleJumped = false;
             }
         }
 

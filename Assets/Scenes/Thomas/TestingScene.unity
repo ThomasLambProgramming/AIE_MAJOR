@@ -739,18 +739,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 160876637, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1118428858, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1418542793, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
+    - target: {fileID: 128533141, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
+      propertyPath: _nodeRenderer
+      value: 
+      objectReference: {fileID: 752377721}
     - target: {fileID: 242978894956372524, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
       propertyPath: m_RootOrder
       value: 13
@@ -799,44 +791,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spring
       objectReference: {fileID: 0}
-    - target: {fileID: 582350458597341334, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2199937337811219716, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2627154774341299844, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2841200674241343816, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4758704823311668983, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5645815695190382725, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5949483875604713207, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7759395965196745129, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8036741442447713048, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
+--- !u!23 &752377721 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5086726277779310560, guid: 09589dc85d9943643aabc96676c8495b, type: 3}
+  m_PrefabInstance: {fileID: 752377720}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &879664283
 GameObject:
   m_ObjectHideFlags: 0
@@ -1670,6 +1631,34 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 443292262148266731, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -7.9037237
+      objectReference: {fileID: 0}
+    - target: {fileID: 443292262148266731, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.9674106
+      objectReference: {fileID: 0}
+    - target: {fileID: 443292262148266731, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10.457
+      objectReference: {fileID: 0}
+    - target: {fileID: 443292262148266731, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.6830127
+      objectReference: {fileID: 0}
+    - target: {fileID: 443292262148266731, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.18301275
+      objectReference: {fileID: 0}
+    - target: {fileID: 443292262148266731, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.6830127
+      objectReference: {fileID: 0}
+    - target: {fileID: 443292262148266731, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.18301275
+      objectReference: {fileID: 0}
     - target: {fileID: 3453307705184082761, guid: 952f6aec54665e3498390a9b04b88fed, type: 3}
       propertyPath: m_Name
       value: GameManagement

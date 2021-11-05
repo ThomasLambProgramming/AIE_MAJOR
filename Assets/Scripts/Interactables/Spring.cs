@@ -10,6 +10,9 @@ namespace Malicious.Interactables
     {
         [SerializeField] private LayerMask _launchMask;
         [SerializeField] private float _launchForce = 10f;
+        [SerializeField] private float _blockLaunchForce = 10f;
+        [SerializeField] private float _groundEnemyLaunchForce = 10f;
+
         [SerializeField] private float _animationTime = 1f;
         [SerializeField] private float _dotCheck = 0.6f;
         private Animator _launchAnimation = null;
@@ -21,7 +24,7 @@ namespace Malicious.Interactables
 
         private void Start()
         {
-            _launchAnimation = GetComponent<Animator>();
+            _launchAnimation = GetComponentInChildren<Animator>();
         }
 
         private IEnumerator Launched()
@@ -40,7 +43,7 @@ namespace Malicious.Interactables
             
             Vector3 directionToObject = other.gameObject.transform.position - transform.position;
             directionToObject = directionToObject.normalized;
-
+            
             if (Vector3.Dot(directionToObject, Vector3.up) < _dotCheck)
                 return;
             
@@ -50,7 +53,15 @@ namespace Malicious.Interactables
                 if (objectRb != null && !_resetting)
                 {
                     Vector3 rbVel = objectRb.velocity;
-                    rbVel.y = _launchForce;
+
+                    if (other.gameObject.layer == 10)
+                        rbVel.y = _launchForce;
+                    if (other.gameObject.layer == 16)
+                        rbVel.y = _blockLaunchForce;
+                    if (other.gameObject.layer == 11)
+                        rbVel.y = _groundEnemyLaunchForce;
+
+
                     objectRb.velocity = rbVel;
                     _launchAnimation.enabled = true;
                     _launchAnimation.SetBool(_Launched, true);
