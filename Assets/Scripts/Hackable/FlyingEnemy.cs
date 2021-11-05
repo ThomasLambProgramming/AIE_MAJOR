@@ -219,7 +219,7 @@ namespace Malicious.Hackable
             {
                 _rigidbody.velocity = other.gameObject.GetComponent<BrokenWire>().DirectionToHit(transform.position) * _hitForce;
             }
-            if (other.gameObject.CompareTag("Player"))
+            if (other.gameObject.CompareTag("Player") && _wait == false)
             {
                 other.gameObject.transform.parent = transform;
                 _playerObject = other.gameObject;
