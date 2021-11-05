@@ -430,6 +430,7 @@ namespace Malicious.Hackable
                 shootDirection = _wirePath[_pathIndex] - _wirePath[_pathIndex - 1];
                 shootDirection = shootDirection.normalized;
                 float dotResult = Vector3.Dot(shootDirection, Vector3.up);
+
                 if (dotResult > -0.7f && dotResult < 0.7f)
                 {
                     shootDirection.y = _launchDirection.y;
