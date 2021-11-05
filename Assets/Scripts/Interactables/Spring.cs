@@ -12,9 +12,9 @@ namespace Malicious.Interactables
         [SerializeField] private float _launchForce = 10f;
         [SerializeField] private float _blockLaunchForce = 10f;
         [SerializeField] private float _groundEnemyLaunchForce = 10f;
-
+        [SerializeField] private float _horizontalAllowance = 3f;
         [SerializeField] private float _animationTime = 1f;
-        [SerializeField] private float _dotCheck = 0.6f;
+        [SerializeField] private float _blockHorizontalAllow = 1.5f;
         private Animator _launchAnimation = null;
         
         
@@ -42,9 +42,15 @@ namespace Malicious.Interactables
                 return;
             
             Vector3 directionToObject = other.gameObject.transform.position - transform.position;
-            directionToObject = directionToObject.normalized;
+            directionToObject.y = 0;
             
-            if (Vector3.Dot(directionToObject, Vector3.up) < _dotCheck)
+            if (other.gameObject.layer == 16)
+            {
+                //since blocks stick out past their mid point it needs extra allowance then the player
+                if (directionToObject.magnitude > _blockHorizontalAllow)
+                    return;
+            }
+            else if (directionToObject.magnitude > _horizontalAllowance)
                 return;
             
             if ((_launchMask & (1 << other.gameObject.layer)) > 0)
@@ -69,5 +75,13 @@ namespace Malicious.Interactables
                 }
             }
         }
+        
+        #if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawLine(transform.position, transform.position + transform.forward * _horizontalAllowance);
+            Gizmos.DrawLine(transform.position, transform.position + transform.right * _horizontalAllowance);
+        }
+        #endif
     }
 }
