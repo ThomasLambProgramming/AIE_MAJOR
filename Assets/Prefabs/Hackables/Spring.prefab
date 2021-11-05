@@ -151,7 +151,7 @@ MonoBehaviour:
   _blockLaunchForce: 10
   _groundEnemyLaunchForce: 10
   _animationTime: 1
-  _dotCheck: 0.4
+  _dotCheck: 0.1
 --- !u!65 &704829934
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -357,6 +357,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Spring 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5086726277684782187, guid: 5dd0df20c24505a43906076fd54d1e91, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 310a192cc6f2a6047879474c021f8b91, type: 2}
     - target: {fileID: 5436118418791921808, guid: 5dd0df20c24505a43906076fd54d1e91, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 

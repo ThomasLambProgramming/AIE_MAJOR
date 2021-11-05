@@ -73,8 +73,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 101783
   _launchForce: 10
+  _blockLaunchForce: 10
+  _groundEnemyLaunchForce: 10
   _animationTime: 1
-  _dotCheck: 0.6
+  _dotCheck: 0.1
 --- !u!65 &704829934
 BoxCollider:
   m_ObjectHideFlags: 0
