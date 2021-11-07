@@ -6,7 +6,17 @@ ModelImporter:
   - first:
       74: 1827226128182048838
     second: Take 001
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bridge
+    second: {fileID: 2100000, guid: 7143888cb3978b948905b12a3fdf6dc2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BridgeArm
+    second: {fileID: 2100000, guid: 3547cb481fb69414d94bb5ca63db925a, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
