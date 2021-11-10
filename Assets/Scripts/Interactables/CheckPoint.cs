@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System;
+using System.Collections;
 
 namespace Malicious.Interactables
 {
@@ -10,17 +12,67 @@ namespace Malicious.Interactables
         public Vector3 _returnPosition = Vector3.zero;
         public Vector3 _facingDirection = Vector3.zero;
 
+        [SerializeField] private Material _defaultMaterial = null;
+        [SerializeField] private Material _hackedMaterial = null;
+
+        [SerializeField] private MeshRenderer _beaconTopRenderer = null;
+        [SerializeField] private MeshRenderer _middleBeaconRenderer = null;
+
+        [SerializeField] private GameObject _beaconObj = null;
+        private float _openHeight = 2.3f;
+        private float _closeHeight = 1.76f;
+
+        private float _timer = 0;
+        private float _animSpeed = 2f;
         private void Start()
         {
             _animator = GetComponent<Animator>();
         }
         public void TurnOn()
         {
-            _animator.SetBool("Active", true);
+            StartCoroutine(Open());
+            _beaconTopRenderer.material = _hackedMaterial;
+            _middleBeaconRenderer.material = _hackedMaterial;
         }
         public void TurnOff()
         {
-            _animator.SetBool("Active", false);
+            StartCoroutine(Close());
+            _beaconTopRenderer.material = _defaultMaterial;
+            _middleBeaconRenderer.material = _defaultMaterial;
+        }
+        IEnumerator Open()
+        {
+            while (_beaconObj.transform.position.y != _openHeight)
+            {
+                _timer += Time.deltaTime * _animSpeed;
+                float y = Mathf.Lerp(_closeHeight, _openHeight, _timer);
+                Vector3 position = _beaconObj.transform.position;
+                position.y = y;
+                _beaconObj.transform.position = position;
+
+                if (_timer > 1)
+                {
+                    _timer = 1;
+                }
+                yield return null;
+            }
+        }
+        IEnumerator Close()
+        {
+            while (_beaconObj.transform.position.y != _closeHeight)
+            {
+                _timer -= Time.deltaTime * _animSpeed;
+                float y = Mathf.Lerp(_closeHeight, _openHeight, _timer);
+                Vector3 position = _beaconObj.transform.position;
+                position.y = y;
+                _beaconObj.transform.position = position;
+
+                if (_timer < 0)
+                {
+                    _timer = 0;
+                }
+                yield return null;
+            }
         }
 
 #if UNITY_EDITOR

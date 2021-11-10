@@ -14,83 +14,107 @@ namespace Malicious.UI
         private static bool _displayingText = false;
 
         private Text _text = null;
-        private Coroutine _fadeOutCoroutine = null;
+        
+       
+        [ContextMenu("TestingFunction")]
+        public void LoadText()
+        {
+            
+        }
 
-        private List<string> _speech = new List<string>();
+        [SerializeField] private List<string> _speech = new List<string>();
         void Start()
         {
             _text = GetComponent<Text>();
             _subtitles = this;
         }
 
-        public void ShowText(string a_text)
+        
+        public void GiveText(List<string> a_text)
         {
-            //This is redundancy to avoid double ups and have the text fade early
-            if (_fadeOutCoroutine != null)
-                StopCoroutine(_fadeOutCoroutine);
+            _speech.Clear();
+            _speech = a_text;
+            _text.text = _speech[0];
+            _speech.RemoveAt(0);
+            _done = false;
+            _fadeIn = true;
+        }
 
-            StopCoroutine(WaitToFadeOut());
-            if (_displayingText)
+        private bool _done = false;
+        private bool _fadeIn = false;
+        private bool _fadeOut = false;
+        private bool _doneFading = true;
+        private float _timer = 0;
+        private float _waitTimer = 0;
+        public void Update()
+        {
+            if (_doneFading)
             {
-                HideText();
-                StartCoroutine(StartText(1.7f, a_text));
+                _waitTimer += Time.deltaTime;
+                if (_waitTimer > _waitTime)
+                {
+                    _waitTimer = 0;
+                    _doneFading = false;
+
+                }
             }
-            else
+            else if (_fadeIn || _fadeOut)
+                Fading();
+        }
+        private void Fading()
+        {
+            if (_done)
+                return;
+
+            if (_fadeIn)
             {
-                StartCoroutine(StartText(0.1f, a_text));
+                _timer += Time.deltaTime * _fadeSpeed;
+                Color textColor = _text.color;
+                textColor.a = _timer;
+                if (_timer >= 1)
+                {
+                    _fadeIn = false;
+                    _timer = 1;
+                    textColor.a = 1;
+                    _doneFading = true;
+                    _fadeOut = true;
+                }
+                _text.color = textColor;
             }
-            
+            else if (_fadeOut)
+            {
+                _timer -= Time.deltaTime * _fadeSpeed;
+                Color textColor = _text.color;
+                textColor.a = _timer;
+                if (_timer <= 0)
+                {
+                    _fadeIn = false;
+                    _timer = 0;
+                    textColor.a = 0;
+                    _fadeIn = true;
+                    _doneFading = true;
+                    
+                    if (_speech.Count > 0)
+                    {
+                        _text.text = _speech[0];
+                        _speech.RemoveAt(0);
+                    }
+                    else
+                    {
+                        _done = true;
+                    }
+
+                }
+                _text.color = textColor;
+            }
         }
         
-        public void HideText()
-        {
-            StartCoroutine(FadeOut());
-        }
-        IEnumerator StartText(float a_waitDurection, string a_text)
-        {
-            yield return new WaitForSeconds(a_waitDurection);
-            _displayingText = true;
-            _text.text = a_text;
-            StartCoroutine(FadeIn());
-        }
-        IEnumerator WaitToFadeOut()
-        {
-            yield return new WaitForSeconds(_waitTime);
-            StartCoroutine(FadeOut());
-        }
-        IEnumerator FadeIn()
-        {
-            Color textColor = _text.color;
-            
-            while (textColor.a < 1)
-            {
-                textColor.a += _fadeSpeed * Time.deltaTime;
-                _text.color = textColor;
-                yield return null;
-            }
-            textColor.a = 1;
-            _text.color = textColor;
-            _fadeOutCoroutine = StartCoroutine(WaitToFadeOut());
-        }
-        IEnumerator FadeOut()
-        {
-            Color textColor = _text.color;
-
-            while (textColor.a > 0)
-            {
-                textColor.a -= _fadeSpeed * Time.deltaTime;
-                _text.color = textColor;
-                yield return null;
-            }
-            textColor.a = 0;
-            _text.color = textColor;
-            _displayingText = false;
-            _fadeOutCoroutine = null;
-        }
         public void LevelCoreStop()
         {
             _fadeSpeed = 6f;
-            HideText();
+            _done = false;
+            _doneFading = false;
+            _fadeOut = true;
         }
     }
 }
