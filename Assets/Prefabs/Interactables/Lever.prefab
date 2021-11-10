@@ -409,11 +409,15 @@ MonoBehaviour:
   _maxTapHoldLength: 0.4
   _requiresSameYHeight: 0
   _yDifferenceAllowed: 1
+  _isHacked: 0
   _lookGoal: {fileID: 0}
-  _nodeRenderer: {fileID: 7475471969630837799}
+  _nodeRenderer:
+  - {fileID: 2069975504426021714}
+  - {fileID: 7475471969630837799}
+  - {fileID: 2401196298631679322}
   _defaultMaterial: {fileID: 2100000, guid: 9b46e7094812f9e40864745e331d1b20, type: 2}
-  _hackValidMaterial: {fileID: 2100000, guid: d8b86c81f490cdf449608ff46aa82111, type: 2}
-  _hackedMaterial: {fileID: 2100000, guid: 248cd4ca2763b604088fac32b3b6ba24, type: 2}
+  _hackValidMaterial: {fileID: 2100000, guid: 48813d8d871569a4e88f392346154e1b, type: 2}
+  _hackedMaterial: {fileID: 2100000, guid: eb4ee8c2c427c6448a2a685168e49584, type: 2}
   _onHackValidEvent:
     m_PersistentCalls:
       m_Calls: []
