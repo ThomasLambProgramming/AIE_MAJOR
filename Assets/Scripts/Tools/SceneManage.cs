@@ -16,6 +16,7 @@ namespace Malicious.Tools
 
         public void LoadLevelOne(int a_index)
         {
+            GameEventManager.Reset();
             SceneManager.LoadScene(a_index);
         }
 

@@ -97,7 +97,7 @@ namespace Malicious.Core
 
         private void PausePressed(InputAction.CallbackContext a_context)
         {
-            if (VoiceText._voiceText._displaying)
+            if (VoiceText._voiceText != null && VoiceText._voiceText._displaying)
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
@@ -193,7 +193,8 @@ namespace Malicious.Core
 
         public static void Reset()
         {
-            GlobalData.InputManager.Dispose();
+            if (GlobalData.InputManager != null)
+                GlobalData.InputManager.Dispose();
             PlayerUpdate        = null;
             PlayerFixedUpdate   = null;
             EnemyUpdate         = null;
