@@ -559,10 +559,10 @@ MonoBehaviour:
   _dotAllowanceForStacking: 0.7
   _stackingArea: {fileID: 7116530919092804061}
   _slowDownSpeed: 0.85
-  _hitForce: 4
   _rampCheck: {fileID: 1411227552}
   _yAngle: -0.73
   _rampCheckDistance: 5
+  _rampAngleAllowance: 0.5
   _rampMask:
     serializedVersion: 2
     m_Bits: 393344
@@ -591,10 +591,10 @@ MonoBehaviour:
   _yDifferenceAllowed: 1
   _isHacked: 0
   _lookGoal: {fileID: 0}
-  _nodeRenderer: {fileID: 7518744619583831225}
-  _defaultMaterial: {fileID: 2100000, guid: 83f8ab50a0baafb47b83584a8881ed10, type: 2}
-  _hackValidMaterial: {fileID: 2100000, guid: d8b86c81f490cdf449608ff46aa82111, type: 2}
-  _hackedMaterial: {fileID: 2100000, guid: 248cd4ca2763b604088fac32b3b6ba24, type: 2}
+  _nodeRenderer: {fileID: 3550973343601797307}
+  _defaultMaterial: {fileID: 2100000, guid: d1eeebe788db5104c8d97017edc8e609, type: 2}
+  _hackValidMaterial: {fileID: 2100000, guid: 7ee697073afcfaf409c815a90adcac2d, type: 2}
+  _hackedMaterial: {fileID: 2100000, guid: 1a488f52648afa542b0787ed10c7ca14, type: 2}
   _onHackValidEvent:
     m_PersistentCalls:
       m_Calls: []
