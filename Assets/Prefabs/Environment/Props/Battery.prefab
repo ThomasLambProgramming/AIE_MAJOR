@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4810184053028505318}
   m_Layer: 7
-  m_Name: Battery_01
+  m_Name: Battery
   m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42,7 +42,6 @@ GameObject:
   - component: {fileID: 8339341923043082342}
   - component: {fileID: 7786410742061464104}
   - component: {fileID: 8106675019121239189}
-  - component: {fileID: 8815886895989713064}
   m_Layer: 7
   m_Name: Battery11
   m_TagString: Environment
@@ -113,16 +112,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8815886895989713064
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6484227336443279490}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 26.881628, y: 30.109024, z: 26.881607}
-  m_Center: {x: 0.0000009536743, y: 14.850323, z: 0}

@@ -1,2 +1,0 @@
-Mad Scientist: "Recording started. This is test seven. Another breakout attempt. I can't keep deleting them every time they try to get out- this is the third time now! I'm going to have to figure something out."
-"Recording ended."

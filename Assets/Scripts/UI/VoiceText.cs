@@ -50,6 +50,7 @@ namespace Malicious.UI
         {
             Time.timeScale = 1f;
             _UIObject.SetActive(false);
+            _displaying = false;
         }
 
         [ContextMenu("Load First level text")]

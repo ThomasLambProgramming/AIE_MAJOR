@@ -14,7 +14,10 @@ namespace Malicious.Interactables
 
         [SerializeField] private Material _defaultMaterial = null;
         [SerializeField] private Material _hackedMaterial = null;
+        [SerializeField] private Material _baseHacked = null;
+        [SerializeField] private Material _baseDefault = null;
 
+        [SerializeField] private MeshRenderer _mainBeacon = null;
         [SerializeField] private MeshRenderer _beaconTopRenderer = null;
         [SerializeField] private MeshRenderer _middleBeaconRenderer = null;
 
@@ -27,18 +30,23 @@ namespace Malicious.Interactables
         private void Start()
         {
             _animator = GetComponent<Animator>();
+
+            _openHeight = _openHeight + transform.position.y;
+            _closeHeight = _closeHeight + transform.position.y;
         }
         public void TurnOn()
         {
             StartCoroutine(Open());
             _beaconTopRenderer.material = _hackedMaterial;
             _middleBeaconRenderer.material = _hackedMaterial;
+            _mainBeacon.material = _baseHacked;
         }
         public void TurnOff()
         {
             StartCoroutine(Close());
             _beaconTopRenderer.material = _defaultMaterial;
             _middleBeaconRenderer.material = _defaultMaterial;
+            _mainBeacon.material = _baseDefault;
         }
         IEnumerator Open()
         {

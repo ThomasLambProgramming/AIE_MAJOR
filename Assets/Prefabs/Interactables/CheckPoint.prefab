@@ -65,6 +65,9 @@ MonoBehaviour:
   _facingDirection: {x: 1, y: 0, z: -1}
   _defaultMaterial: {fileID: 2100000, guid: e5562181e2789964ebf20a7abbb5abc7, type: 2}
   _hackedMaterial: {fileID: 2100000, guid: 179f58a7353ee8f49a106dbf5316e3f9, type: 2}
+  _baseHacked: {fileID: 2100000, guid: 179f58a7353ee8f49a106dbf5316e3f9, type: 2}
+  _baseDefault: {fileID: 2100000, guid: e5562181e2789964ebf20a7abbb5abc7, type: 2}
+  _mainBeacon: {fileID: 3652487521655116839}
   _beaconTopRenderer: {fileID: 595970365336577841}
   _middleBeaconRenderer: {fileID: 5516630124364620933}
   _beaconObj: {fileID: 8413182403380272403}
@@ -167,6 +170,11 @@ PrefabInstance:
 --- !u!4 &6595472477635685793 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6123782c98e8763458d9cc041bb4b207, type: 3}
+  m_PrefabInstance: {fileID: 6633074629263641162}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &3652487521655116839 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7979626713445736045, guid: 6123782c98e8763458d9cc041bb4b207, type: 3}
   m_PrefabInstance: {fileID: 6633074629263641162}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &8413182403380272403 stripped
