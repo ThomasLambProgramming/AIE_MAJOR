@@ -54,6 +54,8 @@ namespace Malicious.Core
         {
             _hackValid = true;
             _onHackValidEvent?.Invoke();
+            if (_nodeRenderer != null && _nodeRenderer.Count <= 0)
+                return;
             foreach (var node in _nodeRenderer)
             {
                 node.material = _hackValidMaterial;
@@ -64,9 +66,12 @@ namespace Malicious.Core
         {
             _hackValid = false;
             _onHackFalseEvent?.Invoke();
-            foreach (var node in _nodeRenderer)
+            if (_nodeRenderer != null && _nodeRenderer.Count > 0)
             {
-                node.material = _defaultMaterial;
+                foreach (var node in _nodeRenderer)
+                {
+                    node.material = _defaultMaterial;
+                }
             }
             _holdTime = 0;
             _holdingHackButton = false;
@@ -140,9 +145,13 @@ namespace Malicious.Core
                 {
                     _hackable._player = _player;
                     _hackable.OnHackEnter();
-                    foreach (var node in _nodeRenderer)
+                    if (_nodeRenderer != null && _nodeRenderer.Count > 0)
                     {
-                        node.material = _hackedMaterial;
+
+                        foreach (var node in _nodeRenderer)
+                        {
+                            node.material = _hackedMaterial;
+                        }
                     }
                     _player.OnHackExit();
                     _player = null;
