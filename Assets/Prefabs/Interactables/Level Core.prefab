@@ -26,13 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1030037168}
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
-  m_LocalPosition: {x: 2.2495944, y: 4.74, z: -0.29}
-  m_LocalScale: {x: 0.6666667, y: 0.6666667, z: 0.6666667}
+  m_LocalRotation: {x: 0, y: 0.9990483, z: 0.043619405, w: 0}
+  m_LocalPosition: {x: -0.051, y: -0.234, z: 3.399}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7010822841767215059}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -5, y: 180, z: 0}
 --- !u!33 &1030037172
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 310a192cc6f2a6047879474c021f8b91, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -235,11 +235,14 @@ MonoBehaviour:
   _dotAllowance: 0.8
   _maxDistanceAway: 5
   _maxTapHoldLength: 0.4
+  _requiresSameYHeight: 0
+  _yDifferenceAllowed: 1
+  _isHacked: 0
   _lookGoal: {fileID: 0}
   _nodeRenderer: {fileID: 1030037171}
-  _defaultMaterial: {fileID: 2100000, guid: 83f8ab50a0baafb47b83584a8881ed10, type: 2}
-  _hackValidMaterial: {fileID: 2100000, guid: d8b86c81f490cdf449608ff46aa82111, type: 2}
-  _hackedMaterial: {fileID: 2100000, guid: 248cd4ca2763b604088fac32b3b6ba24, type: 2}
+  _defaultMaterial: {fileID: 2100000, guid: 310a192cc6f2a6047879474c021f8b91, type: 2}
+  _hackValidMaterial: {fileID: 2100000, guid: 041a0fa5019f8b34c97ebfbb20e6099c, type: 2}
+  _hackedMaterial: {fileID: 2100000, guid: d5de0c944dfb4444aaf8dbc89a2ac117, type: 2}
   _onHackValidEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -263,3 +266,6 @@ MonoBehaviour:
       m_Calls: []
   _isLevelChangeCore: 1
   _buildIndexOfChange: 0
+  _lights: []
+  _door1: {fileID: 0}
+  _door2: {fileID: 0}
