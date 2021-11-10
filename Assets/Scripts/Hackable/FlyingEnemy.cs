@@ -10,6 +10,9 @@ namespace Malicious.Hackable
 {
     public class FlyingEnemy : BasePlayer
     {
+        [SerializeField] private List<GameObject> _fans = new List<GameObject>();
+        [SerializeField] private float _fanSpinSpeed = 10f;
+
         [SerializeField] private List<Vector3> _flightPath = new List<Vector3>();
         [SerializeField] private int _pathIndex = 0;
         private int direction = 1;
@@ -39,6 +42,12 @@ namespace Malicious.Hackable
             GameEventManager.EnemyFixedUpdate += AiUpdate;
             _rigidbody = GetComponent<Rigidbody>();
             _sqrMaxTurningSpeed = _maxTurningSpeed * _maxTurningSpeed;
+        }
+        private void Update()
+        {
+            foreach (var fan in _fans)
+                fan.transform.Rotate(0, _fanSpinSpeed * Time.deltaTime,0);
+
         }
 
         void AiUpdate()

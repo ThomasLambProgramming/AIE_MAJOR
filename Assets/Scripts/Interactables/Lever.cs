@@ -79,6 +79,7 @@ namespace Malicious.Interactables
         public void Rotating()
         {
             timer += Time.deltaTime;
+            Debug.Log("e");
             if (timer > timeForRotate)
             {
                 GameEventManager.GeneralUpdate -= Rotating;
@@ -87,9 +88,9 @@ namespace Malicious.Interactables
             }
 
             if (!isOn)
-                rotateAnchor.Rotate(new Vector3((rotateAmount * Time.deltaTime) / timeForRotate, 0, 0));
+                rotateAnchor.Rotate(rotateAmount * Time.deltaTime / timeForRotate, 0, 0);
             else
-                rotateAnchor.Rotate(new Vector3((-rotateAmount * Time.deltaTime) / timeForRotate, 0, 0));
+                rotateAnchor.Rotate(-rotateAmount * Time.deltaTime / timeForRotate, 0, 0);
         }
     }
 }

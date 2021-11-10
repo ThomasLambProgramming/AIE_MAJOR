@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &117002165
 Transform:
   m_ObjectHideFlags: 0
@@ -397,6 +397,11 @@ MonoBehaviour:
   _player: {fileID: 0}
   _hasHoldOption: 0
   _holdChargeTime: 2
+  _fans:
+  - {fileID: 3251150660189404258}
+  - {fileID: 2893407232319385018}
+  - {fileID: 1798199454952151593}
+  _fanSpinSpeed: 450
   _flightPath: []
   _pathIndex: 0
   _goNextDistance: 4
@@ -429,7 +434,7 @@ MonoBehaviour:
   _isHacked: 0
   _lookGoal: {fileID: 875079078}
   _nodeRenderer:
-  - {fileID: 875079080}
+  - {fileID: 0}
   _defaultMaterial: {fileID: 2100000, guid: 310a192cc6f2a6047879474c021f8b91, type: 2}
   _hackValidMaterial: {fileID: 2100000, guid: 041a0fa5019f8b34c97ebfbb20e6099c, type: 2}
   _hackedMaterial: {fileID: 2100000, guid: d5de0c944dfb4444aaf8dbc89a2ac117, type: 2}
@@ -568,5 +573,20 @@ PrefabInstance:
 --- !u!4 &4541248496641730532 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 965b7e356381d5143a3122f880279101, type: 3}
+  m_PrefabInstance: {fileID: 4075608193775304719}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3251150660189404258 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -7669330806820848531, guid: 965b7e356381d5143a3122f880279101, type: 3}
+  m_PrefabInstance: {fileID: 4075608193775304719}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2893407232319385018 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1200220859681697205, guid: 965b7e356381d5143a3122f880279101, type: 3}
+  m_PrefabInstance: {fileID: 4075608193775304719}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1798199454952151593 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2340469858210109990, guid: 965b7e356381d5143a3122f880279101, type: 3}
   m_PrefabInstance: {fileID: 4075608193775304719}
   m_PrefabAsset: {fileID: 0}
