@@ -4,6 +4,7 @@ using Malicious.GameItems;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using Malicious.Interactables;
 
 namespace Malicious.Hackable
 {
@@ -11,8 +12,8 @@ namespace Malicious.Hackable
     public class MoveableBlock : BasePlayer
     {
         [SerializeField] private Transform _cameraOffset = null;
-        
-        
+
+        private bool _isSpring = false;
         [SerializeField] private bool _faceBoxOnExit = true;
         [SerializeField] private Transform _exitPosition = null;
         [SerializeField] private Collider _exitBox = null;
@@ -42,6 +43,9 @@ namespace Malicious.Hackable
             _startingPosition = transform.position;
             _invertCamX = GlobalData._cameraSettings.InvertX;
             _spinSpeedCamX = GlobalData._cameraSettings.CameraXSpeed;
+
+            if (GetComponent<Spring>() != null)
+                _isSpring = true;
         }
 
         protected override void Tick()
@@ -177,7 +181,10 @@ namespace Malicious.Hackable
             _exitBox.enabled = true;
             base.OnHackEnter();
             
-            CameraController.ChangeCamera(ObjectType.Moveable, _cameraOffset);
+            if (!_isSpring)
+                CameraController.ChangeCamera(ObjectType.Moveable, _cameraOffset);
+            else
+                CameraController.ChangeCamera(ObjectType.Spring, _cameraOffset);
             //Check the materials as well for hack indication
         }
         public override void OnHackExit()

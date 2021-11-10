@@ -7,6 +7,7 @@
         PointOfInterest,
         Wire,
         GroundEnemy,
-        FlyingEnemy
+        FlyingEnemy,
+        Spring
     }
 }

@@ -6,6 +6,7 @@ using Malicious.Interactables;
 using Malicious.Tools;
 using UnityEngine;
 using UnityEngine.Events;
+using Malicious.UI;
 
 namespace Malicious.Hackable
 {
@@ -47,6 +48,7 @@ namespace Malicious.Hackable
             if (_isLevelChangeCore)
             {
                 StartCoroutine(LoadNextLevel());
+                Subtitles._subtitles.LevelCoreStop();
             }
             else
             {
