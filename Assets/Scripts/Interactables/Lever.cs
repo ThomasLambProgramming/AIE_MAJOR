@@ -79,7 +79,6 @@ namespace Malicious.Interactables
         public void Rotating()
         {
             timer += Time.deltaTime;
-            Debug.Log("e");
             if (timer > timeForRotate)
             {
                 GameEventManager.GeneralUpdate -= Rotating;
