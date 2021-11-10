@@ -12,6 +12,9 @@ namespace Malicious.UI
 
         public static VoiceText _voiceText = null;
 
+        [SerializeField] List<string> _levelOneText = new List<string>();
+
+
         public bool _displaying = false;
         private void Start()
         {

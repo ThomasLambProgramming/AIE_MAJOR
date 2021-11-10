@@ -195,6 +195,7 @@ namespace Malicious.Core
         {
             if (GlobalData.InputManager != null)
                 GlobalData.InputManager.Dispose();
+
             PlayerUpdate        = null;
             PlayerFixedUpdate   = null;
             EnemyUpdate         = null;
