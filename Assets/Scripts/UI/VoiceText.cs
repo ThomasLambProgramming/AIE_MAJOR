@@ -30,7 +30,7 @@ namespace Malicious.UI
             switch (a_level)
             {
                 case 0:
-                    _text.text = _LevelOne[a_index];
+                    //_text.text = _LevelOne[a_index];
                     break;
                 case 1:
                     _text.text = _LevelTwo[a_index];
@@ -52,28 +52,24 @@ namespace Malicious.UI
             _UIObject.SetActive(false);
         }
 
-        public static string[] _LevelOne =
+        [ContextMenu("Load First level text")]
+        public void _LevelOne()
         {
-            $"Mad Scientist: \"This thing working? Good. Conducting supervirus test Alpha-Omega-twelve. First Stage: Movement. Ok, try moving around.",
+            List<string> test = new List<string>();
+            test.Add($"Mad Scientist: \"This thing working? Good. Conducting supervirus test Alpha-Omega-twelve. First Stage: Movement. Ok, try moving around.");
+            test.Add($"Mad Scientist: \"Well, that seems to be working. Go to the next stage. I've installed new processes that lets you jump in midair. Figure it out.");
+            test.Add($"Mad Scientist: \"You're a computer virus. You know how to hack into things. Figure it out.");
+            test.Add($"Mad Scientist: \"By the way, you can access your operating interface using a certain button. Escape, I think.");
+            test.Add($"Mad Scientist: \"H-hey! I said don’t touch the core! Stop! Get out of there! That’s not for you!");
+            test.Add($"Mad Scientist: \"Oh, it got into the file core space. Not good. Well, it’s defective, but it works. Commencing virus shutdown.");
+            test.Add("Mad Scientist: \"... ");
+            test.Add("Mad Scientist: \"Hmmm.");
+            test.Add("Mad Scientist: \"...");
+            test.Add("Mad Scientist: \"Darn it, I knew this thing was defective. Don’t go anywhere. And don’t touch that core!\"");
 
-            $"Mad Scientist: \"Well, that seems to be working. Go to the next stage. I've installed new processes that lets you jump in midair. Figure it out.",
-
-            $"Mad Scientist: \"You're a computer virus. You know how to hack into things. Figure it out.",
-
-            $"Mad Scientist: \"By the way, you can access your operating interface using a certain button. Escape, I think.",
-
-            $"Mad Scientist: \"H-hey! I said don’t touch the core! Stop! Get out of there! That’s not for you!",
-
-            $"Mad Scientist: \"Oh, it got into the file core space. Not good. Well, it’s defective, but it works. Commencing virus shutdown."
-                + "\n" +
-            "Mad Scientist: \"... "
-                + "\n" +
-            "Mad Scientist: \"Hmmm."
-                + "\n" +
-            "Mad Scientist: \"..."
-                + "\n" +
-            "Mad Scientist: \"Darn it, I knew this thing was defective. Don’t go anywhere. And don’t touch that core!\""
-        };
+            Subtitles._subtitles.GiveText(test);
+            
+        }
         public static string[] _LevelTwo =
         {
             $"Mad Scientist: \"You can’t escape. It’s impossible." + "\n" + 
