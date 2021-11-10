@@ -9,6 +9,7 @@ namespace Malicious.Core
         [SerializeField] private Transform init_mainCamTransform = null;
         [SerializeField] private CinemachineVirtualCamera init_player = null;
         [SerializeField] private CinemachineVirtualCamera init_moveable = null;
+        [SerializeField] private CinemachineVirtualCamera init_spring = null;
         [SerializeField] private CinemachineVirtualCamera init_pointOfInterest = null;
         [SerializeField] private CinemachineVirtualCamera init_wire = null;
         [SerializeField] private CinemachineVirtualCamera init_groundEnemy = null;
@@ -17,6 +18,7 @@ namespace Malicious.Core
         private static Transform _mainCamTransform = null;
         private static CinemachineVirtualCamera _player = null;
         private static CinemachineVirtualCamera _moveable = null;
+        private static CinemachineVirtualCamera _spring = null;
         private static CinemachineVirtualCamera _pointOfInterest = null;
         private static CinemachineVirtualCamera _wire = null;
         private static CinemachineVirtualCamera _groundEnemy = null;
@@ -42,6 +44,7 @@ namespace Malicious.Core
             _wire = init_wire;
             _groundEnemy = init_groundEnemy;
             _flyingEnemy = init_flyingEnemy;
+            _spring = init_spring;
         }
 
         public static void DisableCameraMovement()
@@ -102,6 +105,9 @@ namespace Malicious.Core
                     break;
                 case ObjectType.FlyingEnemy:
                     _currentHackableCamera = _flyingEnemy;
+                    break;
+                case ObjectType.Spring:
+                    _currentHackableCamera = _spring;
                     break;
             }
             

@@ -458,7 +458,8 @@ MonoBehaviour:
   _yDifferenceAllowed: 1
   _isHacked: 0
   _lookGoal: {fileID: 0}
-  _nodeRenderer: {fileID: 7811915866741279038}
+  _nodeRenderer:
+  - {fileID: 7811915866741279038}
   _defaultMaterial: {fileID: 2100000, guid: d1eeebe788db5104c8d97017edc8e609, type: 2}
   _hackValidMaterial: {fileID: 2100000, guid: 7ee697073afcfaf409c815a90adcac2d, type: 2}
   _hackedMaterial: {fileID: 2100000, guid: 1a488f52648afa542b0787ed10c7ca14, type: 2}

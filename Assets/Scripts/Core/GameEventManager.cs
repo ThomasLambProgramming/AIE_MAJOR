@@ -97,6 +97,14 @@ namespace Malicious.Core
 
         private void PausePressed(InputAction.CallbackContext a_context)
         {
+            if (VoiceText._voiceText._displaying)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                VoiceText._voiceText.HideText();
+                return;
+            }
+
             if (!_paused)
             {
                 Cursor.lockState = CursorLockMode.Confined;

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Malicious.Hackable;
 using Malicious.Interactables;
+using System.Collections.Generic;
 
 namespace Malicious.Core
 {
@@ -33,7 +34,7 @@ namespace Malicious.Core
         //This is to allow for sphere colliders or box colliders as needed
 
         //Material Variables//
-        [SerializeField] private MeshRenderer _nodeRenderer = null;
+        [SerializeField] private List<MeshRenderer> _nodeRenderer = new List<MeshRenderer>();
         [SerializeField] private Material _defaultMaterial = null;
         [SerializeField] private Material _hackValidMaterial = null;
         [SerializeField] private Material _hackedMaterial = null;
@@ -53,14 +54,25 @@ namespace Malicious.Core
         {
             _hackValid = true;
             _onHackValidEvent?.Invoke();
-            _nodeRenderer.material = _hackValidMaterial;
+            if (_nodeRenderer != null && _nodeRenderer.Count <= 0)
+                return;
+            foreach (var node in _nodeRenderer)
+            {
+                node.material = _hackValidMaterial;
+            }
         }
 
         public void OnHackFalse()
         {
             _hackValid = false;
             _onHackFalseEvent?.Invoke();
-            _nodeRenderer.material = _defaultMaterial;
+            if (_nodeRenderer != null && _nodeRenderer.Count > 0)
+            {
+                foreach (var node in _nodeRenderer)
+                {
+                    node.material = _defaultMaterial;
+                }
+            }
             _holdTime = 0;
             _holdingHackButton = false;
         }
@@ -133,7 +145,14 @@ namespace Malicious.Core
                 {
                     _hackable._player = _player;
                     _hackable.OnHackEnter();
-                    _nodeRenderer.material = _hackedMaterial;
+                    if (_nodeRenderer != null && _nodeRenderer.Count > 0)
+                    {
+
+                        foreach (var node in _nodeRenderer)
+                        {
+                            node.material = _hackedMaterial;
+                        }
+                    }
                     _player.OnHackExit();
                     _player = null;
                 }
