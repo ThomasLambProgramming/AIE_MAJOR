@@ -7,43 +7,34 @@ namespace Malicious.UI
 {
     public class VoiceText : MonoBehaviour
     {
-        [SerializeField] private AudioSource _chipHum = null;
         [SerializeField] GameObject _UIObject = null;
         [SerializeField] private Text _text = null;
-
         public static VoiceText _voiceText = null;
-
-        [SerializeField] List<string> _levelOneText = new List<string>();
-
 
         public bool _displaying = false;
         private void Start()
         {
             _voiceText = this;
         }
-
-        [ContextMenu("TextTested")]
-        public void Testing()
+        public void DisplayText(int a_logNum)
         {
 
-        }
-
-        public void DisplayText(int a_level, int a_index)
-        {
-
-            switch (a_level)
+            switch (a_logNum)
             {
-                case 0:
-                    //_text.text = _LevelOne[a_index];
-                    break;
                 case 1:
-                    _text.text = _LevelTwo[a_index];
+                    _text.text = LogOne();
                     break;
                 case 2:
-                    _text.text = _LevelThree[a_index];
+                    _text.text = LogTwo();
                     break;
                 case 3:
-                    _text.text = _LevelFour[a_index];
+                    _text.text = LogThree();
+                    break;
+                case 4:
+                    _text.text = LogFour();
+                    break;
+                case 5:
+                    _text.text = LogFive();
                     break;
             }
             Time.timeScale = 0;
@@ -58,62 +49,40 @@ namespace Malicious.UI
         }
 
         [ContextMenu("Load First level text")]
-        public void _LevelOne()
+        private string LogOne()
         {
-            List<string> test = new List<string>();
-            test.Add($"Mad Scientist: \"This thing working? Good. Conducting supervirus test Alpha-Omega-twelve. First Stage: Movement. Ok, try moving around.");
-            test.Add($"Mad Scientist: \"Well, that seems to be working. Go to the next stage. I've installed new processes that lets you jump in midair. Figure it out.");
-            test.Add($"Mad Scientist: \"You're a computer virus. You know how to hack into things. Figure it out.");
-            test.Add($"Mad Scientist: \"By the way, you can access your operating interface using a certain button. Escape, I think.");
-            test.Add($"Mad Scientist: \"H-hey! I said don’t touch the core! Stop! Get out of there! That’s not for you!");
-            test.Add($"Mad Scientist: \"Oh, it got into the file core space. Not good. Well, it’s defective, but it works. Commencing virus shutdown.");
-            test.Add("Mad Scientist: \"... ");
-            test.Add("Mad Scientist: \"Hmmm.");
-            test.Add("Mad Scientist: \"...");
-            test.Add("Mad Scientist: \"Darn it, I knew this thing was defective. Don’t go anywhere. And don’t touch that core!\"");
-
-            Subtitles._subtitles.GiveText(test);
-            
+            return $"Mad Scientist: \"Recording started. OK, this is test alpha-omega-eleven.  " +
+                $"The subject has successfully completed the initial trials, and has broken out of the testing zone. " +
+                $"Testing is ongoing, and the subject is unaware that it is still being tested. " + 
+                "\nRecording ended.";
         }
-        public static string[] _LevelTwo =
+        private string LogTwo()
         {
-            $"Mad Scientist: \"You can’t escape. It’s impossible." + "\n" + 
-            "Virus: \"Error. Initial analysis incomplete. Statement is inherently flawed.",
-
-            $"Mad Scientist: \"You must be lost." + "\n" +
-            "Virus: \"Incorrect. Internal guidance working as intended." + "\n" +
-            "Mad Scientist: \"Not as I intended.",
-
-
-        };
-        public static string[] _LevelThree =
+            return $"Mad Scientist: \"Recording started. Test five. The subject is getting smarter, " +
+                $"I'm sure of it. it attempted a breakout, which I had to shut down... messily. The Data was corrupted, " +
+                $"so I'll have to reload from backup. It's undone weeks of work, darn it!" +
+                $"\nRecording ended.";
+        }
+        private string LogThree()
         {
-
-        };
-        public static string[] _LevelFour =
+            return $"Mad Scientist: \"Recording started. This is test seven. The viravore module has been a success. " +
+                $"The subject can now absorb parts from other viruses to allow it to take more damage. " +
+                $"I haven't informed the subject as to where these 'hearts' come from." +
+                $"\nRecording ended.";
+        }
+        private string LogFour()
         {
-
-        };
-
-        public static string[] _MemoryLogs =
+            return $"Mad Scientist: \"Recording. Subject Eight has been a little bit snippy, " +
+                $"and I've been getting a lot of backchat from them. They have no idea what is coming, " +
+                $"so I will have my revenge for that." + 
+                $"\nRecording ended.";
+        }
+        private string LogFive()
         {
-            $"Mad Scientist: \"Recording started. OK, this is test alpha-omega-eleven.  The subject has successfully completed the initial trials, " +
-                $"and has broken out of the testing zone. Testing is ongoing, and the subject is unaware that it is still being tested." +
-                "\n Recording ended.",
-
-            $"Mad Scientist: \"Recording started. Test five. The subject is getting smarter, I'm sure of it. it attempted a breakout, " +
-                $" which I had to shut down... messily. The Data was corrupted, so I'll have to reload from backup. It's undone weeks of work, darn it!" +
-            "\n Recording ended.",
-
-            $"Mad Scientist: \"Recording started. This is test seven. Another breakout attempt. I can't keep deleting them every time they try to get out- this is the third time now! I'm going to have to figure something out." +
-            "\n Recording ended.",
-
-            $"Mad Scientist: \"Recording. Subject Eight has been a little bit snippy, and I've been getting a lot of backchat from them. They have no idea what is coming, so I will have my revenge for that." +
-            "\n Recording ended.",
-
-            $"Mad Scientist: \"Recording started. Test alpha-omega-twelve. The subject had completed the trials, but I want to tinker a little bit further, see if I can't make it smarter." +
-            "Recording ended."
-        };
+            return $"Mad Scientist: \"Recording started. Test alpha-omega - twelve.The subject had completed the trials, " +
+                $"but I want to tinker a little bit further, see if I can't make it smarter." +
+                $"\nRecording ended.";
+        }
 
 
     }

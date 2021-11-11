@@ -64,11 +64,13 @@ namespace Malicious.UI
         public void SetFirstInOptions()
         {
             _eventSystem.SetSelectedGameObject(_firstObjectInOptions);
+            _firstObjectInOptions.GetComponent<Button>().Select();
             _optionsButton.Select();
         }
         public void SetFirstToPause()
         {
             _eventSystem.SetSelectedGameObject(_firstObjectInPause);
+            _firstObjectInPause.GetComponent<Button>().Select();
             _pauseButton.Select();
         }
     }

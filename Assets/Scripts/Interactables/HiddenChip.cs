@@ -6,14 +6,14 @@ namespace Malicious.Interactables
 {
     class HiddenChip : MonoBehaviour
     {
-        [SerializeField] int _index = 0;
-        [SerializeField] int _levelIndex = 0;
+        [SerializeField] int _logNumber = 0;
+        
 
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.CompareTag("Player"))
             {
-                VoiceText._voiceText.DisplayText(_levelIndex, _index);
+                VoiceText._voiceText.DisplayText(_logNumber);
                 Destroy(this.gameObject);
             }
         }

@@ -413,6 +413,9 @@ namespace Malicious.Core
             //the 2 y velocity check is so the player can jump just before the arc of their jump
             if ((_canJump || _hasDoubleJumped == false) && _rigidbody.velocity.y < _maxVelocityToJump)
             {
+                if (gameObject.activeInHierarchy == false)
+                    return; 
+
                 StartCoroutine(JumpWait());
                 Vector3 prevVel = _rigidbody.velocity;
                 prevVel.y = _jumpForce;

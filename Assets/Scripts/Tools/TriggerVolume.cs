@@ -13,6 +13,8 @@ namespace Malicious.Tools
         [SerializeField] private UnityEvent onEnterEvents;
         [SerializeField] private UnityEvent onStayEvents;
         [SerializeField] private UnityEvent onExitEvents;
+        [SerializeField] private bool _repeatable = false;
+        private bool _activated = false;
         
         private void Start()
         {
@@ -22,9 +24,11 @@ namespace Malicious.Tools
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("Player") == false)
+            if (other.gameObject.CompareTag("Player") == false || _activated)
                 return;
             onEnterEvents?.Invoke();
+            if (!_repeatable)
+                _activated = true;
         }
         private void OnTriggerStay(Collider other)
         {

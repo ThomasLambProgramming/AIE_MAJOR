@@ -23,7 +23,7 @@ namespace Malicious.Hackable
         [SerializeField] private float _exitForce = 2;
         [Tooltip("Exit location z (blue one) is used for the direction to launch player")]
         [SerializeField] private Transform _exitLocation = null;
-        [SerializeField] private AudioSource _droneSound = null;
+
         [SerializeField] private float _resetWaitTime = 4f;
         [SerializeField] private float _hitForce = 5;
         private bool _isHacked = false;
