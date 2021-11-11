@@ -28,6 +28,10 @@ namespace Malicious.Hackable
         [SerializeField] private float _exitForce = 5f;
         [SerializeField] private float _waitTimeOnExit = 1.5f;
         [SerializeField] private float _hitForce = 4f;
+
+        [SerializeField] private Transform _leftWheelTransform = null;
+        [SerializeField] private Transform _rightWheelTransform = null;
+        
         private int direction = 1;
         private bool _huntPlayer = false;
         private GameObject _playerObject = null;

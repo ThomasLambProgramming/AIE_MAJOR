@@ -65,11 +65,13 @@ namespace Malicious.Core
         [SerializeField] private LayerMask _groundMask = ~0;
         [SerializeField] private Transform _groundCheck = null;
         [SerializeField] private float _groundCheckAngleAllowance = 0.7f;
+        [SerializeField] private float _groundCheckWaitTime = 0.3f;
         private bool _canJump = true;
         private bool _hasDoubleJumped = false;
         private bool _launchedBySpring = false;
         private bool _holdingJump = false;
         private bool _isJumping = false;
+        private bool _checkGround = true;
         //private bool _isJumping = false;
 
         [SerializeField] private float _groundCheckDelay = 0.2f;
@@ -92,7 +94,6 @@ namespace Malicious.Core
         private int _amountOfUpFans = 0;
         private int _amountOfHozFans = 0;
         //--------------------------------//
-
 
         //Misc Variables That couldnt be grouped
         [SerializeField] private Transform _cameraTransform = null;
@@ -424,17 +425,31 @@ namespace Malicious.Core
                 _playerAnimator.SetBool(_Jumped, true);
                 _playerAnimator.SetBool(_Landed, false);
                 _playerAnimator.SetBool(_Falling, false);
-                
+
                 if (_canJump == false)
+                {
                     _hasDoubleJumped = true;
+                    _playerAnimator.SetBool(_Falling, false);
+                    _playerAnimator.SetBool(_DoubleJump, true);
+                }
                 
                 _canJump = false;
                 _isJumping = true;
+                StartCoroutine(GroundWait());
             }
         }
 
+        IEnumerator GroundWait()
+        {
+            _checkGround = false;
+            yield return new WaitForSeconds(_groundCheckWaitTime);
+            _checkGround = true;
+        }
         private void GroundCheck()
         {
+            if (!_checkGround || _rigidbody.velocity.y > 0.2f)
+                return;
+            
             Collider[] collisions = Physics.OverlapSphere(_groundCheck.position, 0.5f, _groundMask);
 
             List<Collider> colliderContainer = new List<Collider>();
@@ -447,21 +462,40 @@ namespace Malicious.Core
                 }
             }
             
+            
             if (colliderContainer.Count <= 0)
             {
                 _canJump = false;
                 if (_rigidbody.velocity.y < 0)
+                {
                     _playerAnimator.SetBool(_Falling, true);
+                    _playerAnimator.SetBool(_DoubleJump, false);
+                    _playerAnimator.SetBool(_Landed, false);   
+                }
             }
             else if (_isJumping && _inFanHoriz)
             {
                 _playerAnimator.SetBool(_Landed, true);
                 _playerAnimator.SetBool(_Falling, false);
                 _playerAnimator.SetBool(_Jumped, false);
+                _playerAnimator.SetBool(_DoubleJump, false);
+
                 _isJumping = false;
                 _canJump = true;
                 _hasDoubleJumped = false;
             }
+            else if (colliderContainer.Count > 0)
+            {
+                _playerAnimator.SetBool(_Landed, true);
+                _playerAnimator.SetBool(_Falling, false);
+                _playerAnimator.SetBool(_Jumped, false);
+                _playerAnimator.SetBool(_DoubleJump, false);
+
+                _isJumping = false;
+                _canJump = true;
+                _hasDoubleJumped = false;
+            }
+            
         }
 
         #endregion
@@ -642,6 +676,7 @@ namespace Malicious.Core
         #region Input
 
         private bool _heldInputDown;
+        private static readonly int _DoubleJump = Animator.StringToHash("DoubleJump");
 
         private void InteractionInputEnter(InputAction.CallbackContext a_context)
         {
