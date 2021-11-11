@@ -9,10 +9,14 @@ namespace Malicious.UI
         [SerializeField] private int _level = 1;
         [SerializeField] private int _index = 1;
         [SerializeField] private float _waitTime = 3f;
-        
+        [SerializeField] private float _playerWaitTime = 0f;
 
         public void LoadText()
         {
+            if (_playerWaitTime > 0.0f)
+            {
+
+            }
             switch(_level)
             {
                 case 1:
