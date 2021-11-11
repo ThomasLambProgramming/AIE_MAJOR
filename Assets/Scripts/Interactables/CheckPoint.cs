@@ -16,7 +16,7 @@ namespace Malicious.Interactables
         [SerializeField] private Material _hackedMaterial = null;
         [SerializeField] private Material _baseHacked = null;
         [SerializeField] private Material _baseDefault = null;
-
+        [SerializeField] private AudioSource _activateSound = null;
         [SerializeField] private MeshRenderer _mainBeacon = null;
         [SerializeField] private MeshRenderer _beaconTopRenderer = null;
         [SerializeField] private MeshRenderer _middleBeaconRenderer = null;
@@ -24,7 +24,7 @@ namespace Malicious.Interactables
         [SerializeField] private GameObject _beaconObj = null;
         private float _openHeight = 2.3f;
         private float _closeHeight = 1.76f;
-
+        private bool _activated = false;
         private float _timer = 0;
         private float _animSpeed = 2f;
         private void Start()
@@ -37,9 +37,12 @@ namespace Malicious.Interactables
         public void TurnOn()
         {
             StartCoroutine(Open());
+            if (!_activated)
+                _activateSound.Play();
             _beaconTopRenderer.material = _hackedMaterial;
             _middleBeaconRenderer.material = _hackedMaterial;
             _mainBeacon.material = _baseHacked;
+            _activated = true;
         }
         public void TurnOff()
         {
@@ -47,6 +50,7 @@ namespace Malicious.Interactables
             _beaconTopRenderer.material = _defaultMaterial;
             _middleBeaconRenderer.material = _defaultMaterial;
             _mainBeacon.material = _baseDefault;
+            _activated = false;
         }
         IEnumerator Open()
         {

@@ -6,7 +6,7 @@ namespace Malicious.GameItems
         [SerializeField] private float _openSpeed = 3f;
         [SerializeField] private Vector3 _targetPosition = Vector3.zero;
         [SerializeField] private int _coresNeededToOpen = 0;
-        
+        [SerializeField] private AudioSource _openingAudio = null;
         private Vector3 _startingPosition = Vector3.zero;
         private float _timer = 0;
         private bool _wait = true;
@@ -55,10 +55,12 @@ namespace Malicious.GameItems
         {
             _openDoor = true;
             _wait = false;
+            _openingAudio.Play();
         }
         [ContextMenu("Close Door")]
         public void Close()
         {
+            _openingAudio.Play();
             _openDoor = false;
             _wait = false;
         }

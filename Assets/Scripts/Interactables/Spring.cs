@@ -15,6 +15,7 @@ namespace Malicious.Interactables
         [SerializeField] private float _horizontalAllowance = 3f;
         [SerializeField] private float _animationTime = 1f;
         [SerializeField] private float _blockHorizontalAllow = 1.5f;
+        [SerializeField] private AudioSource _springAudio = null;
         private Animator _launchAnimation = null;
         
         
@@ -71,6 +72,7 @@ namespace Malicious.Interactables
                     objectRb.velocity = rbVel;
                     _launchAnimation.enabled = true;
                     _launchAnimation.SetBool(_Launched, true);
+                    _springAudio.Play();
                     StartCoroutine(Launched());
                 }
             }
