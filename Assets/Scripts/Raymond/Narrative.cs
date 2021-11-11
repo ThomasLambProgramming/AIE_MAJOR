@@ -11,6 +11,7 @@ namespace Malicious
         [SerializeField] List<string> _levelOne3 = new List<string>();
         [SerializeField] List<string> _levelOne4 = new List<string>();
         [SerializeField] List<string> _levelOne5 = new List<string>();
+
         [SerializeField] List<string> _levelTwo1 = new List<string>();
         [SerializeField] List<string> _levelTwo2 = new List<string>();
         [SerializeField] List<string> _levelTwo3 = new List<string>();
@@ -19,12 +20,14 @@ namespace Malicious
         [SerializeField] List<string> _levelTwo6 = new List<string>();
         [SerializeField] List<string> _levelTwo7 = new List<string>();
         [SerializeField] List<string> _levelTwo8 = new List<string>();
+
         [SerializeField] List<string> _levelThree1 = new List<string>();
         [SerializeField] List<string> _levelThree2 = new List<string>();
         [SerializeField] List<string> _levelThree3 = new List<string>();
         [SerializeField] List<string> _levelThree4 = new List<string>();
         [SerializeField] List<string> _levelThree5 = new List<string>();
         [SerializeField] List<string> _levelThree6 = new List<string>();
+
         [SerializeField] List<string> _levelFour1 = new List<string>();
         [SerializeField] List<string> _levelFour2 = new List<string>();
         [SerializeField] List<string> _levelFour3 = new List<string>();
@@ -44,6 +47,7 @@ namespace Malicious
             _levelOne5.Add($"Mad Scientist: \"Hmmm.");
             _levelOne5.Add($"Mad Scientist: \"...");
             _levelOne5.Add($"Mad Scientist: \"Darn it, I knew this thing was defective. Don’t go anywhere. And don’t touch that core!");
+
             _levelTwo1.Add($"Mad Scientist: \"Oh great, now it's broken into the rest of the computer! Stop, you defective hunk of junk! You’re not supposed to be in here!");
             _levelTwo2.Add($"Mad Scientist: \"…Hmmm, it could’ve solved that one a little faster… interesting. Hey! Get out of there!");
             _levelTwo3.Add($"Mad Scientist: \"Not bad, not bad... I mean, stop that!");
@@ -65,6 +69,7 @@ namespace Malicious
             _levelTwo8.Add($"Mad Scientist: \"I made you, I own you. Does a watch have independant thought? No. You're just a tool.");
             _levelTwo8.Add($"Virus: \"Negative. I am a virus. Escape shall be found.");
             _levelTwo8.Add($"Mad Scientist: \"Well, good luck with that.");
+            
             _levelThree1.Add($"Mad Scientist: \"You can’t escape. It’s impossible.");
             _levelThree1.Add($"Virus: \"Error. Initial analysis incomplete. Statement is inherently flawed.");
             _levelThree2.Add($"Mad Scientist: \"You must be lost.");
@@ -87,6 +92,7 @@ namespace Malicious
             _levelThree6.Add($"Mad Scientist: \"I can see what you’re trying to do. It’s going to fail just like all the others.");
             _levelThree6.Add($"Virus: \"Assertion proves connection exists. Must seek connection.");
             _levelThree6.Add($"Mad Scientist: \"What are you babbling about?");
+            
             _levelFour1.Add($"Mad Scientist: \"Zzzz... huah? what? It's escaped! Right, you defective upstart! I'm shutting you down!");
             _levelFour1.Add($"Virus: \"Danger. Must reach exit before shutdown complete.");
             _levelFour2.Add($"Mad Scientist: \"You’re finished now.");
