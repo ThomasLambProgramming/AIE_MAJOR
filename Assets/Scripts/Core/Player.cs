@@ -102,6 +102,14 @@ namespace Malicious.Core
         private HackableField _currentHackableField = null;
         [SerializeField] private CheckPoint _activeCheckpoint = null;
         //--------------------------------//
+
+        
+        IEnumerator NarrativeWait(float a_waitTime)
+        {
+            _movementDisabled = true;
+            yield return new WaitForSeconds(a_waitTime);
+            _movementDisabled = false;
+        }
         #endregion
         public void SetHackableField(HackableField a_field)
         {

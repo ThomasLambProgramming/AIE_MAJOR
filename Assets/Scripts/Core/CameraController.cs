@@ -108,6 +108,10 @@ namespace Malicious.Core
                     break;
                 case ObjectType.Spring:
                     _currentHackableCamera = _spring;
+                    float newYSpring = _mainCamTransform.rotation.eulerAngles.y;
+                    Vector3 offsetEularSpring = a_offset.rotation.eulerAngles;
+                    offsetEularSpring.y = newYSpring;
+                    a_offset.rotation = Quaternion.Euler(offsetEularSpring);
                     break;
             }
             
