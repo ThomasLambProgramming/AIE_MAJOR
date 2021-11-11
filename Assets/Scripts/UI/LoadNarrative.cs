@@ -8,7 +8,7 @@ namespace Malicious.UI
     {
         [SerializeField] private int _level = 1;
         [SerializeField] private int _index = 1;
-
+        [SerializeField] private float _waitTime = 3f;
         
 
         public void LoadText()
@@ -16,16 +16,16 @@ namespace Malicious.UI
             switch(_level)
             {
                 case 1:
-                    Subtitles._subtitles.GiveText(LevelOne());
+                    Subtitles._subtitles.GiveText(LevelOne(), _waitTime);
                     break;
                 case 2:
-                    Subtitles._subtitles.GiveText(LevelTwo());
+                    Subtitles._subtitles.GiveText(LevelTwo(), _waitTime);
                     break;
                 case 3:
-                    Subtitles._subtitles.GiveText(LevelThree());
+                    Subtitles._subtitles.GiveText(LevelThree(), _waitTime);
                     break;
                 case 4:
-                    Subtitles._subtitles.GiveText(LevelFour());
+                    Subtitles._subtitles.GiveText(LevelFour(), _waitTime);
                     break;
             }
         }
