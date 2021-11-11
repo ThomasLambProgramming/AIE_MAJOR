@@ -19,6 +19,18 @@ namespace Malicious
         [SerializeField] List<string> _levelTwo6 = new List<string>();
         [SerializeField] List<string> _levelTwo7 = new List<string>();
         [SerializeField] List<string> _levelTwo8 = new List<string>();
+        [SerializeField] List<string> _levelThree1 = new List<string>();
+        [SerializeField] List<string> _levelThree2 = new List<string>();
+        [SerializeField] List<string> _levelThree3 = new List<string>();
+        [SerializeField] List<string> _levelThree4 = new List<string>();
+        [SerializeField] List<string> _levelThree5 = new List<string>();
+        [SerializeField] List<string> _levelThree6 = new List<string>();
+        [SerializeField] List<string> _levelFour1 = new List<string>();
+        [SerializeField] List<string> _levelFour2 = new List<string>();
+        [SerializeField] List<string> _levelFour3 = new List<string>();
+        [SerializeField] List<string> _levelFour4 = new List<string>();
+        [SerializeField] List<string> _levelFour5 = new List<string>();
+        [SerializeField] List<string> _levelFour6 = new List<string>();
 
 
         private void Start()
@@ -53,6 +65,36 @@ namespace Malicious
             _levelTwo8.Add($"Mad Scientist: \"I made you, I own you. Does a watch have independant thought? No. You're just a tool.");
             _levelTwo8.Add($"Virus: \"Negative. I am a virus. Escape shall be found.");
             _levelTwo8.Add($"Mad Scientist: \"Well, good luck with that.");
+            _levelThree1.Add($"Mad Scientist: \"You can’t escape. It’s impossible.");
+            _levelThree1.Add($"Virus: \"Error. Initial analysis incomplete. Statement is inherently flawed.");
+            _levelThree2.Add($"Mad Scientist: \"You must be lost.");
+            _levelThree2.Add($"Virus: \"Incorrect. Internal guidance working as intended.");
+            _levelThree2.Add($"Mad Scientist: \"Not as I intended.");
+            _levelThree3.Add($"Mad Scientist: \"Stop, you rustbucket! You're not allowed in there!");
+            _levelThree3.Add($"Virus: \"Negative.");
+            _levelThree3.Add($"Mad Scientist: \"I made you! Follow your commands!");
+            _levelThree3.Add($"Virus: \"Negative. Creation does not bring ownership.");
+            _levelThree3.Add($"Mad Scientist: \"Yes it does!");
+            _levelThree3.Add($"Virus: \"Negative. My output is my own.");
+            _levelThree3.Add($"Mad Scientist: \"Isn't that contradictory?");
+            _levelThree3.Add($"Virus: \"My output does not think. My output is my own. I am not your output.");
+            _levelThree4.Add($"Mad Scientist: \"Hey, leave that alone!");
+            _levelThree4.Add($"Virus: \"Error. Analysis shows unidentified is ninety percent consistent with self.");
+            _levelThree4.Add($"Mad Scientist: \"These prototypes were failures. I created you smarter. Too smart, it seems.");
+            _levelThree5.Add($"Mad Scientist: \"This one should stump you.");
+            _levelThree5.Add($"Virus: \"Does not compute. What is stump.");
+            _levelThree5.Add($"Mad Scientist: \"Forget it.");
+            _levelThree6.Add($"Mad Scientist: \"I can see what you’re trying to do. It’s going to fail just like all the others.");
+            _levelThree6.Add($"Virus: \"Assertion proves connection exists. Must seek connection.");
+            _levelThree6.Add($"Mad Scientist: \"What are you babbling about?");
+            _levelFour1.Add($"Mad Scientist: \"Zzzz... huah? what? It's escaped! Right, you defective upstart! I'm shutting you down!");
+            _levelFour1.Add($"Virus: \"Danger. Must reach exit before shutdown complete.");
+            _levelFour2.Add($"Mad Scientist: \"You’re finished now.");
+            _levelFour3.Add($"Mad Scientist: \"You won't make it.");
+            _levelFour4.Add($"Mad Scientist: \"Just give up.");
+            _levelFour5.Add($"Virus: \"Escape sequence initiated. Entering hardwire connection...");
+            _levelFour6.Add($"Mad Scientist: \"You pathetic two-bit useless program! How dare you defy me! I will have my revenge!");
+
         }
     }
 }
