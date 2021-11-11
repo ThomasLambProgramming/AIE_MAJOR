@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 856198083119821386}
   - component: {fileID: 732872609}
   - component: {fileID: 732872611}
-  - component: {fileID: 732872610}
+  - component: {fileID: 1781819183834318464}
   m_Layer: 0
   m_Name: HiddenChip
   m_TagString: Untagged
@@ -143,7 +143,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &732872610
+--- !u!114 &1781819183834318464
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,14 +152,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 47854260717250800}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e0f08b654f33994cbf484916533717b, type: 3}
+  m_Script: {fileID: 11500000, guid: e3e92e8826a830f40ae3a23b285a14b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _chipHum: {fileID: 732872611}
-  _UIObject: {fileID: 0}
-  _text: {fileID: 0}
-  _levelOneText: []
-  _displaying: 0
+  _index: 0
+  _levelIndex: 0
+  _offsetAmount: 0.25
+  _rotateSpeed: 40
+  _moveSpeed: 3
 --- !u!1 &339615027971203624
 GameObject:
   m_ObjectHideFlags: 0

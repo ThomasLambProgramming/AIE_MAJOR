@@ -10,9 +10,6 @@ namespace Malicious.UI
         public static Subtitles _subtitles = null;
         [SerializeField] private float _fadeSpeed = 2f;
         [SerializeField] private float _waitTime = 5f;
-
-        private static bool _displayingText = false;
-
         private Text _text = null;
         
        

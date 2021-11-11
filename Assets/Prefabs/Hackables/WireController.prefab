@@ -124,9 +124,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2e20528d08341168202ba3c03743845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 10
-  _maxSpeed: 8
-  _spinSpeed: 5
+  _moveSpeed: 20
+  _maxSpeed: 14
+  _spinSpeed: 10
   _cameraTransform: {fileID: 0}
   _player: {fileID: 0}
   _hasHoldOption: 1
@@ -141,8 +141,8 @@ MonoBehaviour:
   _heightAngleAllowance: 0.6
   _wireLength: 2.5
   _wireCharges: 5
-  _stoppingDistance: 0.01
-  _dissolveTime: 1
+  _stoppingDistance: 0.05
+  _dissolveTime: 0.25
   _wireStopMask:
     serializedVersion: 2
     m_Bits: 4294967295

@@ -136,6 +136,7 @@ namespace Malicious.Core
         {
             if (_paused)
             {
+                Cursor.lockState = CursorLockMode.Locked;
                 GamePauseExit?.Invoke();
                 Time.timeScale = 1f;
                 _paused = false;
