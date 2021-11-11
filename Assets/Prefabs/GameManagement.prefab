@@ -3074,14 +3074,14 @@ MonoBehaviour:
   _maxSpeed: 5
   _fanMoveSpeedScale: 0.5
   _spinSpeedModel: 5
-  _slowDownSpeed: 0.85
+  _slowDownSpeed: 0.3
   _minXCameraAngle: -30
   _maxXCameraAngle: 60
   _cameraOffset: {fileID: 3453307704990204556}
   _cameraAngleMin: 1
   _animationSwapSpeed: 3
   _playerAnimator: {fileID: 0}
-  _maxVelocityToJump: 0.6
+  _maxVelocityToJump: 0.5
   _jumpForce: 5
   _additionalGravity: -9.81
   _groundMask:
