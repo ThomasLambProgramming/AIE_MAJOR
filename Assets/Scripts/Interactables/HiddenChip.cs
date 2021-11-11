@@ -1,19 +1,21 @@
 ﻿using System;
 using UnityEngine;
 using Malicious.UI;
+using UnityEngine.Events;
 
 namespace Malicious.Interactables
 {
     class HiddenChip : MonoBehaviour
     {
         [SerializeField] int _logNumber = 0;
-        
+        [SerializeField] UnityEvent _onCollisionEvent = null;
 
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.CompareTag("Player"))
             {
                 VoiceText._voiceText.DisplayText(_logNumber);
+                _onCollisionEvent?.Invoke();
                 Destroy(this.gameObject);
             }
         }
