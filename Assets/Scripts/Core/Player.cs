@@ -278,6 +278,7 @@ namespace Malicious.Core
             gameObject.SetActive(true);
             CameraController.ChangeCamera(ObjectType.Player, _cameraOffset);
             _heldInputDown = false;
+            GameEventManager._CurrentManager._hackingOutAudio.Play();
         }
         public void OnHackExit()
         {
@@ -287,6 +288,7 @@ namespace Malicious.Core
             GameEventManager.PlayerFixedUpdate -= FixedTick;
             gameObject.SetActive(false);
             _heldInputDown = false;
+            GameEventManager._CurrentManager._hackingInAudio.Play();
         }
         private void Movement()
         {
@@ -556,8 +558,9 @@ namespace Malicious.Core
             if (a_other.gameObject.CompareTag("CheckPoint"))
             {
                 CheckPoint currentCheckPoint = a_other.GetComponent<CheckPoint>();
+                
 
-                if (_activeCheckpoint != null)
+                if (_activeCheckpoint != null && _activeCheckpoint != currentCheckPoint)
                     _activeCheckpoint.TurnOff();
 
                 _activeCheckpoint = currentCheckPoint;

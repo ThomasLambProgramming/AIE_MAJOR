@@ -9,6 +9,7 @@ namespace Malicious.GameItems
         [SerializeField] float _offsetAmount = 2f;
         [SerializeField] float _rotateSpeed = 10f;
         [SerializeField] float _moveSpeed = 10f;
+       
 
         private Vector3 _initalPosition = Vector3.zero;
         private void Start()
@@ -29,6 +30,7 @@ namespace Malicious.GameItems
         {
             if (other.gameObject.CompareTag("Player"))
             {
+                GameEventManager._CurrentManager._heartAudio.Play();
                 GameEventManager.PlayerHealedFunc();
                 //run particle effect or something
                 gameObject.SetActive(false);
