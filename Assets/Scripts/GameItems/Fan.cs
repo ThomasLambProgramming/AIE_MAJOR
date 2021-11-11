@@ -20,7 +20,7 @@ namespace Malicious.GameItems
         [SerializeField] private float _horizontalDifferenceAllow = 2f;
         private float _sqrhorizontalDifferenceAllow = 2f;
 
-
+        [SerializeField] private AudioSource _fanAudio = null;
         [SerializeField] private LayerMask _objectsAllowed = ~0;
         [SerializeField] private Vector3 _launchDirection = Vector3.up;
 
@@ -171,7 +171,14 @@ namespace Malicious.GameItems
         private void FixedUpdate()
         {
             if (!_isActive)
+            {
+                if (_fanAudio.isPlaying)
+                    _fanAudio.Stop();
                 return;
+            }
+            else
+                if (!_fanAudio.isPlaying)
+                    _fanAudio.Play();
 
             ApplyForces(ref _playerList, _minPlayerForce, _maxPlayerForce, _playerVelLimit, _correctionPlayerForce, _velocityPreservePlayer);
             ApplyForces(ref _groundEnemyList, _minGroundEnemyForce, _maxGroundEnemyForce, _groundEnemyVelLimit, _correctionGroundEnemyForce, _velocityPreserveGroundEnemy);

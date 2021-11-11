@@ -8,11 +8,17 @@ namespace Malicious.Core
 {
     public class GameEventManager : MonoBehaviour
     {
+        public AudioSource _hackingInAudio = null;
+        public AudioSource _hackingOutAudio = null;
+        public AudioSource _heartAudio = null;
+
+
+
         //These events is seperated to allow for more options
         //such as disabling the player update while a cutscene is active
         //without needing heaps of if statements on when the player can and 
         //cannot move
-    
+
         /// <summary>
         /// Player update event
         /// </summary>
@@ -69,6 +75,8 @@ namespace Malicious.Core
         [SerializeField] private FadeTransition _fadeTransitionInit = null;
         //I cant be bothered at this point and im just making things static so its easy to reference
         public static FadeTransition _fadeTransition = null;
+
+        
         void Update()
         {
             PlayerUpdate?.Invoke();
