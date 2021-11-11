@@ -409,6 +409,7 @@ MonoBehaviour:
   _playerRotateSpeed: 70
   _exitForce: 2
   _exitLocation: {fileID: 529712657}
+  _droneSound: {fileID: 0}
   _resetWaitTime: 4
   _hitForce: 10
   _raycastMask:
@@ -434,7 +435,7 @@ MonoBehaviour:
   _isHacked: 0
   _lookGoal: {fileID: 875079078}
   _nodeRenderer:
-  - {fileID: 0}
+  - {fileID: 875079080}
   _defaultMaterial: {fileID: 2100000, guid: 310a192cc6f2a6047879474c021f8b91, type: 2}
   _hackValidMaterial: {fileID: 2100000, guid: 041a0fa5019f8b34c97ebfbb20e6099c, type: 2}
   _hackedMaterial: {fileID: 2100000, guid: d5de0c944dfb4444aaf8dbc89a2ac117, type: 2}
