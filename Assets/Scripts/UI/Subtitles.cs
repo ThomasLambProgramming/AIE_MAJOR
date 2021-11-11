@@ -10,6 +10,7 @@ namespace Malicious.UI
         public static Subtitles _subtitles = null;
         [SerializeField] private float _fadeSpeed = 2f;
         [SerializeField] private float _waitTime = 5f;
+        [SerializeField] private float _inbetweenTime = 1.1f;
         private Text _text = null;
         
        
@@ -27,8 +28,9 @@ namespace Malicious.UI
         }
 
         
-        public void GiveText(List<string> a_text)
+        public void GiveText(List<string> a_text, float a_speed)
         {
+            _waitTime = a_speed;
             _speech.Clear();
             _speech = a_text;
             _text.text = _speech[0];
@@ -48,11 +50,18 @@ namespace Malicious.UI
             if (_doneFading)
             {
                 _waitTimer += Time.deltaTime;
-                if (_waitTimer > _waitTime)
+                if (_fadeIn)
+                {
+                    if (_waitTimer > _inbetweenTime)
+                    {
+                        _waitTimer = 0;
+                        _doneFading = false;
+                    }
+                }
+                else if (_waitTimer > _waitTime)
                 {
                     _waitTimer = 0;
                     _doneFading = false;
-
                 }
             }
             else if (_fadeIn || _fadeOut)
