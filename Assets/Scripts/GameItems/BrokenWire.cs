@@ -9,7 +9,7 @@ namespace Malicious.GameItems
         [SerializeField] private BoxCollider _areaCollider = null;
         [SerializeField] private float _activeTime = 2f;
         [SerializeField] private float _offTime = 1f;
-
+        [SerializeField] private AudioSource _arcSound = null;
         [SerializeField] private float _arcWidth = 0.5f;
         [SerializeField] private float _arcOnTime = 1;
         [SerializeField] private float _arcOffTime = 1;
@@ -46,12 +46,18 @@ namespace Malicious.GameItems
         public void Update()
         {
             if (!_turnedOn)
+            {
                 return;
+            }
+            else 
 
             _Activetimer += Time.deltaTime;
             
             if (_isActive)
             {
+                if (!_arcSound.isPlaying)
+                    _arcSound.Play();
+
                 if (_Activetimer >= _activeTime)
                 {
                     _Activetimer = 0;
@@ -63,6 +69,9 @@ namespace Malicious.GameItems
             }
             else
             {
+                if (_arcSound.isPlaying)
+                    _arcSound.Stop();
+
                 if (_Activetimer >= _offTime)
                 {
                     _Activetimer = 0;

@@ -37,7 +37,7 @@ namespace Malicious.Interactables
         public void TurnOn()
         {
             StartCoroutine(Open());
-            if (!_activated)
+            if (!_activated && _activateSound != null)
                 _activateSound.Play();
             _beaconTopRenderer.material = _hackedMaterial;
             _middleBeaconRenderer.material = _hackedMaterial;

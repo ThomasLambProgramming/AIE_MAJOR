@@ -11,7 +11,7 @@ namespace Malicious.Core
         public AudioSource _hackingInAudio = null;
         public AudioSource _hackingOutAudio = null;
         public AudioSource _heartAudio = null;
-
+        public AudioSource _pauseAudio = null;
 
 
         //These events is seperated to allow for more options
@@ -115,6 +115,7 @@ namespace Malicious.Core
 
             if (!_paused)
             {
+                _pauseAudio.Play();
                 Cursor.lockState = CursorLockMode.Confined;
                 Time.timeScale = 0;
                 GamePauseStart?.Invoke();
