@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Malicious.Core;
 
 namespace Malicious.UI
 {
@@ -15,7 +16,7 @@ namespace Malicious.UI
         {
             if (_playerWaitTime > 0.0f)
             {
-
+                Player._player.NarrativePlayer(_playerWaitTime);
             }
             switch(_level)
             {

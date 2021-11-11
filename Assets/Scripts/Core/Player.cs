@@ -11,7 +11,7 @@ namespace Malicious.Core
     {
 
         #region Variables
-        
+
         //Speed Variables//
         [SerializeField] private float _moveSpeed = 100f;
         [SerializeField] private float _maxSpeed = 4f;
@@ -19,7 +19,7 @@ namespace Malicious.Core
         [SerializeField] private float _spinSpeedModel = 5f;
         [SerializeField] private float _slowDownSpeed = 0.85f;
         //-------------------------------------//
-        
+
         //Camera Variables//
         public static float _spinSpeedCamX = 5f;
         public static float _spinSpeedCamY = 5f;
@@ -32,7 +32,7 @@ namespace Malicious.Core
         [SerializeField] private Transform _cameraOffset = null;
         [SerializeField] private float _cameraAngleMin = 1f;
         //-------------------------------------//
-        
+
         //Animator Variables//
         [SerializeField] private float _animationSwapSpeed = 3f;
         [SerializeField] private Animator _playerAnimator = null;
@@ -40,24 +40,19 @@ namespace Malicious.Core
         private static readonly int _Jumped = Animator.StringToHash("Jumped");
         private static readonly int _Falling = Animator.StringToHash("Falling");
         private static readonly int _Landed = Animator.StringToHash("Landed");
-        private static readonly int _ResetToRun = Animator.StringToHash("ResetToRun");
-        //[SerializeField] private float _jumpDuration = 1.5f;
-        //[SerializeField] private float _landResetDuration = 1.5f;
-        //[SerializeField] private float _landDuration = 1.5f;
-        
-        //private readonly int _jumpingVariable = Animator.StringToHash("Jumping");
-        //private float _currentRunAmount = 0f;
+
+
         private float _prevRunAnimAmount = 0;
         //--------------------------------//
-        
-        
+
+
         //Input Variables//
         private Vector2 _moveInput = Vector2.zero;
         private Vector2 _spinInput = Vector2.zero;
 
         //-------------------------------------//
-        
-        
+
+
         //Jumping Variables//
         [SerializeField] private float _maxVelocityToJump = 0.6f;
         [SerializeField] private float _jumpForce = 10f;
@@ -76,8 +71,8 @@ namespace Malicious.Core
 
         [SerializeField] private float _groundCheckDelay = 0.2f;
         //--------------------------------//
-        
-        
+
+
         //IFrame Variables//
         private bool _isPaused = false;
         private bool _iFrameActive = false;
@@ -103,7 +98,12 @@ namespace Malicious.Core
         [SerializeField] private CheckPoint _activeCheckpoint = null;
         //--------------------------------//
 
-        
+        //I hate this whole thing
+        public static Player _player = null;
+        public void NarrativePlayer(float a_float)
+        {
+            StartCoroutine(NarrativeWait(a_float));
+        }
         IEnumerator NarrativeWait(float a_waitTime)
         {
             _movementDisabled = true;
@@ -164,6 +164,7 @@ namespace Malicious.Core
             _spinSpeedCamY = GlobalData._cameraSettings.CameraYSpeed;
             _invertCamX = GlobalData._cameraSettings.InvertX;
             _invertCamY = GlobalData._cameraSettings.InvertY;
+            _player = this;
         }
         private void Tick()
         {
