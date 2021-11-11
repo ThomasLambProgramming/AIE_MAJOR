@@ -10,7 +10,7 @@ namespace Malicious.GameItems
         [SerializeField] private LayerMask _mask;
         [SerializeField] private UnityEvent _OnEvent;
         [SerializeField] private UnityEvent _OffEvent;
-
+        [SerializeField] private AudioSource _pressurePlateDownAudio = null;
         //This is for checking that objects are still in holding it down
         private List<GameObject> _containedObjects = new List<GameObject>();
         private void OnTriggerEnter(Collider other)
@@ -29,6 +29,7 @@ namespace Malicious.GameItems
                     //we only want to press it down when its the first object
                     //this is all done so multiple objects can be on it without causing issues
                     //or overlaps
+                    _pressurePlateDownAudio.Play();
                     _OnEvent?.Invoke();
                 }
             }

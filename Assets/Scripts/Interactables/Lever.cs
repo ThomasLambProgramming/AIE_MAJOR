@@ -15,7 +15,7 @@ namespace Malicious.Interactables
         [SerializeField] private float timeForRotate = 2f;
         [SerializeField] private float rotateAmount = 70;
         [SerializeField] private Transform rotateAnchor = null;
-        
+        [SerializeField] private AudioSource _leverActivateSound = null;
         
         
         //private bool _beenHacked = false;
@@ -53,6 +53,7 @@ namespace Malicious.Interactables
                 return;
             if (!isOn)
             {
+                _leverActivateSound.Play();
                 onEvent?.Invoke();
                 isOn = true;
                 isRotating = true;
@@ -63,6 +64,7 @@ namespace Malicious.Interactables
             {
                 if (reusable)
                 {
+                    _leverActivateSound.Play();
                     offEvent?.Invoke();
                     isOn = false;
                     timer = 0;

@@ -18,7 +18,7 @@ namespace Malicious.Hackable
         [SerializeField] private int _buildIndexOfChange = 0;
         private bool _activated = false;
         private ParticleSystem _particleSystem = null;
-
+        [SerializeField] private AudioSource _coreHackSound = null;
         [SerializeField] private List<WallLight> _lights = new List<WallLight>();
         [SerializeField] private Door _door1 = null;
         [SerializeField] private Door _door2 = null;
@@ -44,6 +44,7 @@ namespace Malicious.Hackable
             if (_activated)
                 return;
 
+            _coreHackSound.Play();
             _activated = true;
             if (_isLevelChangeCore)
             {

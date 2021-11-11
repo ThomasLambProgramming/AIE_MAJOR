@@ -7,6 +7,7 @@ namespace Malicious.UI
 {
     public class VoiceText : MonoBehaviour
     {
+        [SerializeField] private AudioSource _chipHum = null;
         [SerializeField] GameObject _UIObject = null;
         [SerializeField] private Text _text = null;
 

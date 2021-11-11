@@ -68,7 +68,22 @@ namespace Malicious.Hackable
             Vector3 directionToTarget = _flightPath[_pathIndex] - transform.position;
             if (Vector3.SqrMagnitude(directionToTarget) > _goNextDistance)
             {
-                Quaternion lookDirection = Quaternion.LookRotation(directionToTarget);
+                Vector3 desiredVelocity = Vector3.Normalize(directionToTarget) * _maxSpeed;
+                Vector3 steeringForce = desiredVelocity - _rigidbody.velocity;
+
+                if (steeringForce.sqrMagnitude > _sqrMaxTurningSpeed)
+                {
+                    steeringForce = steeringForce.normalized * _maxTurningSpeed;
+                }
+                _rigidbody.velocity += steeringForce * Time.deltaTime;
+
+                if (_rigidbody.velocity.magnitude > _maxSpeed)
+                {
+                    _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
+                }
+
+
+                Quaternion lookDirection = Quaternion.LookRotation(_rigidbody.velocity.normalized);
 
                 if (transform.rotation != lookDirection)
                 {
