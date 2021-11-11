@@ -16,7 +16,7 @@ namespace Malicious.UI
         [SerializeField] private GameObject _controlSchemeObject = null;
         [SerializeField] private GameObject _firstObjectInPause = null;
         [SerializeField] private GameObject _firstObjectInOptions = null;
-        [SerializeField] private Button _pauseButton = null;
+        
         [SerializeField] private Button _optionsButton = null;
         [SerializeField] private Button _controlLayoutButton = null;
 
@@ -40,7 +40,7 @@ namespace Malicious.UI
             _controlSchemeObject.SetActive(false);
             GlobalData.InputManager.Player.BackButton.performed += BackOut;
             SetFirstToPause();
-            StartCoroutine(WaitToSelectPause());
+            
         }
 
         private void OnPauseExit()
@@ -73,18 +73,13 @@ namespace Malicious.UI
         }
         public void SetFirstToPause()
         {
+            _eventSystem.SetSelectedGameObject(null);
             _eventSystem.SetSelectedGameObject(_firstObjectInPause);
-            _pauseButton.Select();
         }
         public void SetFirstToControlScheme()
         {
             _eventSystem.SetSelectedGameObject(_controlSchemeObject);
             _controlLayoutButton.Select();
-        }
-        IEnumerator WaitToSelectPause()
-        {
-            yield return new WaitForSeconds(0.4f);
-            _pauseButton.Select();
         }
     }
 }
