@@ -2426,14 +2426,14 @@ MonoBehaviour:
   _maxSpeed: 5
   _fanMoveSpeedScale: 0.5
   _spinSpeedModel: 5
-  _slowDownSpeed: 0.85
+  _slowDownSpeed: 0.3
   _minXCameraAngle: -30
   _maxXCameraAngle: 60
   _cameraOffset: {fileID: 3453307704990204556}
   _cameraAngleMin: 1
   _animationSwapSpeed: 3
   _playerAnimator: {fileID: 0}
-  _maxVelocityToJump: 0.6
+  _maxVelocityToJump: 0.5
   _jumpForce: 5
   _additionalGravity: -9.81
   _groundMask:
@@ -5381,6 +5381,7 @@ MonoBehaviour:
   _hackingInAudio: {fileID: 589785442}
   _hackingOutAudio: {fileID: 589785441}
   _heartAudio: {fileID: 589785443}
+  _pauseAudio: {fileID: 0}
   _fadeTransitionInit: {fileID: 3453307705462060265}
 --- !u!114 &3453307705607170851
 MonoBehaviour:
@@ -5728,6 +5729,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e0f08b654f33994cbf484916533717b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _chipHum: {fileID: 0}
   _UIObject: {fileID: 1494605327}
   _text: {fileID: 1568860626}
   _levelOneText: []
