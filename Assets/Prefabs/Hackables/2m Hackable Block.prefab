@@ -411,7 +411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 100
-  _maxSpeed: 4
+  _maxSpeed: 5
   _spinSpeed: 40
   _cameraTransform: {fileID: 8584930223012037216}
   _player: {fileID: 0}
@@ -439,6 +439,7 @@ MonoBehaviour:
   _onHackExitEvent:
     m_PersistentCalls:
       m_Calls: []
+  _onPressurePlate: 0
 --- !u!114 &563411767771454171
 MonoBehaviour:
   m_ObjectHideFlags: 0
