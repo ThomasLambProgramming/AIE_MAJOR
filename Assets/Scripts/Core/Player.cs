@@ -460,7 +460,7 @@ namespace Malicious.Core
             if (!_checkGround || _rigidbody.velocity.y > 0.2f)
                 return;
             
-            Collider[] collisions = Physics.OverlapSphere(_groundCheck.position, 0.5f, _groundMask);
+            Collider[] collisions = Physics.OverlapSphere(_groundCheck.position, 0.2f, _groundMask);
 
             List<Collider> colliderContainer = new List<Collider>();
 
@@ -500,12 +500,11 @@ namespace Malicious.Core
                 _playerAnimator.SetBool(_Falling, false);
                 _playerAnimator.SetBool(_Jumped, false);
                 _playerAnimator.SetBool(_DoubleJump, false);
-
+            
                 _isJumping = false;
                 _canJump = true;
                 _hasDoubleJumped = false;
             }
-            
         }
 
         #endregion
