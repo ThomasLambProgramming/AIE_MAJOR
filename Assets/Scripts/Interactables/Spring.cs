@@ -45,7 +45,7 @@ namespace Malicious.Interactables
             Vector3 directionToObject = other.gameObject.transform.position - transform.position;
             directionToObject.y = 0;
             
-            if (other.gameObject.layer == 16)
+            if (other.gameObject.layer == 16 || other.gameObject.layer == 15)
             {
                 //since blocks stick out past their mid point it needs extra allowance then the player
                 if (directionToObject.magnitude > _blockHorizontalAllow)
