@@ -172,12 +172,12 @@ namespace Malicious.GameItems
         {
             if (!_isActive)
             {
-                if (_fanAudio.isPlaying)
+                if (_fanAudio != null && _fanAudio.isPlaying)
                     _fanAudio.Stop();
                 return;
             }
             else
-                if (!_fanAudio.isPlaying)
+                if (_fanAudio != null && !_fanAudio.isPlaying)
                     _fanAudio.Play();
 
             ApplyForces(ref _playerList, _minPlayerForce, _maxPlayerForce, _playerVelLimit, _correctionPlayerForce, _velocityPreservePlayer);

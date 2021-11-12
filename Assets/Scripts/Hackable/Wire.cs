@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Malicious.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace Malicious.Hackable
 {
@@ -17,7 +18,8 @@ namespace Malicious.Hackable
         //for it to dissolve in to avoid any logic being needed
         [SerializeField] private GameObject _wirePrefab = null;
         [SerializeField] private Vector3 _startingCameraDirection = Vector3.zero;
-        
+        [SerializeField] private Text _chargeUi = null;
+        [SerializeField] private string _defaultChargeText = "Charge Left: ";
         //------Other Variables----------------//
         [SerializeField] private Vector3 _startingDirection = Vector3.zero;
         [SerializeField] private float _heightAngleAllowance = 0.6f;
@@ -95,6 +97,8 @@ namespace Malicious.Hackable
         public override void OnHackEnter()
         {
             CameraController.ChangeCamera(ObjectType.Wire, _wireCameraOffset);
+            _chargeUi = _wireModel.GetComponentInChildren<Text>();
+            _chargeUi.text = _defaultChargeText + _chargesLeft;
             base.OnHackEnter();
             _wireModel.SetActive(true);
             _wireModel.transform.rotation = Quaternion.LookRotation(_startingCameraDirection);
@@ -241,6 +245,7 @@ namespace Malicious.Hackable
                     _takingInput = false;
                     _moveToEnd = true;
                     _chargesLeft--;
+                    _chargeUi.text = _defaultChargeText + _chargesLeft;
                     _wirePath.Add(newWirePoint);
                     GameObject accessVar = 
                         Instantiate(_wirePrefab, 
@@ -315,6 +320,7 @@ namespace Malicious.Hackable
                 return;
             _takingInput = false;
             _chargesLeft++;
+            _chargeUi.text = _defaultChargeText + _chargesLeft;
             _moveToEnd = true;
             _pathIndex--;
                 
@@ -439,6 +445,8 @@ namespace Malicious.Hackable
             }
 
             _player.transform.position = _wireModel.transform.position + _wireModel.transform.forward;
+
+            //change to look direction
             Vector3 wireModelEular = _wireModel.transform.rotation.eulerAngles;
             Vector3 playerEular = _player.transform.rotation.eulerAngles;
             

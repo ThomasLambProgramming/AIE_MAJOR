@@ -99,6 +99,10 @@ namespace Malicious.Core
                     break;
                 case ObjectType.Wire:
                     _currentHackableCamera = _wire;
+                    float newYWire = _mainCamTransform.rotation.eulerAngles.y;
+                    Vector3 offsetEularWire = a_offset.rotation.eulerAngles;
+                    offsetEularWire.y = newYWire;
+                    a_offset.rotation = Quaternion.Euler(offsetEularWire);
                     break;
                 case ObjectType.GroundEnemy:
                     _currentHackableCamera = _groundEnemy;
