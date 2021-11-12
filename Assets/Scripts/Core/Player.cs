@@ -107,6 +107,7 @@ namespace Malicious.Core
         IEnumerator NarrativeWait(float a_waitTime)
         {
             _movementDisabled = true;
+            _moveInput = Vector3.zero;
             yield return new WaitForSeconds(a_waitTime);
             _movementDisabled = false;
         }

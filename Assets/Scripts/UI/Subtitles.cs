@@ -9,11 +9,18 @@ namespace Malicious.UI
     {
         public static Subtitles _subtitles = null;
         [SerializeField] private float _fadeSpeed = 2f;
-        [SerializeField] private float _waitTime = 5f;
+        [SerializeField] private List<float> _waitTime;
         [SerializeField] private float _inbetweenTime = 1.1f;
         private Text _text = null;
-        
-       
+
+        private bool _done = true;
+        private bool _fadeIn = false;
+        private bool _fadeOut = false;
+        private bool _doneFading = true;
+        private float _timer = 0;
+        private float _waitTimer = 0;
+
+
         [ContextMenu("TestingFunction")]
         public void LoadText()
         {
@@ -28,9 +35,9 @@ namespace Malicious.UI
         }
 
         
-        public void GiveText(List<string> a_text, float a_speed)
+        public void GiveText(List<string> a_text, List<float> a_waitTimes)
         {
-            _waitTime = a_speed;
+            _waitTime = a_waitTimes;
             _speech.Clear();
             _speech = a_text;
             _text.text = _speech[0];
@@ -39,12 +46,7 @@ namespace Malicious.UI
             _fadeIn = true;
         }
 
-        private bool _done = false;
-        private bool _fadeIn = false;
-        private bool _fadeOut = false;
-        private bool _doneFading = true;
-        private float _timer = 0;
-        private float _waitTimer = 0;
+        
         public void Update()
         {
             if (_doneFading)
@@ -58,7 +60,7 @@ namespace Malicious.UI
                         _doneFading = false;
                     }
                 }
-                else if (_waitTimer > _waitTime)
+                else if (_waitTimer > _waitTime[0])
                 {
                     _waitTimer = 0;
                     _doneFading = false;
@@ -104,6 +106,7 @@ namespace Malicious.UI
                     {
                         _text.text = _speech[0];
                         _speech.RemoveAt(0);
+                        _waitTime.RemoveAt(0);
                     }
                     else
                     {
