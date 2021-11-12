@@ -199,7 +199,7 @@ MonoBehaviour:
   _isHacked: 0
   _lookGoal: {fileID: 0}
   _nodeRenderer:
-  - {fileID: 0}
+  - {fileID: 4089482448764841744}
   _defaultMaterial: {fileID: 2100000, guid: 310a192cc6f2a6047879474c021f8b91, type: 2}
   _hackValidMaterial: {fileID: 2100000, guid: 041a0fa5019f8b34c97ebfbb20e6099c, type: 2}
   _hackedMaterial: {fileID: 2100000, guid: d5de0c944dfb4444aaf8dbc89a2ac117, type: 2}
@@ -305,5 +305,10 @@ PrefabInstance:
 --- !u!4 &543450652792968169 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 64ff6f72b4ce57c4d9fe02b230dde68d, type: 3}
+  m_PrefabInstance: {fileID: 907064322}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &4089482448764841744 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -5133889587185050862, guid: 64ff6f72b4ce57c4d9fe02b230dde68d, type: 3}
   m_PrefabInstance: {fileID: 907064322}
   m_PrefabAsset: {fileID: 0}

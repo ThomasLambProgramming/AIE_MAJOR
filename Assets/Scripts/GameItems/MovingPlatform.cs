@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Malicious.Core;
 using UnityEngine;
+using Malicious.Hackable;
 
 namespace Malicious.GameItems
 {
@@ -137,6 +138,11 @@ namespace Malicious.GameItems
                 other.gameObject.CompareTag("Block")|| 
                 other.gameObject.CompareTag("FlyingEnemy"))
             {
+                if (other.gameObject.layer == 16)
+                {
+                    if (other.gameObject.GetComponent<MoveableBlock>()._onPressurePlate)
+                        return;
+                }
                 other.transform.parent = this.transform;
                 if (_waitPlayer && waiting)
                 {
@@ -169,6 +175,8 @@ namespace Malicious.GameItems
                 
                 return;
             }
+            if (other.transform.parent == transform)
+                other.transform.parent = null;
             
             if (other.gameObject.CompareTag("Player") || 
                 other.gameObject.CompareTag("Hackable") || 

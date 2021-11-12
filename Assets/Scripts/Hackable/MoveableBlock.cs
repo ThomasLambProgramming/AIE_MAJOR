@@ -31,7 +31,7 @@ namespace Malicious.Hackable
         [SerializeField] private UnityEvent _onHackExitEvent = null;
         private Vector3 _startingPosition = Vector3.zero;
         private GameObject _stackedObject = null;
-
+        public bool _onPressurePlate = false;
         public static bool _invertCamX = false;
         public static float _spinSpeedCamX = 5f;
         //public static float _spinSpeedCamY = 5f;

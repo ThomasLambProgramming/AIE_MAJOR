@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Malicious.Hackable;
 
 namespace Malicious.GameItems
 {
@@ -23,6 +24,10 @@ namespace Malicious.GameItems
             
             if ((_mask & (1 << other.gameObject.layer)) > 0)
             {
+                if (other.gameObject.layer == 16)
+                {
+                    other.gameObject.GetComponent<MoveableBlock>()._onPressurePlate = true;
+                }
                 _containedObjects.Add(other.gameObject);
                 if (_containedObjects.Count == 1)
                 {
@@ -42,6 +47,10 @@ namespace Malicious.GameItems
 
             if (_containedObjects.Contains(other.gameObject))
             {
+                if (other.gameObject.layer == 16)
+                {
+                    other.gameObject.GetComponent<MoveableBlock>()._onPressurePlate = false;
+                }
                 _containedObjects.Remove(other.gameObject);
                 if (_containedObjects.Count <= 0)
                 {
