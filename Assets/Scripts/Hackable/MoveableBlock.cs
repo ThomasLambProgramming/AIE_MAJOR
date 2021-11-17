@@ -26,6 +26,9 @@ namespace Malicious.Hackable
         [SerializeField] private float _yAngle = -2f;
         [SerializeField] private float _rampCheckDistance = 3f;
         [SerializeField] private float _rampAngleAllowance = 0.5f;
+
+        [SerializeField] private float _maxYDifferenceRamp = 0.09f;
+        
         [SerializeField] private LayerMask _rampMask = ~0;
         [SerializeField] private UnityEvent _onHackEnterEvent = null;
         [SerializeField] private UnityEvent _onHackExitEvent = null;
@@ -95,14 +98,18 @@ namespace Malicious.Hackable
                 {
                     if (Vector3.Dot(hit.normal, Vector3.up) > _rampAngleAllowance)
                     {
+                        if (Mathf.Abs(transform.position.y - hit.point.y) < _maxYDifferenceRamp)
+                        {
 
-                        Vector3 currentPos = transform.position;
 
-                        float yHit = hit.point.y;
-                        if (hit.point.y > transform.position.y)
-                            currentPos.y = yHit;
+                            Vector3 currentPos = transform.position;
 
-                        transform.position = currentPos;
+                            float yHit = hit.point.y;
+                            if (hit.point.y > transform.position.y)
+                                currentPos.y = yHit;
+
+                            transform.position = currentPos;
+                        }
                     }
                 }
             }
