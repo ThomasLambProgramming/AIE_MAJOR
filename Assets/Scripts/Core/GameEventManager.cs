@@ -3,6 +3,7 @@ using System.Collections;
 using Malicious.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Malicious.Hackable;
 
 namespace Malicious.Core
 {
@@ -65,6 +66,7 @@ namespace Malicious.Core
         public static GameEventManager _CurrentManager = null; 
 
         private static bool _paused = false;
+        public static bool _inFirstWireUI = false;
         
         private static int _playerHealth = 3;
         
@@ -105,6 +107,14 @@ namespace Malicious.Core
 
         private void PausePressed(InputAction.CallbackContext a_context)
         {
+            if (Wire._inFirstUi)
+            {
+                if (Wire._currentWire != null)
+                {
+                    Wire._currentWire.ExitFirstUI();
+                    return;
+                }
+            }
             if (VoiceText._voiceText != null && VoiceText._voiceText._displaying)
             {
                 Cursor.lockState = CursorLockMode.Locked;
