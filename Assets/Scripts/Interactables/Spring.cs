@@ -63,7 +63,7 @@ namespace Malicious.Interactables
 
                     if (other.gameObject.layer == 10)
                         rbVel.y = _launchForce;
-                    if (other.gameObject.layer == 16)
+                    if (other.gameObject.layer == 16 || other.gameObject.layer == 15)
                         rbVel.y = _blockLaunchForce;
                     if (other.gameObject.layer == 11)
                         rbVel.y = _groundEnemyLaunchForce;

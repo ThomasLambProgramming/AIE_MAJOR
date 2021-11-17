@@ -58,6 +58,7 @@ namespace Malicious.Core
                 return;
             foreach (var node in _nodeRenderer)
             {
+                Debug.Log("RAN");
                 node.material = _hackValidMaterial;
             }
         }

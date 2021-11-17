@@ -37,6 +37,7 @@ namespace Malicious.Hackable
         [SerializeField] private GameObject _firstUi = null;
         [HideInInspector] public static bool _inFirstUi = false;
         public static Wire _currentWire = null;
+        private bool _shownMenuOnce = false;
 
         private bool _dissolveRunning = false;
         private Vector3 _resetAmount = Vector3.zero;
@@ -110,10 +111,11 @@ namespace Malicious.Hackable
             _wireModel.transform.rotation = Quaternion.LookRotation(_startingCameraDirection);
             _wireModel.transform.position = _wirePath[0];
 
-            if (_isFirstWire)
+            if (_isFirstWire && _shownMenuOnce == false)
             {
                 _inFirstUi = true;
                 _firstUi.SetActive(true);
+                _shownMenuOnce = true;
             }
             if (_wirePath.Count > 1)
             {

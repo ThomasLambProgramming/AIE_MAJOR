@@ -29,6 +29,9 @@ namespace Malicious.Hackable
         private bool _isHacked = false;
         private GameObject _playerObject = null;
         private float _sqrMaxTurningSpeed = 0;
+        [SerializeField] private float _playerDotCheck = 0.7f;
+
+        
 
         private Vector3 originalPosition = Vector3.zero;
 
@@ -215,46 +218,45 @@ namespace Malicious.Hackable
         }
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("Fan"))
-            {
-            }
-
             if (other.gameObject.CompareTag("Laser"))
             {
                 _rigidbody.velocity = other.gameObject.GetComponent<BrokenWire>().DirectionToHit(transform.position) * _hitForce;
             }
-            if (other.gameObject.CompareTag("Player") && _wait == false)
-            {
-                other.gameObject.transform.parent = transform;
-                _playerObject = other.gameObject;
-            }
         }
         private void OnTriggerExit(Collider other)
         {
+           
+        }
+
+        private void OnCollisionEnter(Collision other)
+        {
             if (other.gameObject.CompareTag("Player"))
             {
-                other.gameObject.transform.parent = null;
+                //get the x,y of the collision then set it to the flying enemy height;
+                Vector3 location = other.transform.position;
+                location.y = transform.position.y;
+
+                Vector3 directionToPlayer = other.transform.position - location;
+                directionToPlayer = directionToPlayer.normalized;
+
+                if (Vector3.Dot(directionToPlayer, Vector3.up) > _playerDotCheck)
+                {
+                    if (_wait == false)
+                    {
+                        other.gameObject.transform.parent = transform;
+                        _playerObject = other.gameObject;
+                    }
+                }
+            }
+        }
+        private void OnCollisionExit(Collision collision)
+        {
+            if (collision.gameObject.CompareTag("Player") && collision.gameObject.transform.parent == transform)
+            {
+                collision.gameObject.transform.parent = null;
                 _playerObject = null;
             }
         }
-
-        //private void OnCollisionEnter(Collision other)
-        //{
-        //    //if (other.gameObject.CompareTag("Laser"))
-        //    //{
-        //    //    Vector3 movementDirection = (other.transform.position - transform.position).normalized;
-        //    //    Ray ray = new Ray(transform.position, movementDirection);
-        //    //    RaycastHit hit;
-        //    //    Vector3 forceDirection = Vector3.zero;
-        //    //    if (Physics.Raycast(ray, out hit, 10, _raycastMask))
-        //    //    {
-        //    //        forceDirection = hit.normal;
-        //    //    }
-        //    //    forceDirection.y = 0;
-        //    //    forceDirection = forceDirection.normalized;
-        //    //    _rigidbody.velocity = (forceDirection * _hitForce);
-        //    //}
-        //}
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()
