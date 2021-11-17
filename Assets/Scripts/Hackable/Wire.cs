@@ -33,6 +33,11 @@ namespace Malicious.Hackable
         [SerializeField] private float _launchForce = 0;
         [SerializeField] private float _resetSpeed = 2f;
 
+        [SerializeField] private bool _isFirstWire = false;
+        [SerializeField] private GameObject _firstUi = null;
+        [HideInInspector] public static bool _inFirstUi = false;
+        public static Wire _currentWire = null;
+
         private bool _dissolveRunning = false;
         private Vector3 _resetAmount = Vector3.zero;
         private bool _resetting = false;
@@ -96,6 +101,7 @@ namespace Malicious.Hackable
 
         public override void OnHackEnter()
         {
+            _currentWire = this;
             CameraController.ChangeCamera(ObjectType.Wire, _wireCameraOffset);
             _chargeUi = _wireModel.GetComponentInChildren<Text>();
             _chargeUi.text = _defaultChargeText + _chargesLeft;
@@ -103,6 +109,12 @@ namespace Malicious.Hackable
             _wireModel.SetActive(true);
             _wireModel.transform.rotation = Quaternion.LookRotation(_startingCameraDirection);
             _wireModel.transform.position = _wirePath[0];
+
+            if (_isFirstWire)
+            {
+                _inFirstUi = true;
+                _firstUi.SetActive(true);
+            }
             if (_wirePath.Count > 1)
             {
                 _moveToEnd = true;
@@ -117,6 +129,7 @@ namespace Malicious.Hackable
 
         public override void OnHackExit()
         {
+            _currentWire = null;
             base.OnHackExit();
             _pathIndex = 0;
             _rotationGoal = Quaternion.identity;
@@ -313,7 +326,7 @@ namespace Malicious.Hackable
 
         private void RemoveInputEnter(InputAction.CallbackContext a_context)
         {
-            if (_moveToEnd)
+            if (_moveToEnd || _inFirstUi)
                 return;
 
             if (_pathIndex == 0)
@@ -351,7 +364,7 @@ namespace Malicious.Hackable
         protected override void MoveInputEnter(InputAction.CallbackContext a_context)
         {
             //if we are moving then we dont want to be able to take in input
-            if (_moveToEnd)
+            if (_moveToEnd || _inFirstUi)
                 return;
             
             Vector2 input = a_context.ReadValue<Vector2>();
@@ -384,6 +397,9 @@ namespace Malicious.Hackable
         }
         protected override void JumpInputEnter(InputAction.CallbackContext a_context)
         {
+            if (_inFirstUi)
+                return;
+
             if (_chargesLeft == 0)
             {
                 ReturnToPlayer();
@@ -393,6 +409,8 @@ namespace Malicious.Hackable
         }
         protected override void DownInputEnter(InputAction.CallbackContext a_context)
         {
+            if (_inFirstUi)
+                return;
             if (_takingInput) 
                 AddPoint(-_wireModel.transform.up);
         }
@@ -400,6 +418,8 @@ namespace Malicious.Hackable
         private bool _interactionEntered = false;
         protected override void InteractionInputEnter(InputAction.CallbackContext a_context)
         {
+            if (_inFirstUi)
+                return;
             _interactionEntered = true;
             //Set to player
             _holdingInteractButton = true;
@@ -407,6 +427,8 @@ namespace Malicious.Hackable
         }
         protected override void InteractionInputExit(InputAction.CallbackContext a_context)
         {
+            if (_inFirstUi)
+                return;
             //Since the e key will enter to begin with the player can hold and use the exit before starting
             //so its possible to enter and be forced to hold the input key
             if (!_interactionEntered)
@@ -523,12 +545,27 @@ namespace Malicious.Hackable
         {
             base.EnableInput();
             GlobalData.InputManager.Player.RemoveWire.performed += RemoveInputEnter;
+            GlobalData.InputManager.Player.Pause.performed += EscapeInputEnter;
         }
 
         protected override void DisableInput()
         {
             base.DisableInput();
             GlobalData.InputManager.Player.RemoveWire.performed -= RemoveInputEnter;
+            GlobalData.InputManager.Player.Pause.performed -= EscapeInputEnter;
+        }
+
+        private void EscapeInputEnter(InputAction.CallbackContext a_context)
+        {
+            ExitFirstUI();
+        }
+        public void ExitFirstUI()
+        {
+            if (_isFirstWire && _firstUi.activeInHierarchy)
+            {
+                _inFirstUi = false;
+                _firstUi.SetActive(false);
+            }
         }
     }
     
