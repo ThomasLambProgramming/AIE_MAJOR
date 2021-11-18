@@ -1,6 +1,7 @@
 using Malicious.Core;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections.Generic;
 
 namespace Malicious.Interactables
 {
@@ -16,8 +17,12 @@ namespace Malicious.Interactables
         [SerializeField] private float rotateAmount = 70;
         [SerializeField] private Transform rotateAnchor = null;
         [SerializeField] private AudioSource _leverActivateSound = null;
-        
-        
+
+        [SerializeField] private List<MeshRenderer> _cableRenderers = new List<MeshRenderer>();
+        [SerializeField] private Material _onMaterial = null;
+        [SerializeField] private Material _defaultMaterial = null;
+
+
         //private bool _beenHacked = false;
         public void OnHackValid()
         {
@@ -27,7 +32,7 @@ namespace Malicious.Interactables
         }
         public float HackedHoldTime() => 0f;
         public bool HasHoldInput() => false;
-        public void HoldInputActivate(){}
+        public void HoldInputActivate() { }
 
 #if UNITY_EDITOR
         [SerializeField] private bool testEvents = false;
@@ -59,22 +64,34 @@ namespace Malicious.Interactables
                 isRotating = true;
                 timer = 0;
                 GameEventManager.GeneralUpdate += Rotating;
-            }
-            else
-            {
-                if (reusable)
+                if (_cableRenderers.Count > 0)
                 {
-                    _leverActivateSound.Play();
-                    offEvent?.Invoke();
-                    isOn = false;
-                    timer = 0;
-                    isRotating = true;
-                    GameEventManager.GeneralUpdate += Rotating;
-
+                    foreach (MeshRenderer renderer in _cableRenderers)
+                    {
+                        renderer.material = _onMaterial;
+                    }
+                }
+                else
+                {
+                    if (reusable)
+                    {
+                        _leverActivateSound.Play();
+                        offEvent?.Invoke();
+                        isOn = false;
+                        timer = 0;
+                        isRotating = true;
+                        GameEventManager.GeneralUpdate += Rotating;
+                        if (_cableRenderers.Count > 0)
+                        {
+                            foreach (MeshRenderer renderer in _cableRenderers)
+                            {
+                                renderer.material = _defaultMaterial;
+                            }
+                        }
+                    }
                 }
             }
         }
-
 
         //This is temp to make the lever rotate from one side to another
         //just for visuals (get the designers to make an animation for this

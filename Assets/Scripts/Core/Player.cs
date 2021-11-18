@@ -43,7 +43,7 @@ namespace Malicious.Core
         private static readonly int _Landed = Animator.StringToHash("Landed");
 
         public static Transform _wireModelTransform = null;
-
+        private Coroutine _narrativeCoroutine = null;
 
         private float _prevRunAnimAmount = 0;
         //--------------------------------//
@@ -75,7 +75,7 @@ namespace Malicious.Core
         [SerializeField] private float _groundCheckDelay = 0.2f;
         //--------------------------------//
 
-
+        private bool _narrativePause = false;
         //IFrame Variables//
         private bool _isPaused = false;
         private bool _iFrameActive = false;
@@ -105,14 +105,14 @@ namespace Malicious.Core
         public static Player _player = null;
         public void NarrativePlayer(float a_float)
         {
-            StartCoroutine(NarrativeWait(a_float));
+            _narrativeCoroutine = StartCoroutine(NarrativeWait(a_float));
         }
         IEnumerator NarrativeWait(float a_waitTime)
         {
-            _movementDisabled = true;
+            _narrativePause = true;
             _moveInput = Vector3.zero;
             yield return new WaitForSeconds(a_waitTime);
-            _movementDisabled = false;
+            _narrativePause = false;
         }
         #endregion
         public void SetHackableField(HackableField a_field)
@@ -309,6 +309,9 @@ namespace Malicious.Core
         }
         private void Movement()
         {
+            if (_narrativePause)
+                return;
+
             if (_moveInput != Vector2.zero && !_movementDisabled)
             {
                 Vector2 normalisedInput = _moveInput.normalized;
@@ -425,7 +428,7 @@ namespace Malicious.Core
         #region Jumping
         private void Jump()
         {
-            if (_movementDisabled)
+            if (_movementDisabled || _narrativePause)
                 return;
             //the 2 y velocity check is so the player can jump just before the arc of their jump
             if ((_canJump || _hasDoubleJumped == false) && _rigidbody.velocity.y < _maxVelocityToJump)
@@ -713,6 +716,11 @@ namespace Malicious.Core
         {
             if (!_holdingJump)
             {
+                if (_narrativePause)
+                {
+                    StopCoroutine(_narrativeCoroutine);
+                    _narrativePause = false;
+                }
                 Jump();
                 _holdingJump = true;
             }

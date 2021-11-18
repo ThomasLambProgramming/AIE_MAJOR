@@ -30,9 +30,12 @@ namespace Malicious.Hackable
         protected Vector2 _moveInput = Vector2.zero;
         protected Vector2 _spinInput = Vector2.zero;
         //-------------------------------------//
+        private HackableField _hackField = null;
 
-        
-
+        protected virtual void Start()
+        {
+            _hackField = GetComponent<HackableField>();
+        }
         protected virtual void Tick()
         {
         }
@@ -57,6 +60,10 @@ namespace Malicious.Hackable
             _spinInput = Vector2.zero;
             GameEventManager.PlayerUpdate -= Tick;
             GameEventManager.PlayerFixedUpdate -= FixedTick;
+            if (_hackField != null)
+            {
+                _hackField.ResetColors();
+            }
         }
         public virtual void HoldOptionActivate()
         {

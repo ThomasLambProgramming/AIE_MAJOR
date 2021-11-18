@@ -59,8 +59,9 @@ namespace Malicious.Hackable
         [SerializeField] private Vector3 _pointSize = new Vector3(0.4f, 0.4f, 0.4f);
         [SerializeField] private bool _showDirection = true;
         //[SerializeField] private bool _showLaunchDirection = true;
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             _chargesLeft = _wireCharges;
             _pathIndex = 0;
         }

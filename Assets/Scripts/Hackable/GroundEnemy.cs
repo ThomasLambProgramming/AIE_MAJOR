@@ -40,8 +40,9 @@ namespace Malicious.Hackable
         private Vector3 _directionToTarget = Vector3.zero;
         private Vector3 _startingPosition = Vector3.zero;
         private Quaternion _startingRotation = Quaternion.identity;
-        void Start()
+        protected override void Start()
         {
+            base.Start();
             GameEventManager.EnemyFixedUpdate += AiUpdate;
             _rigidbody = GetComponent<Rigidbody>();
             _sqrMaxSteeringForce = _maxSteeringForce * _maxSteeringForce;

@@ -96,7 +96,6 @@ namespace Malicious.Core
                         
                         Vector3 eularAmount = lookDirection.eulerAngles;
 
-                        Debug.Log(eularAmount);
                         Vector3 eularOffset = a_offset.rotation.eulerAngles;
                         eularOffset.y = eularAmount.y;
                         a_offset.rotation = Quaternion.Euler(eularOffset);

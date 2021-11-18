@@ -42,7 +42,14 @@ namespace Malicious.Core
 
         [SerializeField] private UnityEvent _onHackValidEvent = null;
         [SerializeField] private UnityEvent _onHackFalseEvent = null;
-        
+
+        public void ResetColors()
+        {
+            foreach(MeshRenderer renderer in _nodeRenderer)
+            {
+                renderer.material = _defaultMaterial;
+            }
+        }
         private void Start()
         {
             _hackable = GetComponent<BasePlayer>();

@@ -20,6 +20,9 @@ namespace Malicious.UI
         private float _timer = 0;
         private float _waitTimer = 0;
 
+        private bool _levelCoreActivated = false;
+
+        public static Subtitles _narrativeStatic = null;
 
         [ContextMenu("TestingFunction")]
         public void LoadText()
@@ -30,10 +33,19 @@ namespace Malicious.UI
         [SerializeField] private List<string> _speech = new List<string>();
         void Start()
         {
+            _narrativeStatic = this;
             _text = GetComponent<Text>();
             _subtitles = this;
         }
-
+        public bool SkipText()
+        {
+            _timer = 10f;
+            if (_speech.Count == 1)
+            {
+                return true;
+            }
+            return false;
+        }
         
         public void GiveText(List<string> a_text, List<float> a_waitTimes)
         {
@@ -102,6 +114,11 @@ namespace Malicious.UI
                     _fadeIn = true;
                     _doneFading = true;
                     
+                    if (_levelCoreActivated)
+                    {
+                        _done = true;
+                        return;
+                    }
                     if (_speech.Count > 0)
                     {
                         _text.text = _speech[0];
@@ -120,10 +137,15 @@ namespace Malicious.UI
         
         public void LevelCoreStop()
         {
-            _fadeSpeed = 6f;
+            if (_doneFading)
+            {
+                _levelCoreActivated = true;
+                _speech.Clear();
+            }
             _done = false;
             _doneFading = false;
             _fadeOut = true;
+            _levelCoreActivated = true;
         }
     }
 }
