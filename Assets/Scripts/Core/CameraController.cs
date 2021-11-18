@@ -30,6 +30,9 @@ namespace Malicious.Core
         
         private static int _resetPrio = 0;
         private static int _activePrio = 10;
+
+
+        public static Transform _wireModelTransform = null;
         
         
         private void Start()
@@ -69,11 +72,17 @@ namespace Malicious.Core
             {
                 _player.Priority = 0;
             }
-            
+
+            bool currentlyWire = false;
+            if (_currentHackableCamera == _wire)
+                currentlyWire = true;
+
+
+            CinemachineVirtualCamera previousCamera = null;
             //Just as a default thing the camera is 100% changing so the previous needs to be reset
             if (_currentHackableCamera != null)
             {
-                _currentHackableCamera.Priority = _resetPrio;
+                previousCamera = _currentHackableCamera;
             }
 
             
@@ -81,11 +90,26 @@ namespace Malicious.Core
             {
                 case ObjectType.Player:
                     _player.Priority = 20;
-                    float newYRot = _mainCamTransform.rotation.eulerAngles.y;
-                    Vector3 eularOffset = a_offset.rotation.eulerAngles;
-                    eularOffset.y = newYRot;
-                    a_offset.rotation = Quaternion.Euler(eularOffset);
-                    return;
+                    if (currentlyWire)
+                    {
+                        Debug.Log("RanThis");
+                        Time.timeScale = 0.01f;
+                        Quaternion lookDirection = Quaternion.LookRotation(_wireModelTransform.forward);
+                        Vector3 eularAmount = lookDirection.eulerAngles;
+
+                        Vector3 eularOffset = a_offset.rotation.eulerAngles;
+                        eularOffset.y = eularAmount.y;
+                        a_offset.rotation = Quaternion.Euler(eularOffset);
+                        return;
+                    }
+                    else
+                    {
+                        float newYRot = _mainCamTransform.rotation.eulerAngles.y;
+                        Vector3 eularOffset = a_offset.rotation.eulerAngles;
+                        eularOffset.y = newYRot;
+                        a_offset.rotation = Quaternion.Euler(eularOffset);
+                        return;
+                    }
                 case ObjectType.Moveable:
                     _currentHackableCamera = _moveable;
                     //Sets the y rotation of the camera to be the previous cameras y rotation
@@ -118,8 +142,10 @@ namespace Malicious.Core
                     a_offset.rotation = Quaternion.Euler(offsetEularSpring);
                     break;
             }
-            
-            
+
+            if (previousCamera != null)
+                previousCamera.Priority = _resetPrio;
+
             if (a_offset != null)
             {
                 _currentHackableCamera.LookAt = a_offset;

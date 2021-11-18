@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Malicious.Hackable;
 using UnityEngine;
+using Malicious.Core;
 
 namespace Malicious.Interactables
 {
@@ -62,7 +63,14 @@ namespace Malicious.Interactables
                     Vector3 rbVel = objectRb.velocity;
 
                     if (other.gameObject.layer == 10)
+                    {
                         rbVel.y = _launchForce;
+                        Player currentPlayer = other.gameObject.GetComponent<Player>();
+                        if (currentPlayer != null)
+                        {
+                            currentPlayer.SpringLaunch();
+                        }
+                    }
                     if (other.gameObject.layer == 16 || other.gameObject.layer == 15)
                         rbVel.y = _blockLaunchForce;
                     if (other.gameObject.layer == 11)
