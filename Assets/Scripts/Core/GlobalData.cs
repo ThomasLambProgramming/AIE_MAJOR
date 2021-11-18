@@ -10,10 +10,10 @@ namespace Malicious.Core
     [Serializable]
     public class CameraSettings
     {
-        public float CameraXSpeed = 400f;
-        public float CameraYSpeed = 20f;
+        public float CameraXSpeed = 150f;
+        public float CameraYSpeed = 25f;
         public bool InvertX = false;
-        public bool InvertY = false;
+        public bool InvertY = true;
     }
     public class GlobalData : MonoBehaviour
     {
