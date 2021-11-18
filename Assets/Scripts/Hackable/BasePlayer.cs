@@ -56,6 +56,11 @@ namespace Malicious.Hackable
         public virtual void OnHackExit()
         {
             DisableInput();
+
+            if (_player == null)
+            {
+                _player = Player._player;
+            }
             _moveInput = Vector2.zero;
             _spinInput = Vector2.zero;
             GameEventManager.PlayerUpdate -= Tick;
