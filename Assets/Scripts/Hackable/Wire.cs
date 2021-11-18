@@ -171,6 +171,7 @@ namespace Malicious.Hackable
 
         private void ResetPath()
         {
+
             Vector3 startingPos = _wirePath[0];
             _wirePath.Clear();
             _wirePath = new List<Vector3>();
@@ -178,11 +179,14 @@ namespace Malicious.Hackable
             _wireModel.transform.rotation = Quaternion.LookRotation(_startingDirection);
             _resetAmount = _wirePath[0] - _wireModel.transform.position;
             _resetting = true;
-            foreach (var wire in _dissolveWires)
+            if (_dissolveWires.Count > 0)
             {
-                wire.DissolveOut(true);
+                foreach (var wire in _dissolveWires)
+                {
+                    wire.DissolveOut(true);
+                }
+                _dissolveWires.Clear();
             }
-            _dissolveWires.Clear();
         }
         private void MoveToEndOfWire()
         {
@@ -427,6 +431,8 @@ namespace Malicious.Hackable
         {
             if (_inFirstUi)
                 return;
+            if (_moveToEnd)
+                return;
             _interactionEntered = true;
             //Set to player
             _holdingInteractButton = true;
@@ -434,7 +440,7 @@ namespace Malicious.Hackable
         }
         protected override void InteractionInputExit(InputAction.CallbackContext a_context)
         {
-            if (_inFirstUi)
+            if (_inFirstUi || _moveToEnd)
                 return;
             //Since the e key will enter to begin with the player can hold and use the exit before starting
             //so its possible to enter and be forced to hold the input key
@@ -454,13 +460,13 @@ namespace Malicious.Hackable
         private void ReturnToPlayer()
         {
             Vector3 shootDirection = Vector3.zero;
-            if (_wirePath.Count == 1)
+            if (_wirePath.Count <= 1)
             {
                 shootDirection = _startingDirection;
                 shootDirection.y = _launchDirection.y;
                 shootDirection = shootDirection.normalized;
             }
-            else
+            else if (_wirePath.Count > 1)
             {
                 shootDirection = _wirePath[_pathIndex] - _wirePath[_pathIndex - 1];
                 shootDirection = shootDirection.normalized;

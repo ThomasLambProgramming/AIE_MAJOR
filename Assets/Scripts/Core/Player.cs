@@ -589,7 +589,7 @@ namespace Malicious.Core
             {
                 Ray ray = new Ray(_groundCheck.position, Vector3.down);
                 RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 1, _groundMask))
+                if (Physics.Raycast(ray, out hit, 0.2f, _groundMask))
                 {
                     if (Vector3.Dot(hit.normal, Vector3.up) > _groundCheckAngleAllowance)
                     {
