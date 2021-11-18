@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd34ca7a1204a734daef8c739ac65cd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 20
+  _moveSpeed: 19
   _maxSpeed: 5
   _spinSpeed: 20
   _cameraTransform: {fileID: 365240353}
@@ -177,8 +177,6 @@ MonoBehaviour:
   _exitForce: 5
   _waitTimeOnExit: 1.5
   _hitForce: 4
-  _leftWheelTransform: {fileID: 0}
-  _rightWheelTransform: {fileID: 0}
 --- !u!114 &951164797
 MonoBehaviour:
   m_ObjectHideFlags: 0
