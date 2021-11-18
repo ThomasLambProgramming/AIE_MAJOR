@@ -105,13 +105,16 @@ namespace Malicious.Hackable
             _currentWire = this;
             CameraController.ChangeCamera(ObjectType.Wire, _wireCameraOffset);
             _chargeUi = _wireModel.GetComponentInChildren<Text>();
-            _chargeUi.text = _defaultChargeText + _chargesLeft;
+            _chargeUi.text = _defaultChargeText + _wireCharges;
             base.OnHackEnter();
             _wireModel.SetActive(true);
             _wireModel.transform.rotation = Quaternion.LookRotation(_startingCameraDirection);
             _wireModel.transform.position = _wirePath[0];
-
-            if (_isFirstWire && _shownMenuOnce == false)
+            if (CameraController._wireModelTransform == null)
+            {
+                CameraController._wireModelTransform = _wireModel.transform;
+            }
+            if (_isFirstWire && _shownMenuOnce == false && _firstUi != null)
             {
                 _inFirstUi = true;
                 _firstUi.SetActive(true);
@@ -145,7 +148,8 @@ namespace Malicious.Hackable
         {
             if (_wirePath.Count == 1)
                 return;
-            
+
+            _chargeUi.text = _defaultChargeText + _wireCharges;
             ResetPath();
             _wireModel.SetActive(false);
         }
@@ -563,7 +567,7 @@ namespace Malicious.Hackable
         }
         public void ExitFirstUI()
         {
-            if (_isFirstWire && _firstUi.activeInHierarchy)
+            if (_isFirstWire && _firstUi != null &&_firstUi.activeInHierarchy)
             {
                 _inFirstUi = false;
                 _firstUi.SetActive(false);

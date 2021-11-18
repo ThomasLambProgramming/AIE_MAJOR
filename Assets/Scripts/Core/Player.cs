@@ -41,6 +41,8 @@ namespace Malicious.Core
         private static readonly int _Falling = Animator.StringToHash("Falling");
         private static readonly int _Landed = Animator.StringToHash("Landed");
 
+        public static Transform _wireModelTransform = null;
+
 
         private float _prevRunAnimAmount = 0;
         //--------------------------------//
@@ -149,7 +151,7 @@ namespace Malicious.Core
             _playerAnimator = _modelContainer.GetComponent<Animator>();
             _playerAnimator.SetFloat(_animatorRunVariable, 0);
             EnableInput();
-            
+
             GameEventManager.GamePauseStart += PauseEnter;
             GameEventManager.GamePauseExit += PauseExit;
 
@@ -228,13 +230,13 @@ namespace Malicious.Core
         private float ClampAngle(float a_angle, float a_min, float a_max)
         {
             if (a_angle < 90 || a_angle > 270)
-            {      
-                if (a_angle > 180) a_angle -= 360; 
+            {
+                if (a_angle > 180) a_angle -= 360;
                 if (a_max > 180) a_max -= 360;
                 if (a_min > 180) a_min -= 360;
             }
             a_angle = Mathf.Clamp(a_angle, a_min, a_max);
-            if (a_angle < 0) a_angle += 360;  
+            if (a_angle < 0) a_angle += 360;
             return a_angle;
         }
 
@@ -242,7 +244,7 @@ namespace Malicious.Core
         {
             _canJump = false;
             _hasDoubleJumped = false;
-            
+
             if (a_isUp)
             {
                 _inFanUp = true;
@@ -319,20 +321,20 @@ namespace Malicious.Core
 
                     _cameraOffset.transform.Rotate(0, -angleFromForward * Time.deltaTime * _spinSpeedModel, 0, Space.World);
                 }
-                
+
 
                 float scaleAmount = _moveInput.magnitude;
-                
+
                 if (scaleAmount > 1)
                     scaleAmount = 1;
-                
+
                 float currentYAmount = _rigidbody.velocity.y;
 
-                
+
                 Vector3 newVel =
                     _cameraTransform.forward * (normalisedInput.y * _moveSpeed * Time.deltaTime) +
                     _cameraTransform.right * (normalisedInput.x * _moveSpeed * Time.deltaTime);
-                
+
                 //We are checking if the horizontal speed is too great 
                 Vector3 tempVelocity = _rigidbody.velocity + newVel;
                 tempVelocity.y = 0;
@@ -390,7 +392,7 @@ namespace Malicious.Core
                     _rigidbody.velocity.z);
             }
         }
-        
+
         private void PlayerDead()
         {
             transform.position = _activeCheckpoint._returnPosition;
@@ -425,7 +427,7 @@ namespace Malicious.Core
             if ((_canJump || _hasDoubleJumped == false) && _rigidbody.velocity.y < _maxVelocityToJump)
             {
                 if (gameObject.activeInHierarchy == false)
-                    return; 
+                    return;
 
                 StartCoroutine(JumpWait());
                 Vector3 prevVel = _rigidbody.velocity;
@@ -442,7 +444,7 @@ namespace Malicious.Core
                     _playerAnimator.SetBool(_Falling, false);
                     _playerAnimator.SetBool(_DoubleJump, true);
                 }
-                
+
                 _canJump = false;
                 _isJumping = true;
                 StartCoroutine(GroundWait());
@@ -459,20 +461,20 @@ namespace Malicious.Core
         {
             if (!_checkGround || _rigidbody.velocity.y > 0.2f)
                 return;
-            
+
             Collider[] collisions = Physics.OverlapSphere(_groundCheck.position, 0.2f, _groundMask);
 
             List<Collider> colliderContainer = new List<Collider>();
 
-            for(int i = 0; i < collisions.Length; i++)
+            for (int i = 0; i < collisions.Length; i++)
             {
                 if (!collisions[i].isTrigger)
                 {
                     colliderContainer.Add(collisions[i]);
                 }
             }
-            
-            
+
+
             if (colliderContainer.Count <= 0)
             {
                 _canJump = false;
@@ -480,7 +482,7 @@ namespace Malicious.Core
                 {
                     _playerAnimator.SetBool(_Falling, true);
                     _playerAnimator.SetBool(_DoubleJump, false);
-                    _playerAnimator.SetBool(_Landed, false);   
+                    _playerAnimator.SetBool(_Landed, false);
                 }
             }
             else if (_isJumping && _inFanHoriz)
@@ -500,7 +502,7 @@ namespace Malicious.Core
                 _playerAnimator.SetBool(_Falling, false);
                 _playerAnimator.SetBool(_Jumped, false);
                 _playerAnimator.SetBool(_DoubleJump, false);
-            
+
                 _isJumping = false;
                 _canJump = true;
                 _hasDoubleJumped = false;
@@ -512,13 +514,13 @@ namespace Malicious.Core
         {
             Vector3 vel = _rigidbody.velocity;
             vel.y = 0;
-            
+
             float animatorAmount = 0;
             if (vel.magnitude > 0)
                 animatorAmount = vel.magnitude / _maxSpeed;
 
             _prevRunAnimAmount = Mathf.Lerp(_prevRunAnimAmount, animatorAmount, Time.deltaTime * _animationSwapSpeed);
-            
+
             _playerAnimator.SetFloat(_animatorRunVariable, _prevRunAnimAmount);
         }
 
@@ -535,11 +537,11 @@ namespace Malicious.Core
                 GameEventManager.PlayerHitFunc();
                 StartCoroutine(IFrame());
             }
-            else if ((other.collider.gameObject.CompareTag("Enemy") || 
-                 other.gameObject.CompareTag("Laser")) && 
+            else if ((other.collider.gameObject.CompareTag("Enemy") ||
+                 other.gameObject.CompareTag("Laser")) &&
                 _iFrameActive == false)
             {
-                List<ContactPoint> contacts = new List<ContactPoint>(); 
+                List<ContactPoint> contacts = new List<ContactPoint>();
                 other.GetContacts(contacts);
 
                 Vector3 averagedNormal = Vector3.zero;
@@ -551,7 +553,7 @@ namespace Malicious.Core
                 averagedNormal = averagedNormal.normalized;
                 averagedNormal.y = _yHitAmount;
                 LaunchPlayer(averagedNormal * _hitForce);
-                
+
                 GameEventManager.PlayerHitFunc();
                 if (GameEventManager.CurrentHealth() <= 0)
                 {
@@ -594,7 +596,7 @@ namespace Malicious.Core
                         _canJump = true;
                         _hasDoubleJumped = false;
                         _launchedBySpring = false;
-                    } 
+                    }
                 }
             }
         }
@@ -604,7 +606,7 @@ namespace Malicious.Core
             if (a_other.gameObject.CompareTag("CheckPoint"))
             {
                 CheckPoint currentCheckPoint = a_other.GetComponent<CheckPoint>();
-                
+
 
                 if (_activeCheckpoint != null && _activeCheckpoint != currentCheckPoint)
                     _activeCheckpoint.TurnOff();
@@ -620,7 +622,7 @@ namespace Malicious.Core
             if (a_other.gameObject.CompareTag("Laser"))
             {
                 LaunchPlayer(_rigidbody.velocity = a_other.gameObject.GetComponent<BrokenWire>().DirectionToHit(transform.position) * _hitForce);
-                
+
                 GameEventManager.PlayerHitFunc();
                 if (GameEventManager.CurrentHealth() <= 0)
                 {
@@ -632,13 +634,13 @@ namespace Malicious.Core
                     StartCoroutine(DisableMoveInput());
                 }
             }
-            if (a_other.gameObject.layer == 15)
-            {
-                _launchedBySpring = true;
-                _hasDoubleJumped = false;
-            }
+            
         }
-
+        public void SpringLaunch()
+        {
+            _launchedBySpring = true;
+            _hasDoubleJumped = false;
+        }
         #endregion
         private IEnumerator IFrame()
         {
