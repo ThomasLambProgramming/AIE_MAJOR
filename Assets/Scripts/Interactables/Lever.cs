@@ -51,11 +51,12 @@ namespace Malicious.Interactables
 
         public void Hacked()
         {
-            //_beenHacked = true;
+
             //if its in the middle of rotating dont let the player change (to not
             //cause errors with rotation)
             if (isRotating)
                 return;
+
             if (!isOn)
             {
                 _leverActivateSound.Play();
@@ -71,44 +72,54 @@ namespace Malicious.Interactables
                         renderer.material = _onMaterial;
                     }
                 }
-                else
+            }
+            else
+            {
+                if (reusable)
                 {
-                    if (reusable)
+                    _leverActivateSound.Play();
+                    offEvent?.Invoke();
+                    isOn = false;
+                    timer = 0;
+                    isRotating = true;
+                    GameEventManager.GeneralUpdate += Rotating;
+                    if (_cableRenderers.Count > 0)
                     {
-                        _leverActivateSound.Play();
-                        offEvent?.Invoke();
-                        isOn = false;
-                        timer = 0;
-                        isRotating = true;
-                        GameEventManager.GeneralUpdate += Rotating;
-                        if (_cableRenderers.Count > 0)
+                        foreach (MeshRenderer renderer in _cableRenderers)
                         {
-                            foreach (MeshRenderer renderer in _cableRenderers)
-                            {
-                                renderer.material = _defaultMaterial;
-                            }
+                            renderer.material = _defaultMaterial;
                         }
                     }
                 }
             }
         }
 
+
+        float _initialAmount = 0f;
         //This is temp to make the lever rotate from one side to another
         //just for visuals (get the designers to make an animation for this
         public void Rotating()
         {
+
             timer += Time.deltaTime;
             if (timer > timeForRotate)
             {
                 GameEventManager.GeneralUpdate -= Rotating;
                 isRotating = false;
+
                 return;
             }
 
             if (!isOn)
+            {
+
                 rotateAnchor.Rotate(rotateAmount * Time.deltaTime / timeForRotate, 0, 0);
+            }
             else
+            {
+
                 rotateAnchor.Rotate(-rotateAmount * Time.deltaTime / timeForRotate, 0, 0);
+            }
         }
     }
 }
