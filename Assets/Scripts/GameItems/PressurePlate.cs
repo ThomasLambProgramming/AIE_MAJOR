@@ -12,6 +12,11 @@ namespace Malicious.GameItems
         [SerializeField] private UnityEvent _OnEvent;
         [SerializeField] private UnityEvent _OffEvent;
         [SerializeField] private AudioSource _pressurePlateDownAudio = null;
+
+        [SerializeField] private List<MeshRenderer> _cableRenderers = new List<MeshRenderer>();
+        [SerializeField] private Material _onMaterial = null;
+        [SerializeField] private Material _defaultMaterial = null;
+
         //This is for checking that objects are still in holding it down
         private List<GameObject> _containedObjects = new List<GameObject>();
         private void OnTriggerEnter(Collider other)
@@ -36,6 +41,14 @@ namespace Malicious.GameItems
                     //or overlaps
                     _pressurePlateDownAudio.Play();
                     _OnEvent?.Invoke();
+
+                    if (_cableRenderers.Count > 0)
+                    {
+                        foreach(MeshRenderer renderer in _cableRenderers)
+                        {
+                            renderer.material = _onMaterial;
+                        }
+                    }
                 }
             }
         }
@@ -55,6 +68,14 @@ namespace Malicious.GameItems
                 if (_containedObjects.Count <= 0)
                 {
                     _OffEvent?.Invoke();
+
+                    if (_cableRenderers.Count > 0)
+                    {
+                        foreach (MeshRenderer renderer in _cableRenderers)
+                        {
+                            renderer.material = _defaultMaterial;
+                        }
+                    }
                 }
             }
         }

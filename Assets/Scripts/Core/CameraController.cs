@@ -92,15 +92,15 @@ namespace Malicious.Core
                     _player.Priority = 20;
                     if (currentlyWire)
                     {
-                        Debug.Log("RanThis");
-                        Time.timeScale = 0.01f;
                         Quaternion lookDirection = Quaternion.LookRotation(_wireModelTransform.forward);
+                        
                         Vector3 eularAmount = lookDirection.eulerAngles;
 
+                        Debug.Log(eularAmount);
                         Vector3 eularOffset = a_offset.rotation.eulerAngles;
                         eularOffset.y = eularAmount.y;
                         a_offset.rotation = Quaternion.Euler(eularOffset);
-                        return;
+                        break;
                     }
                     else
                     {
@@ -108,7 +108,7 @@ namespace Malicious.Core
                         Vector3 eularOffset = a_offset.rotation.eulerAngles;
                         eularOffset.y = newYRot;
                         a_offset.rotation = Quaternion.Euler(eularOffset);
-                        return;
+                        break;
                     }
                 case ObjectType.Moveable:
                     _currentHackableCamera = _moveable;

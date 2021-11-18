@@ -23,6 +23,7 @@ namespace Malicious.Core
         //Camera Variables//
         public static float _spinSpeedCamX = 5f;
         public static float _spinSpeedCamY = 5f;
+
         public static bool _invertCamX = false;
         public static bool _invertCamY = false;
 
@@ -162,6 +163,9 @@ namespace Malicious.Core
             //_currentRunAmount = 0;
             GameEventManager.PlayerStopInput += PlayerDied;
             GameEventManager.PlayerDead += PlayerDead;
+
+
+
 
             _spinSpeedCamX = GlobalData._cameraSettings.CameraXSpeed;
             _spinSpeedCamY = GlobalData._cameraSettings.CameraYSpeed;
