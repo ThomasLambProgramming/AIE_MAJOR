@@ -85,7 +85,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2777678383723916130}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7, y: 0, z: 0}
+  m_LocalPosition: {x: -0.14, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1975872768020076153}
@@ -511,6 +511,7 @@ MonoBehaviour:
   _yAngle: -0.73
   _rampCheckDistance: 5
   _rampAngleAllowance: 0.5
+  _maxYDifferenceRamp: 0.09
   _rampMask:
     serializedVersion: 2
     m_Bits: 393344
