@@ -35,8 +35,7 @@ namespace Malicious.Hackable
 
         [SerializeField] private bool _isFirstWire = false;
         [SerializeField] private GameObject _firstUi = null;
-        [HideInInspector] public static bool _inFirstUi = false;
-        public static Wire _currentWire = null;
+        private static bool _inFirstUi = false;
         private bool _shownMenuOnce = false;
 
         private bool _dissolveRunning = false;
@@ -103,10 +102,12 @@ namespace Malicious.Hackable
 
         public override void OnHackEnter()
         {
-            _currentWire = this;
+            
+
             CameraController.ChangeCamera(ObjectType.Wire, _wireCameraOffset);
             _chargeUi = _wireModel.GetComponentInChildren<Text>();
             _chargeUi.text = _defaultChargeText + _wireCharges;
+            
             base.OnHackEnter();
             _wireModel.SetActive(true);
             _wireModel.transform.rotation = Quaternion.LookRotation(_startingCameraDirection);
@@ -115,6 +116,8 @@ namespace Malicious.Hackable
             {
                 CameraController._wireModelTransform = _wireModel.transform;
             }
+            
+            //This is what is causing the wire issues its disabling input and deleting at some point
             if (_isFirstWire && _shownMenuOnce == false && _firstUi != null)
             {
                 _inFirstUi = true;
@@ -135,7 +138,6 @@ namespace Malicious.Hackable
 
         public override void OnHackExit()
         {
-            _currentWire = null;
             base.OnHackExit();
             _pathIndex = 0;
             _rotationGoal = Quaternion.identity;
@@ -162,10 +164,14 @@ namespace Malicious.Hackable
             _wirePath.Add(startingPos);
             _pathIndex = 0;
             _chargesLeft = _wireCharges;
-            foreach (var wire in _dissolveWires)
+            if (_dissolveWires.Count > 0)
             {
-                wire.DissolveOut(true);
+                foreach (var wire in _dissolveWires)
+                {
+                    wire.DissolveOut(true);
+                }
             }
+
             _dissolveWires.Clear();
         }
 
@@ -327,8 +333,6 @@ namespace Malicious.Hackable
                 _wireLength,
                 _wireStopMask))
             {
-                if (hit.collider != null)
-                    Debug.Log(hit.collider.gameObject.name);    
                 return false;
             }
             
@@ -430,7 +434,9 @@ namespace Malicious.Hackable
         protected override void InteractionInputEnter(InputAction.CallbackContext a_context)
         {
             if (_inFirstUi)
+            {
                 return;
+            }
             if (_moveToEnd)
                 return;
             _interactionEntered = true;
@@ -459,6 +465,7 @@ namespace Malicious.Hackable
 
         private void ReturnToPlayer()
         {
+            
             Vector3 shootDirection = Vector3.zero;
             if (_wirePath.Count <= 1)
             {
@@ -478,13 +485,12 @@ namespace Malicious.Hackable
                 }
                 shootDirection = shootDirection.normalized;
             }
-
             _player.transform.position = _wireModel.transform.position + _wireModel.transform.forward;
 
             //change to look direction
             Vector3 wireModelEular = _wireModel.transform.rotation.eulerAngles;
             Vector3 playerEular = _player.transform.rotation.eulerAngles;
-            
+
             playerEular.y = wireModelEular.y;
             _player.transform.rotation = Quaternion.Euler(playerEular);
             
@@ -574,7 +580,7 @@ namespace Malicious.Hackable
         }
         public void ExitFirstUI()
         {
-            if (_isFirstWire && _firstUi != null &&_firstUi.activeInHierarchy)
+            if (_isFirstWire && _firstUi != null && _firstUi.activeInHierarchy)
             {
                 _inFirstUi = false;
                 _firstUi.SetActive(false);

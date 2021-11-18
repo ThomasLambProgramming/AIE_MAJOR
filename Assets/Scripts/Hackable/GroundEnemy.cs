@@ -29,8 +29,8 @@ namespace Malicious.Hackable
         [SerializeField] private float _waitTimeOnExit = 1.5f;
         [SerializeField] private float _hitForce = 4f;
 
-        [SerializeField] private Transform _leftWheelTransform = null;
-        [SerializeField] private Transform _rightWheelTransform = null;
+        //[SerializeField] private Transform _leftWheelTransform = null;
+        //[SerializeField] private Transform _rightWheelTransform = null;
         
         private int direction = 1;
         private bool _huntPlayer = false;
@@ -48,6 +48,8 @@ namespace Malicious.Hackable
             _sqrMaxSteeringForce = _maxSteeringForce * _maxSteeringForce;
             _startingPosition = transform.position;
             _startingRotation = transform.rotation;
+
+            
         }
 
         void AiUpdate()

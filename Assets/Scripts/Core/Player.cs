@@ -110,7 +110,8 @@ namespace Malicious.Core
         IEnumerator NarrativeWait(float a_waitTime)
         {
             _narrativePause = true;
-            _moveInput = Vector3.zero;
+            _moveInput = Vector2.zero;
+            _rigidbody.velocity = Vector3.zero;
             yield return new WaitForSeconds(a_waitTime);
             _narrativePause = false;
         }

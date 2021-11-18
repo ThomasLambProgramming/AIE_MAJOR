@@ -150,7 +150,13 @@ namespace Malicious.Core
 
                 if (_hackable != null)
                 {
-                    _hackable._player = _player;
+                    if (_player != null)
+                    {
+                        _hackable._player = _player;
+                        _player.OnHackExit();
+                        _player = null;
+                    }
+
                     _hackable.OnHackEnter();
                     if (_nodeRenderer != null && _nodeRenderer.Count > 0)
                     {
@@ -160,8 +166,6 @@ namespace Malicious.Core
                             node.material = _hackedMaterial;
                         }
                     }
-                    _player.OnHackExit();
-                    _player = null;
                 }
             }
         }

@@ -31,7 +31,11 @@ namespace Malicious.GameItems
             {
                 if (other.gameObject.layer == 16)
                 {
-                    other.gameObject.GetComponent<MoveableBlock>()._onPressurePlate = true;
+                    MoveableBlock temp = other.gameObject.GetComponent<MoveableBlock>();
+                    if (temp != null)
+                    {
+                        temp._onPressurePlate = true;
+                    }
                 }
                 _containedObjects.Add(other.gameObject);
                 if (_containedObjects.Count == 1)
