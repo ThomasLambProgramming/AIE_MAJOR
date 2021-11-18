@@ -289,6 +289,8 @@ namespace Malicious.Core
         {
             EnableInput();
             _moveInput = Vector2.zero;
+            _spinInput = Vector2.zero;
+
             GameEventManager.PlayerUpdate += Tick;
             GameEventManager.PlayerFixedUpdate += FixedTick;
             //_currentRunAmount = 0;
