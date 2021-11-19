@@ -99,6 +99,8 @@ namespace Malicious.Core
         private Vector3 _pauseEnterVelocity = Vector3.zero;
         private HackableField _currentHackableField = null;
         [SerializeField] private CheckPoint _activeCheckpoint = null;
+
+        [SerializeField] private ParticleSystem _hitParticleEffect = null;
         //--------------------------------//
 
         //I hate this whole thing
@@ -546,6 +548,8 @@ namespace Malicious.Core
             {
                 GameEventManager.PlayerHitFunc();
                 StartCoroutine(IFrame());
+                _hitParticleEffect.transform.position = transform.position + new Vector3(0, 1, 0);
+                _hitParticleEffect.Play(true);
             }
             else if ((other.collider.gameObject.CompareTag("Enemy") ||
                  other.gameObject.CompareTag("Laser")) &&
@@ -564,7 +568,10 @@ namespace Malicious.Core
                 averagedNormal.y = _yHitAmount;
                 LaunchPlayer(averagedNormal * _hitForce);
 
+                _hitParticleEffect.transform.position = transform.position + new Vector3(0, 1, 0);
+                _hitParticleEffect.Play(true);
                 GameEventManager.PlayerHitFunc();
+                
                 if (GameEventManager.CurrentHealth() <= 0)
                 {
                     //Run shader for dissolve
@@ -632,7 +639,8 @@ namespace Malicious.Core
             if (a_other.gameObject.CompareTag("Laser"))
             {
                 LaunchPlayer(_rigidbody.velocity = a_other.gameObject.GetComponent<BrokenWire>().DirectionToHit(transform.position) * _hitForce);
-
+                _hitParticleEffect.transform.position = transform.position + new Vector3(0, 1, 0);
+                _hitParticleEffect.Play(true);
                 GameEventManager.PlayerHitFunc();
                 if (GameEventManager.CurrentHealth() <= 0)
                 {

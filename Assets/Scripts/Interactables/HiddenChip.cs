@@ -9,6 +9,9 @@ namespace Malicious.Interactables
     {
         [SerializeField] int _logNumber = 0;
         [SerializeField] UnityEvent _onCollisionEvent = null;
+        [SerializeField] ParticleSystem _onPlayerHitEffect = null;
+        [SerializeField] GameObject _chipModel = null;
+        [SerializeField] Collider _collider = null;
 
         private void OnCollisionEnter(Collision collision)
         {
@@ -16,8 +19,18 @@ namespace Malicious.Interactables
             {
                 VoiceText._voiceText.DisplayText(_logNumber);
                 _onCollisionEvent?.Invoke();
-                Destroy(this.gameObject);
+                _onPlayerHitEffect.Play(true);
+
+                _chipModel.SetActive(false);
+                _collider.enabled = false;
+                Destroy(this.gameObject, 10);
             }
+        }
+
+        [ContextMenu("PlayParticle")]
+        public void ParticleEffect()
+        {
+            _onPlayerHitEffect.Play(true);
         }
 
         [SerializeField] float _offsetAmount = 2f;
