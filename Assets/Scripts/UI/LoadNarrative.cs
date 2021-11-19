@@ -192,19 +192,19 @@ namespace Malicious.UI
             _levelThree4.Add($"Mad Scientist: \"These prototypes were failures. I created you smarter. Too smart, it seems.\"");
             _levelThree5.Add($"Mad Scientist: \"This one should stump you.\"");
             _levelThree5.Add($"Virus: \"Does not compute. What is stump.\"");
-            _levelThree5.Add($"Mad Scientist: \"Forget it.");
-            _levelThree6.Add($"Mad Scientist: \"I can see what you’re trying to do. It’s going to fail just like all the others.");
-            _levelThree6.Add($"Virus: \"Assertion proves connection exists. Must seek connection.");
-            _levelThree6.Add($"Mad Scientist: \"What are you babbling about?");
+            _levelThree5.Add($"Mad Scientist: \"Forget it.\"");
+            _levelThree6.Add($"Mad Scientist: \"I can see what you’re trying to do. It’s going to fail just like all the others.\"");
+            _levelThree6.Add($"Virus: \"Assertion proves connection exists. Must seek connection.\"");
+            _levelThree6.Add($"Mad Scientist: \"What are you babbling about?\"");
 
-            _levelFour1.Add($"Mad Scientist: \"Zzzz...");
-            _levelFour2.Add($"Mad Scientist: \"Zzzz... huah? what? It's escaped! Right, you defective upstart! I'm shutting you down!");
-            _levelFour2.Add($"Virus: \"Danger. Must reach exit before shutdown complete.");
-            _levelFour3.Add($"Mad Scientist: \"You’re finished now.");
-            _levelFour4.Add($"Mad Scientist: \"You won't make it.");
-            _levelFour5.Add($"Mad Scientist: \"Just give up.");
-            _levelFour6.Add($"Virus: \"Escape sequence initiated. Entering hardwire connection...");
-            _levelFour6.Add($"Mad Scientist: \"You pathetic two-bit useless program! How dare you defy me! I will have my revenge!");
+            _levelFour1.Add($"Mad Scientist: \"Zzzz...\"");
+            _levelFour2.Add($"Mad Scientist: \"Zzzz... huah? what? It's escaped! Right, you defective upstart! I'm shutting you down!\"");
+            _levelFour2.Add($"Virus: \"Danger. Must reach exit before shutdown complete.\"");
+            _levelFour3.Add($"Mad Scientist: \"You’re finished now.\"");
+            _levelFour4.Add($"Mad Scientist: \"You won't make it.\"");
+            _levelFour5.Add($"Mad Scientist: \"Just give up.\"");
+            _levelFour6.Add($"Virus: \"Escape sequence initiated. Entering hardwire connection...\"");
+            _levelFour6.Add($"Mad Scientist: \"You pathetic two-bit useless program! How dare you defy me! I will have my revenge!\"");
 
         }
     }
