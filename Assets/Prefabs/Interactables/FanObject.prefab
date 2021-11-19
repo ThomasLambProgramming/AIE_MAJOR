@@ -117,6 +117,7 @@ MonoBehaviour:
   _groundEnemyVelLimit: 5
   _flyingEnemyVelLimit: 5
   _springVelLimit: 5
+  _fanEffects: {fileID: 2512559986608468694}
 --- !u!65 &938614588948011791
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -816,5 +817,10 @@ PrefabInstance:
 --- !u!4 &2512559986608468693 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6638729864550987572, guid: d01c82f3098168c4984cecd0715b2a57, type: 3}
+  m_PrefabInstance: {fileID: 9151286257345545697}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &2512559986608468694 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6638729864550987575, guid: d01c82f3098168c4984cecd0715b2a57, type: 3}
   m_PrefabInstance: {fileID: 9151286257345545697}
   m_PrefabAsset: {fileID: 0}

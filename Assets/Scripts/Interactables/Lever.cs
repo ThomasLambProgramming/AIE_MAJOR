@@ -93,9 +93,6 @@ namespace Malicious.Interactables
                 }
             }
         }
-
-
-        float _initialAmount = 0f;
         //This is temp to make the lever rotate from one side to another
         //just for visuals (get the designers to make an animation for this
         public void Rotating()
