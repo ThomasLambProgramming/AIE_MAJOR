@@ -160,6 +160,9 @@ MonoBehaviour:
   _onCollisionEvent:
     m_PersistentCalls:
       m_Calls: []
+  _onPlayerHitEffect: {fileID: 6953487106310638699}
+  _chipModel: {fileID: 6160883539631272368}
+  _collider: {fileID: 732872609}
   _offsetAmount: 0.25
   _rotateSpeed: 60
   _moveSpeed: 3
@@ -417,5 +420,10 @@ PrefabInstance:
 --- !u!4 &6772739613824360955 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4923632352700204014, guid: 49936b61fab18be40956ac1c20a5fdf8, type: 3}
+  m_PrefabInstance: {fileID: 1849250200093630997}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &6953487106310638699 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8779315491677220478, guid: 49936b61fab18be40956ac1c20a5fdf8, type: 3}
   m_PrefabInstance: {fileID: 1849250200093630997}
   m_PrefabAsset: {fileID: 0}

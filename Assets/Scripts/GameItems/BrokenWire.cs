@@ -65,6 +65,10 @@ namespace Malicious.GameItems
                     _arcTimer = 0;
                     _areaCollider.enabled = false;
                     _lineRenderer.enabled = false;
+                    _leftSide.Stop();
+                    _leftSide.Clear(true);
+                    _rightSide.Stop();
+                    _rightSide.Clear(true);
                 }
             }
             else
@@ -79,6 +83,8 @@ namespace Malicious.GameItems
                     _arcTimer = 0;
                     _lineRenderer.enabled = true;
                     _areaCollider.enabled = true;
+                    _leftSide.Play();
+                    _rightSide.Play();
                 }
             }
 
@@ -157,7 +163,9 @@ namespace Malicious.GameItems
             _lineRenderer.enabled = true;
             _Activetimer = 0;
             _leftSide.Stop();
+            _leftSide.Clear(true);
             _rightSide.Stop();
+            _rightSide.Clear(true);
         }
 
         public void TurnOn()
