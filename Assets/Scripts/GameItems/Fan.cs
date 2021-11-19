@@ -15,7 +15,7 @@ namespace Malicious.GameItems
         [SerializeField] private GameObject _rotateObject = null;
         [SerializeField] private float _rotateFanSpeed = 10f;
         [SerializeField] private float _rotateSpeed = 10f;
-    
+
         [SerializeField] private float _fanHeight = 5f;
         [SerializeField] private float _horizontalDifferenceAllow = 2f;
         private float _sqrhorizontalDifferenceAllow = 2f;
@@ -30,7 +30,7 @@ namespace Malicious.GameItems
         [SerializeField] private float _minGroundEnemyForce = 3f;
         [SerializeField] private float _minFlyingEnemyForce = 3f;
         [SerializeField] private float _minSpringForce = 3f;
-        
+
         [Header("Front of fan Variables")]
         [SerializeField] private float _maxPlayerForce = 10f;
         [SerializeField] private float _maxBlockForce = 10f;
@@ -40,13 +40,13 @@ namespace Malicious.GameItems
 
         [Header("Correction Variables")]
         [SerializeField] private float _correctionDotAllowance = 0.5f;
-        
+
         [SerializeField] private float _correctionPlayerForce = 0.7f;
         [SerializeField] private float _correctionBlockForce = 1f;
         [SerializeField] private float _correctionGroundEnemyForce = 1f;
         [SerializeField] private float _correctionFlyingEnemyForce = 1f;
         [SerializeField] private float _correctionSpringForce = 1f;
-        
+
         [SerializeField] private float _velocityPreservePlayer = 0.7f;
         [SerializeField] private float _velocityPreserveBlock = 1f;
         [SerializeField] private float _velocityPreserveGroundEnemy = 1f;
@@ -66,11 +66,20 @@ namespace Malicious.GameItems
         private List<Rigidbody> _flyingEnemyList = new List<Rigidbody>();
         private List<Rigidbody> _springList = new List<Rigidbody>();
 
+        [SerializeField] ParticleSystem _fanEffects = null;
+
         private void Start()
         {
             _sqrhorizontalDifferenceAllow = _horizontalDifferenceAllow * _horizontalDifferenceAllow;
             if (_launchDirection == Vector3.zero)
                 _launchDirection = transform.up;
+
+            if (!_isActive)
+            {
+                _fanEffects.Clear(true);
+                _fanEffects.Stop();
+
+            }
         }
 
         [ContextMenu("Set fan direction")]
@@ -81,13 +90,13 @@ namespace Malicious.GameItems
         private void OnTriggerEnter(Collider other)
         {
             if (other.isTrigger)
-                return; 
-            
+                return;
+
             Rigidbody objectRb = other.gameObject.GetComponent<Rigidbody>();
 
             if (objectRb != null && (_objectsAllowed & (1 << other.gameObject.layer)) > 0)
             {
-                switch(other.gameObject.layer)
+                switch (other.gameObject.layer)
                 {
                     case 10:
                         _playerList.Add(objectRb);
@@ -133,7 +142,7 @@ namespace Malicious.GameItems
         {
             if (other.isTrigger)
                 return;
-            
+
             if (CheckList(ref _playerList, other.gameObject))
                 return;
             if (CheckList(ref _blockList, other.gameObject))
@@ -178,7 +187,7 @@ namespace Malicious.GameItems
             }
             else
                 if (_fanAudio != null && !_fanAudio.isPlaying)
-                    _fanAudio.Play();
+                _fanAudio.Play();
 
             ApplyForces(ref _playerList, _minPlayerForce, _maxPlayerForce, _playerVelLimit, _correctionPlayerForce, _velocityPreservePlayer);
             ApplyForces(ref _groundEnemyList, _minGroundEnemyForce, _maxGroundEnemyForce, _groundEnemyVelLimit, _correctionGroundEnemyForce, _velocityPreserveGroundEnemy);
@@ -191,7 +200,7 @@ namespace Malicious.GameItems
             for (int i = 0; i < a_list.Count; i++)
             {
                 Vector3 difference = a_list[i].transform.position - transform.position;
-                
+
                 if (_launchDirection == Vector3.up)
                 {
                     Vector2 horizontalDiff = new Vector2(difference.x, difference.z);
@@ -210,7 +219,7 @@ namespace Malicious.GameItems
                     lerpAmount = 0.1f;
 
                 float forceScale = Mathf.Lerp(a_maxForce, a_minForce, lerpAmount);
-                
+
                 if (_launchDirection != Vector3.up)
                 {
                     forceScale = Mathf.Lerp(a_maxForce, a_minForce, Vector3.SqrMagnitude(difference) / (_fanHeight * _fanHeight));
@@ -218,7 +227,7 @@ namespace Malicious.GameItems
 
                 Vector3 forceToApply = _launchDirection * forceScale;
                 a_list[i].AddForce(forceToApply);
-                
+
                 if (_launchDirection == Vector3.up)
                 {
                     if (a_list[i].velocity.y > a_velLimit)
@@ -242,11 +251,11 @@ namespace Malicious.GameItems
                         currentVel *= a_preserveForce;
                         currentVel += _launchDirection * (correctionForce * a_correctionForce);
                     }
-                    
-                    
+
+
                     if (currentVel.sqrMagnitude > a_velLimit)
                     {
-                        currentVel= currentVel.normalized * a_velLimit;
+                        currentVel = currentVel.normalized * a_velLimit;
                         currentVel.y = currentY;
                     }
                     a_list[i].velocity = currentVel;
@@ -266,8 +275,8 @@ namespace Malicious.GameItems
             while (transform.rotation != goalRot)
             {
                 transform.rotation = Quaternion.RotateTowards(
-                    transform.rotation, 
-                    goalRot, 
+                    transform.rotation,
+                    goalRot,
                     _rotateFanSpeed * Time.deltaTime);
                 _launchDirection = -transform.up;
                 yield return null;
@@ -277,11 +286,23 @@ namespace Malicious.GameItems
         private void Update()
         {
             if (_isActive)
-                _rotateObject.transform.Rotate(0,_rotateSpeed * Time.deltaTime,0);  
+                _rotateObject.transform.Rotate(0, _rotateSpeed * Time.deltaTime, 0);
         }
 
-        public void Deactivate() => _isActive = false;
-        public void Activate() => _isActive = true;
+        [ContextMenu("TurnFanOff")]
+        public void Deactivate()
+        {
+            _isActive = false;
+            _fanEffects.Clear(true);
+            _fanEffects.Stop();
+        }
+        [ContextMenu("TurnFanOn")]
+        public void Activate() 
+        {
+            _isActive = true;
+            _fanEffects.Play(true);
+        }
+
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()

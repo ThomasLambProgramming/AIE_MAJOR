@@ -32,7 +32,7 @@ namespace Malicious.Hackable
         //-------------------------------------//
         private HackableField _hackField = null;
 
-        protected virtual void Start()
+        public virtual void Start()
         {
             _hackField = GetComponent<HackableField>();
         }

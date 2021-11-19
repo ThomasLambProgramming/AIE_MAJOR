@@ -38,8 +38,8 @@ namespace Malicious.Hackable
         public static bool _invertCamX = false;
         public static float _spinSpeedCamX = 5f;
         //public static float _spinSpeedCamY = 5f;
-        
-        protected override void Start()
+
+        public override void Start()
         {
             base.Start();
             _rigidbody = GetComponent<Rigidbody>();
