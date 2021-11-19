@@ -719,11 +719,6 @@ namespace Malicious.Core
         {
             if (!_holdingJump)
             {
-                if (_narrativePause)
-                {
-                    StopCoroutine(_narrativeCoroutine);
-                    _narrativePause = false;
-                }
                 Jump();
                 _holdingJump = true;
             }
