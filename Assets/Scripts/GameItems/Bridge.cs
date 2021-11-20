@@ -15,13 +15,15 @@ namespace Malicious.GameItems
         private float _railHeight = 0;
         [SerializeField] private float _railSpeed = 1f;
         private float _startingRailHeight = 0;
-        
-        
+
+        private Coroutine _startCoroutine = null;
+        private Coroutine _endCoroutine = null;
+
         private float _startingScale = 0;
         private float _timer = 0;
         private float _railTimer = 0;
         
-        private void Start()
+        public void Start()
         {
             _startingScale = _pathObject.transform.localScale.x;
             if (_railObject != null)
@@ -33,15 +35,19 @@ namespace Malicious.GameItems
         [ContextMenu("BridgeOn")]
         public void BridgeOn()
         {
-            StopCoroutine(TurnBridgeOff());
-            StartCoroutine(TurnBridgeOn());
+            if (_endCoroutine != null)
+                StopCoroutine(_endCoroutine);
+
+            _startCoroutine = StartCoroutine(TurnBridgeOn());
         }
 
         [ContextMenu("BridgeOff")]
         public void BridgeOff()
         {
-            StopCoroutine(TurnBridgeOn());
-            StartCoroutine(TurnBridgeOff());
+            if (_startCoroutine != null)
+                StopCoroutine(_startCoroutine);
+
+            _endCoroutine = StartCoroutine(TurnBridgeOff());
         }
 
         private IEnumerator TurnBridgeOn()
