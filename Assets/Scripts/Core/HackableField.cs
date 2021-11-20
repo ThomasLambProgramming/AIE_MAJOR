@@ -87,6 +87,9 @@ namespace Malicious.Core
 
         private bool DotCheck()
         {
+            //changed this to always return true due to feedback from testers
+            return true;
+            
             Transform playerTransform = _player.transform;
 
             if (_requiresSameYHeight)
