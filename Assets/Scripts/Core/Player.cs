@@ -59,14 +59,14 @@ namespace Malicious.Core
         //Jumping Variables//
         [SerializeField] private float _maxVelocityToJump = 0.6f;
         [SerializeField] private float _jumpForce = 10f;
-        [SerializeField] private float _additionalGravity = -9.81f;
+        //[SerializeField] private float _additionalGravity = -9.81f;
         [SerializeField] private LayerMask _groundMask = ~0;
         [SerializeField] private Transform _groundCheck = null;
         [SerializeField] private float _groundCheckAngleAllowance = 0.7f;
         [SerializeField] private float _groundCheckWaitTime = 0.3f;
         private bool _canJump = true;
         private bool _hasDoubleJumped = false;
-        private bool _launchedBySpring = false;
+        //private bool _launchedBySpring = false;
         private bool _holdingJump = false;
         private bool _isJumping = false;
         private bool _checkGround = true;
@@ -238,12 +238,18 @@ namespace Malicious.Core
         {
             if (a_angle < 90 || a_angle > 270)
             {
-                if (a_angle > 180) a_angle -= 360;
-                if (a_max > 180) a_max -= 360;
-                if (a_min > 180) a_min -= 360;
+                if (a_angle > 180) 
+                    a_angle -= 360;
+                    
+                if (a_max > 180) 
+                    a_max -= 360;
+                    
+                if (a_min > 180) 
+                    a_min -= 360;
             }
             a_angle = Mathf.Clamp(a_angle, a_min, a_max);
-            if (a_angle < 0) a_angle += 360;
+            if (a_angle < 0) 
+                a_angle += 360;
             return a_angle;
         }
 
@@ -396,13 +402,7 @@ namespace Malicious.Core
                 _rigidbody.velocity = new Vector3(0, _rigidbody.velocity.y, 0);
             }
 
-            if ((!_holdingJump && _canJump == false && !_inFanHoriz) || _launchedBySpring)
-            {
-                _rigidbody.velocity = new Vector3(
-                    _rigidbody.velocity.x,
-                    _rigidbody.velocity.y + _additionalGravity * Time.deltaTime,
-                    _rigidbody.velocity.z);
-            }
+            
         }
 
         private void PlayerDead()
@@ -593,7 +593,7 @@ namespace Malicious.Core
                 _isJumping = false;
                 _canJump = true;
                 _hasDoubleJumped = false;
-                _launchedBySpring = false;
+                
             }
             else
             {
@@ -612,7 +612,7 @@ namespace Malicious.Core
                         _isJumping = false;
                         _canJump = true;
                         _hasDoubleJumped = false;
-                        _launchedBySpring = false;
+                        
                     }
                 }
             }
@@ -654,11 +654,7 @@ namespace Malicious.Core
             }
             
         }
-        public void SpringLaunch()
-        {
-            _launchedBySpring = true;
-            _hasDoubleJumped = false;
-        }
+        
         #endregion
         private IEnumerator IFrame()
         {
