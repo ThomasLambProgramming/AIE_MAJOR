@@ -18,7 +18,7 @@ namespace Malicious.Hackable
         private int direction = 1;
         [SerializeField] private float _goNextDistance = 4;
         [SerializeField] private float _maxTurningSpeed = 10f;
-        
+        [SerializeField] private float _flyingEnemyDecelerationSpeed = 0.80f;
         [SerializeField] private float _playerRotateSpeed = 0;
         [SerializeField] private float _exitForce = 2;
         [Tooltip("Exit location z (blue one) is used for the direction to launch player")]
@@ -144,13 +144,13 @@ namespace Malicious.Hackable
                 float yVel = newVel.y;
 
                 newVel.y = 0;
-                newVel = newVel * 0.98f;
+                newVel = newVel * _flyingEnemyDecelerationSpeed;
 
                 float sqrMagnitude = newVel.sqrMagnitude;
                 if (sqrMagnitude < 3f)
                 {
                     if (sqrMagnitude > 0.5f)
-                        newVel = newVel * 0.90f;
+                        newVel = newVel * _flyingEnemyDecelerationSpeed;
                     else
                         newVel = Vector3.zero;
                 }
