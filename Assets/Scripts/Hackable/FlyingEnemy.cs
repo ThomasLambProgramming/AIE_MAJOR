@@ -167,7 +167,8 @@ namespace Malicious.Hackable
 
         protected override void InteractionInputEnter(InputAction.CallbackContext a_context)
         {
-            OnHackExit();
+            if (_canExit)
+                OnHackExit();
         }
         public override void ExitedFan(bool a_isUp)
         {

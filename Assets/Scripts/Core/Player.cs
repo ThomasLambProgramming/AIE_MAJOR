@@ -99,7 +99,8 @@ namespace Malicious.Core
         private Vector3 _pauseEnterVelocity = Vector3.zero;
         private HackableField _currentHackableField = null;
         [SerializeField] private CheckPoint _activeCheckpoint = null;
-
+        [SerializeField] private float _hackingCooldownTime = 2f;
+        private bool _canHack = true;
         [SerializeField] private ParticleSystem _hitParticleEffect = null;
         //--------------------------------//
 
@@ -202,7 +203,12 @@ namespace Malicious.Core
                 }
             }
         }
-
+        private IEnumerator HackingCooldown(float a_waitTime)
+        {
+            _canHack = false;
+            yield return new WaitForSeconds(a_waitTime);
+            _canHack = true;
+        }
         private void SpinMovement()
         {
             if (_spinInput != Vector2.zero)
@@ -307,6 +313,7 @@ namespace Malicious.Core
             CameraController.ChangeCamera(ObjectType.Player, _cameraOffset);
             _heldInputDown = false;
             GameEventManager._CurrentManager._hackingOutAudio.Play();
+            StartCoroutine(HackingCooldown(_hackingCooldownTime));
         }
         public void OnHackExit()
         {
@@ -705,6 +712,9 @@ namespace Malicious.Core
 
         private void InteractionInputEnter(InputAction.CallbackContext a_context)
         {
+            if (!_canHack)
+                return;
+
             _heldInputDown = true;
             if (_currentHackableField != null)
             {

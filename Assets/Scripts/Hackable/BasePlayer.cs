@@ -2,6 +2,8 @@
 using UnityEngine;
 using Malicious.Core;
 using Unity.Mathematics;
+using System;
+using System.Collections;
 
 namespace Malicious.Hackable
 {
@@ -12,6 +14,9 @@ namespace Malicious.Hackable
         [SerializeField] protected float _maxSpeed = 4f;
         [SerializeField] protected float _spinSpeed = 5f;
         //-------------------------------------//
+
+        [SerializeField] protected float _exitCD = 2f;
+        protected bool _canExit = true;
 
         //Camera Variables//
         [SerializeField] protected Transform _cameraTransform = null;
@@ -52,6 +57,7 @@ namespace Malicious.Hackable
             Vector3 eularRot = transform.rotation.eulerAngles;
             eularRot.x = 0;
             transform.rotation = Quaternion.Euler(eularRot);
+            StartCoroutine(ExitCoolDown(_exitCD));
         }
         public virtual void OnHackExit()
         {
@@ -69,6 +75,12 @@ namespace Malicious.Hackable
             {
                 _hackField.ResetColors();
             }
+        }
+        private IEnumerator ExitCoolDown(float a_waitTime)
+        {
+            _canExit = false;
+            yield return new WaitForSeconds(a_waitTime);
+            _canExit = true;
         }
         public virtual void HoldOptionActivate()
         {

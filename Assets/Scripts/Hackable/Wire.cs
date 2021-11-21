@@ -437,7 +437,7 @@ namespace Malicious.Hackable
             //Set to player
             _holdingInteractButton = false;
 
-            if (_holdTimer < _maxTimeForExit)
+            if (_holdTimer < _maxTimeForExit && _canExit)
             {
                 ReturnToPlayer();
             }

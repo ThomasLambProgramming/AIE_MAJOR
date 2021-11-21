@@ -163,6 +163,9 @@ namespace Malicious.Hackable
 
         protected override void InteractionInputEnter(InputAction.CallbackContext a_context)
         {
+            if (!_canExit)
+                return;
+
             //exit out
             _player.transform.position = _exitPosition.position;
             Vector3 rotationDirection = Vector3.zero;
