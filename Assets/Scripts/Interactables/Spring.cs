@@ -18,7 +18,15 @@ namespace Malicious.Interactables
         [SerializeField] private float _blockHorizontalAllow = 1.5f;
         [SerializeField] private AudioSource _springAudio = null;
         private Animator _launchAnimation = null;
-        
+
+        [SerializeField] Animation _animLaunch = null;
+
+        [ContextMenu("LaunchTest")]
+        public void LaunchTest()
+        {
+            if (_animLaunch != null)
+                _animLaunch.Play();
+        }
         
         private bool _resetting;
         private static readonly int _Launched = Animator.StringToHash("Launched");
@@ -34,11 +42,10 @@ namespace Malicious.Interactables
             _resetting = true;
             yield return new WaitForSeconds(_animationTime);
             _launchAnimation.SetBool(_Launched, false);
-            _launchAnimation.enabled = false;
             _resetting = false;
         }
 
-        private void OnTriggerEnter(Collider other)
+        public void OnTriggerEnter(Collider other)
         {
             if (other.isTrigger)
                 return;
@@ -73,7 +80,6 @@ namespace Malicious.Interactables
 
 
                     objectRb.velocity = rbVel;
-                    _launchAnimation.enabled = true;
                     _launchAnimation.SetBool(_Launched, true);
                     _springAudio.Play();
                     StartCoroutine(Launched());

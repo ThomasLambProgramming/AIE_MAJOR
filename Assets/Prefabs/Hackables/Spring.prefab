@@ -155,6 +155,7 @@ MonoBehaviour:
   _animationTime: 0.98
   _blockHorizontalAllow: 1.5
   _springAudio: {fileID: 926575705}
+  _animLaunch: {fileID: 0}
 --- !u!65 &704829934
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -175,7 +176,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 582350458597341334}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 55bcd5dc54f356f458c116a53c03f51a, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -235,13 +236,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7bd9d36ac941768532bd36c7c0609f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dotAllowance: 0.3
   _maxDistanceAway: 20
   _maxTapHoldLength: 0.4
-  _requiresSameYHeight: 1
-  _yDifferenceAllowed: 0.5
   _isHacked: 0
-  _lookGoal: {fileID: 0}
   _nodeRenderer:
   - {fileID: 5086726277779310560}
   _defaultMaterial: {fileID: 2100000, guid: 68e2847a29b20e44e827355a95f8a4d5, type: 2}
@@ -268,6 +265,7 @@ MonoBehaviour:
   _moveSpeed: 170
   _maxSpeed: 4
   _spinSpeed: 5
+  _exitCD: 2
   _cameraTransform: {fileID: 242978894956372524}
   _player: {fileID: 0}
   _hasHoldOption: 0
@@ -285,6 +283,7 @@ MonoBehaviour:
   _yAngle: -0.9
   _rampCheckDistance: 5
   _rampAngleAllowance: 0.5
+  _maxYDifferenceRamp: 0.09
   _rampMask:
     serializedVersion: 2
     m_Bits: 393344
@@ -294,6 +293,7 @@ MonoBehaviour:
   _onHackExitEvent:
     m_PersistentCalls:
       m_Calls: []
+  _onPressurePlate: 0
 --- !u!82 &926575705
 AudioSource:
   m_ObjectHideFlags: 0

@@ -39,9 +39,9 @@ namespace Malicious.Hackable
         public static float _spinSpeedCamX = 5f;
         //public static float _spinSpeedCamY = 5f;
 
-        public override void Start()
+        public void Start()
         {
-            base.Start();
+            _hackField = GetComponent<HackableField>();
             _rigidbody = GetComponent<Rigidbody>();
             _cameraTransform = _cameraOffset;
             _startingPosition = transform.position;

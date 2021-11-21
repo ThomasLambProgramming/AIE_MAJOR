@@ -33,9 +33,6 @@ namespace Malicious.Hackable
         [SerializeField] private float _launchForce = 0;
         [SerializeField] private float _resetSpeed = 2f;
 
-        [SerializeField] private ParticleSystem _baseLightningParticle = null;
-        
-
         private bool _dissolveRunning = false;
         private Vector3 _resetAmount = Vector3.zero;
         private bool _resetting = false;
@@ -56,9 +53,9 @@ namespace Malicious.Hackable
         [SerializeField] private Vector3 _pointSize = new Vector3(0.4f, 0.4f, 0.4f);
         [SerializeField] private bool _showDirection = true;
         //[SerializeField] private bool _showLaunchDirection = true;
-        public override void Start()
+        public void Start()
         {
-            base.Start();
+            _hackField = GetComponent<HackableField>();
             _chargesLeft = _wireCharges;
             _pathIndex = 0;
         }
@@ -100,7 +97,6 @@ namespace Malicious.Hackable
 
         public override void OnHackEnter()
         {
-            _baseLightningParticle.Play(true);
             CameraController.ChangeCamera(ObjectType.Wire, _wireCameraOffset);
             _chargeUi = _wireModel.GetComponentInChildren<Text>();
             _chargeUi.text = _defaultChargeText + _wireCharges;
@@ -241,7 +237,6 @@ namespace Malicious.Hackable
                         _moveToEnd = false;
                         _takingInput = false;
                     }
-                    _baseLightningParticle.Play(true);
                 }
             }
         }

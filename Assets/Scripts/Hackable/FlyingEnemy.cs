@@ -43,9 +43,9 @@ namespace Malicious.Hackable
 
         private bool _wait = false;
         // Start is called before the first frame update
-        public override void Start()
+        public void Start()
         {
-            base.Start();
+            _hackField = GetComponent<HackableField>();
             originalPosition = transform.position;
             GameEventManager.EnemyFixedUpdate += AiUpdate;
             _rigidbody = GetComponent<Rigidbody>();

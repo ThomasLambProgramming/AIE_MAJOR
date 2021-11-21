@@ -35,12 +35,9 @@ namespace Malicious.Hackable
         protected Vector2 _moveInput = Vector2.zero;
         protected Vector2 _spinInput = Vector2.zero;
         //-------------------------------------//
-        private HackableField _hackField = null;
+        protected HackableField _hackField = null;
 
-        public virtual void Start()
-        {
-            _hackField = GetComponent<HackableField>();
-        }
+        
         protected virtual void Tick()
         {
         }

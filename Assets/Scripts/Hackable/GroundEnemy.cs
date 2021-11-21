@@ -37,11 +37,8 @@ namespace Malicious.Hackable
         [SerializeField] private MeshRenderer _orbRenderer = null;
         [SerializeField] private MeshRenderer _mainBody = null;
 
-
-
-
-        //[SerializeField] private Transform _leftWheelTransform = null;
-        //[SerializeField] private Transform _rightWheelTransform = null;
+        [SerializeField] private Transform _leftWheelTransform = null;
+        [SerializeField] private Transform _rightWheelTransform = null;
 
         private int direction = 1;
         private bool _huntPlayer = false;
@@ -51,9 +48,9 @@ namespace Malicious.Hackable
         private Vector3 _directionToTarget = Vector3.zero;
         private Vector3 _startingPosition = Vector3.zero;
         private Quaternion _startingRotation = Quaternion.identity;
-        public override void Start()
+        public void Start()
         {
-            base.Start();
+            _hackField = GetComponent<HackableField>();
             GameEventManager.EnemyFixedUpdate += AiUpdate;
             _rigidbody = GetComponent<Rigidbody>();
             _sqrMaxSteeringForce = _maxSteeringForce * _maxSteeringForce;

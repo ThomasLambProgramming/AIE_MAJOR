@@ -24,7 +24,7 @@ namespace Malicious.Hackable
         [SerializeField] private Door _door2 = null;
 
         // Start is called before the first frame update
-        void Start()
+        public void Start()
         {
             _particleSystem = GetComponent<ParticleSystem>();
         }
