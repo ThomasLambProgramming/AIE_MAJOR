@@ -31,9 +31,13 @@ namespace Malicious.Hackable
         private float _sqrMaxTurningSpeed = 0;
         [SerializeField] private float _playerDotCheck = 0.7f;
 
+        [SerializeField] private Material _hackedMaterial = null;
+        [SerializeField] private Material _defaultMaterial = null;
+
+        [SerializeField] private List<MeshRenderer> _bodyParts = new List<MeshRenderer>();
         
 
-        private Vector3 originalPosition = Vector3.zero;
+    private Vector3 originalPosition = Vector3.zero;
 
         [SerializeField] private LayerMask _raycastMask = ~0;
 
@@ -180,6 +184,11 @@ namespace Malicious.Hackable
             _isHacked = true;
             GameEventManager.EnemyFixedUpdate -= AiUpdate;
             CameraController.ChangeCamera(ObjectType.FlyingEnemy, _cameraTransform);
+
+            foreach (MeshRenderer renderer in _bodyParts)
+            {
+                renderer.material = _hackedMaterial;
+            }
         }
 
         public override void OnHackExit()
@@ -198,6 +207,10 @@ namespace Malicious.Hackable
             _player.transform.rotation = Quaternion.LookRotation(exitDirection);
             _player.transform.position = _exitLocation.position;
 
+            foreach (MeshRenderer renderer in _bodyParts)
+            {
+                renderer.material = _defaultMaterial;
+            }
             StartCoroutine(WaitToReset());
         }
 

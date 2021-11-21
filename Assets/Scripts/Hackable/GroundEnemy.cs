@@ -29,9 +29,20 @@ namespace Malicious.Hackable
         [SerializeField] private float _waitTimeOnExit = 1.5f;
         [SerializeField] private float _hitForce = 4f;
 
+        [SerializeField] private Material _hackedMaterial = null;
+        [SerializeField] private Material _defaultMaterial = null;
+
+        [SerializeField] private MeshRenderer _wheelLeft = null;
+        [SerializeField] private MeshRenderer _wheelRight = null;
+        [SerializeField] private MeshRenderer _orbRenderer = null;
+        [SerializeField] private MeshRenderer _mainBody = null;
+
+
+
+
         //[SerializeField] private Transform _leftWheelTransform = null;
         //[SerializeField] private Transform _rightWheelTransform = null;
-        
+
         private int direction = 1;
         private bool _huntPlayer = false;
         private GameObject _playerObject = null;
@@ -214,6 +225,12 @@ namespace Malicious.Hackable
             GameEventManager.EnemyFixedUpdate -= AiUpdate;
             CameraController.ChangeCamera(ObjectType.GroundEnemy, _cameraTransform);
             _huntPlayer = false;
+
+            _wheelLeft.material = _hackedMaterial;
+            _wheelRight.material = _hackedMaterial;
+            _orbRenderer.material = _hackedMaterial;
+           
+            _mainBody.material = _hackedMaterial;
         }
         protected override void InteractionInputEnter(InputAction.CallbackContext a_context)
         {
@@ -251,6 +268,12 @@ namespace Malicious.Hackable
             _rigidbody.velocity = Vector3.zero;
             _pathIndex = 1;
             _player = null;
+
+            _wheelLeft.material = _defaultMaterial;
+            _wheelRight.material = _defaultMaterial;
+            _orbRenderer.material = _defaultMaterial;
+           
+            _mainBody.material = _defaultMaterial;
         }
 
         IEnumerator ExitWaitTime()
