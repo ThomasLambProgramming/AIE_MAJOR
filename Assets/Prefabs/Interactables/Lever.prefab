@@ -298,14 +298,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8370262574698596322}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 0.61, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2595064925336230126}
   m_Father: {fileID: 8332675309789470533}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!1 &8712297759930779135
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,9 +364,12 @@ MonoBehaviour:
       m_Calls: []
   timer: 0
   timeForRotate: 0.4
-  rotateAmount: 45
+  rotateAmount: 90
   rotateAnchor: {fileID: 8370262574698596321}
   _leverActivateSound: {fileID: 708521050}
+  _cableRenderers: []
+  _onMaterial: {fileID: 0}
+  _defaultMaterial: {fileID: 0}
   testEvents: 0
 --- !u!65 &8712297759930779132
 BoxCollider:
@@ -406,13 +409,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7bd9d36ac941768532bd36c7c0609f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dotAllowance: 0.4
   _maxDistanceAway: 5
   _maxTapHoldLength: 0.4
-  _requiresSameYHeight: 0
-  _yDifferenceAllowed: 1
   _isHacked: 0
-  _lookGoal: {fileID: 0}
   _nodeRenderer:
   - {fileID: 2069975504426021714}
   - {fileID: 7475471969630837799}
