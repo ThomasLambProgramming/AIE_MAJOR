@@ -468,6 +468,9 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _pressurePlateDownAudio: {fileID: 276822964}
+  _cableRenderers: []
+  _onMaterial: {fileID: 2100000, guid: 041a0fa5019f8b34c97ebfbb20e6099c, type: 2}
+  _defaultMaterial: {fileID: 2100000, guid: 310a192cc6f2a6047879474c021f8b91, type: 2}
 --- !u!82 &276822964
 AudioSource:
   m_ObjectHideFlags: 0
