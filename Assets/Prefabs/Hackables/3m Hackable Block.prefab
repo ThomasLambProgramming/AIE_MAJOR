@@ -295,6 +295,7 @@ MonoBehaviour:
   _moveSpeed: 100
   _maxSpeed: 5
   _spinSpeed: 40
+  _exitCD: 0.5
   _cameraTransform: {fileID: 1573277489660683643}
   _player: {fileID: 0}
   _hasHoldOption: 0
@@ -335,13 +336,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7bd9d36ac941768532bd36c7c0609f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dotAllowance: 0.3
   _maxDistanceAway: 20
   _maxTapHoldLength: 0.4
-  _requiresSameYHeight: 0
-  _yDifferenceAllowed: 1
   _isHacked: 0
-  _lookGoal: {fileID: 0}
   _nodeRenderer:
   - {fileID: 1053608187429137957}
   _defaultMaterial: {fileID: 2100000, guid: d1eeebe788db5104c8d97017edc8e609, type: 2}

@@ -127,6 +127,7 @@ MonoBehaviour:
   _moveSpeed: 20
   _maxSpeed: 14
   _spinSpeed: 10
+  _exitCD: 0.5
   _cameraTransform: {fileID: 0}
   _player: {fileID: 0}
   _hasHoldOption: 1
@@ -137,6 +138,8 @@ MonoBehaviour:
   - {x: -16.04, y: 0.481, z: 7.3953905}
   _wirePrefab: {fileID: 923981262691301710, guid: 5942664a276b1c2428be53b2b33995ad, type: 3}
   _startingCameraDirection: {x: -0.57, y: 0, z: 0}
+  _chargeUi: {fileID: 0}
+  _defaultChargeText: 'Charge Left: '
   _startingDirection: {x: 0, y: 1, z: 0}
   _heightAngleAllowance: 0.6
   _wireLength: 2.5
@@ -151,6 +154,7 @@ MonoBehaviour:
   _launchForce: 3
   _resetSpeed: 2
   _dissolveWires: []
+  _backupVector: {x: 0, y: 0, z: 0}
   _showPath: 1
   _pointSize: {x: 0.4, y: 0.4, z: 0.4}
   _showDirection: 1
@@ -166,13 +170,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7bd9d36ac941768532bd36c7c0609f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dotAllowance: 0.3
   _maxDistanceAway: 50
   _maxTapHoldLength: 0.4
-  _requiresSameYHeight: 0
-  _yDifferenceAllowed: 1
   _isHacked: 0
-  _lookGoal: {fileID: 0}
   _nodeRenderer:
   - {fileID: 4434637795523235829}
   _defaultMaterial: {fileID: 2100000, guid: d1eeebe788db5104c8d97017edc8e609, type: 2}

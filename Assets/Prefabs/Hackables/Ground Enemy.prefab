@@ -156,7 +156,7 @@ MonoBehaviour:
   _moveSpeed: 19
   _maxSpeed: 5
   _spinSpeed: 20
-  _exitCD: 2
+  _exitCD: 0.5
   _cameraTransform: {fileID: 365240353}
   _player: {fileID: 0}
   _hasHoldOption: 0
@@ -186,6 +186,8 @@ MonoBehaviour:
   _mainBody: {fileID: 5815874671579164369}
   _leftWheelTransform: {fileID: 0}
   _rightWheelTransform: {fileID: 0}
+  _wheelTurnSpeed: 4
+  _angleLimit: 15
 --- !u!114 &951164797
 MonoBehaviour:
   m_ObjectHideFlags: 0
