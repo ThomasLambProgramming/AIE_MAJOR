@@ -72,6 +72,7 @@ namespace Malicious.Interactables
                     if (other.gameObject.layer == 10)
                     {
                         rbVel.y = _launchForce;
+                        other.gameObject.GetComponent<Player>().SpringLaunch();
                     }
                     if (other.gameObject.layer == 16 || other.gameObject.layer == 15)
                         rbVel.y = _blockLaunchForce;

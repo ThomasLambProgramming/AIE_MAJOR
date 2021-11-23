@@ -275,7 +275,10 @@ namespace Malicious.Core
                 _inFanHoriz = true;
             }
         }
-
+        public void SpringLaunch()
+        {
+            _hasDoubleJumped = false;
+        }
         public void ExitedFan(bool a_isUp)
         {
             if (a_isUp)
