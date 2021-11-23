@@ -40,6 +40,10 @@ namespace Malicious.Hackable
         [SerializeField] private Transform _leftWheelTransform = null;
         [SerializeField] private Transform _rightWheelTransform = null;
 
+        [SerializeField] private float _wheelTurnSpeed = 4f;
+        [SerializeField] private float _angleLimit = 15f;
+        private float _rotateTimer = 0;
+
         private int direction = 1;
         private bool _huntPlayer = false;
         private GameObject _playerObject = null;
@@ -173,7 +177,13 @@ namespace Malicious.Hackable
             if (_moveInput != Vector2.zero)
             {
                 if (Mathf.Abs(_moveInput.x) > 0.1f)
+                {
                     transform.Rotate(0, _moveInput.x * _playerRotateSpeed * Time.deltaTime, 0);
+
+                    float goalRotation = _moveInput.x > 0 ? _angleLimit : -_angleLimit;
+
+
+                }
                 
                 if (Mathf.Abs(_moveInput.y) > 0.1f) 
                 {
