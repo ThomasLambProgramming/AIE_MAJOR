@@ -49,6 +49,7 @@ namespace Malicious.Hackable
         [SerializeField] private List<WireModelDissolve> _dissolveWires = new List<WireModelDissolve>();
         
         //------Debug Variables----------------//
+        [SerializeField] private Vector3 _backupVector = new Vector3(0,0,0);
         [SerializeField] private bool _showPath = true;
         [SerializeField] private Vector3 _pointSize = new Vector3(0.4f, 0.4f, 0.4f);
         [SerializeField] private bool _showDirection = true;
@@ -167,7 +168,14 @@ namespace Malicious.Hackable
             _wirePath.Clear();
             _wirePath = new List<Vector3>();
             _wirePath.Add(startingPos);
-            _wireModel.transform.rotation = Quaternion.LookRotation(_startingDirection);
+            
+            if (Vector3.Dot(_startingDirection, Vector3.up) < 0.6f)
+                _wireModel.transform.rotation = Quaternion.LookRotation(_startingDirection);
+            else
+            {
+                _wireModel.transform.rotation = Quaternion.LookRotation(_backupVector); 
+            }
+                
             _resetAmount = _wirePath[0] - _wireModel.transform.position;
             _resetting = true;
             if (_dissolveWires.Count > 0)
