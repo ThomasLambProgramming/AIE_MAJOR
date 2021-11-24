@@ -4183,6 +4183,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Broken_Wire_Trail
       objectReference: {fileID: 0}
+    - target: {fileID: 5567428426767272763, guid: dec5376ab388ad049ac281d2ac700fcf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dec5376ab388ad049ac281d2ac700fcf, type: 3}
 --- !u!4 &5567428427346930916 stripped
@@ -4249,6 +4253,10 @@ PrefabInstance:
     - target: {fileID: 5567428426767272763, guid: dec5376ab388ad049ac281d2ac700fcf, type: 3}
       propertyPath: m_Name
       value: Broken_Wire_Trail (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5567428426767272763, guid: dec5376ab388ad049ac281d2ac700fcf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dec5376ab388ad049ac281d2ac700fcf, type: 3}
