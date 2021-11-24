@@ -275,6 +275,10 @@ namespace Malicious.Core
                 _inFanHoriz = true;
             }
         }
+        public void EndingSequence()
+        {
+            DisableInput();
+        }
         public void SpringLaunch()
         {
             _hasDoubleJumped = false;

@@ -17,23 +17,15 @@ namespace Malicious.GameItems
         [SerializeField] Subtitles _subtitlesObject = null;
         [SerializeField] SceneManage _sceneManage = null;
         [SerializeField] float _totalWaitTime = 6f;
-        // Start is called before the first frame update
-        void Start()
-        {
-            //CameraController._currentHackableCamera.LookAt = _cameraTransform;
-            //CameraController._currentHackableCamera.Follow = _cameraTransform;
-        }
+        [SerializeField] GameObject _playerObject = null;
+        [SerializeField] float _finWaitTime = 5f;
 
         public void EndingPlay()
         {
-            _cameraTransform.position = _playerCameraOffset.position;
-            _cameraTransform.rotation = _playerCameraOffset.rotation;
-
-            CameraController._currentHackableCamera.LookAt = _cameraTransform;
-            CameraController._currentHackableCamera.Follow = _cameraTransform;
-
+            CameraController.ChangeCamera(ObjectType.PointOfInterest, null);
             _subtitlesObject.GiveText(_endingText, _waitTimes);
 
+            _playerObject.GetComponent<Player>().EndingSequence();
 
             StartCoroutine(WaitToFadeOut(_totalWaitTime));
         }
@@ -42,7 +34,7 @@ namespace Malicious.GameItems
         {
             yield return new WaitForSeconds(a_float);
             _fadeObject.FadeOut();
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(_finWaitTime);
             _sceneManage.LoadMenu();
         }
     }
