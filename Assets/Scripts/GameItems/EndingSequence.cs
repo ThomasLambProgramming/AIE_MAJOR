@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Malicious.Core;
 using Malicious.UI;
+using Malicious.Tools;
 
 namespace Malicious.GameItems
 {
@@ -14,12 +15,13 @@ namespace Malicious.GameItems
         [SerializeField, TextArea] List<string> _endingText = new List<string>();
         [SerializeField] List<float> _waitTimes = new List<float>();
         [SerializeField] Subtitles _subtitlesObject = null;
-
+        [SerializeField] SceneManage _sceneManage = null;
+        [SerializeField] float _totalWaitTime = 6f;
         // Start is called before the first frame update
         void Start()
         {
-            CameraController._currentHackableCamera.LookAt = _cameraTransform;
-            CameraController._currentHackableCamera.Follow = _cameraTransform;
+            //CameraController._currentHackableCamera.LookAt = _cameraTransform;
+            //CameraController._currentHackableCamera.Follow = _cameraTransform;
         }
 
         public void EndingPlay()
@@ -33,13 +35,15 @@ namespace Malicious.GameItems
             _subtitlesObject.GiveText(_endingText, _waitTimes);
 
 
-            
+            StartCoroutine(WaitToFadeOut(_totalWaitTime));
         }
 
         private IEnumerator WaitToFadeOut(float a_float)
         {
             yield return new WaitForSeconds(a_float);
             _fadeObject.FadeOut();
+            yield return new WaitForSeconds(3f);
+            _sceneManage.LoadMenu();
         }
     }
 }
