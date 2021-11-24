@@ -262,11 +262,15 @@ namespace Malicious.GameItems
                 }
             }
         }
+        Coroutine _fanRotating = null;
         public void RotateFan(Vector3 a_goalRotation)
         {
-            //insurance that its not overlapping rotates
-            StopCoroutine(RotateFanEnumerator(Vector3.zero));
-            StartCoroutine(RotateFanEnumerator(a_goalRotation));
+            if (_fanRotating != null)
+            {
+                StopCoroutine(_fanRotating);
+            }
+            _fanRotating = StartCoroutine(RotateFanEnumerator(a_goalRotation));
+
         }
         private IEnumerator RotateFanEnumerator(Vector3 a_target)
         {
