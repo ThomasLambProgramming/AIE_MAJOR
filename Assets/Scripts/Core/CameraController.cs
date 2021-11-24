@@ -48,6 +48,8 @@ namespace Malicious.Core
             _groundEnemy = init_groundEnemy;
             _flyingEnemy = init_flyingEnemy;
             _spring = init_spring;
+
+            _currentHackableCamera = _player;
         }
 
         public static void DisableCameraMovement()
