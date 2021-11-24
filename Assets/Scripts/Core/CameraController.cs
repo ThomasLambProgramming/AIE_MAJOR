@@ -23,7 +23,7 @@ namespace Malicious.Core
         private static CinemachineVirtualCamera _wire = null;
         private static CinemachineVirtualCamera _groundEnemy = null;
         private static CinemachineVirtualCamera _flyingEnemy = null;
-        private static CinemachineVirtualCamera _currentHackableCamera = null;
+        public static CinemachineVirtualCamera _currentHackableCamera = null;
         
         [SerializeField] private int init_resetPrio = 0;
         [SerializeField] private int init_activePrio = 10;
