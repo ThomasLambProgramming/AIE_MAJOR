@@ -275,6 +275,21 @@ namespace Malicious.Core
                 _inFanHoriz = true;
             }
         }
+        public void EndingSequence(Vector3 a_targetLocation)
+        {
+            DisableInput();
+            StartCoroutine(GotoEnd(a_targetLocation));
+        }
+        private IEnumerator GotoEnd(Vector3 a_location)
+        {
+            while (Vector3.Distance(transform.position, a_location) > 0.2f)
+            {
+                transform.localScale = transform.localScale * 0.98f;
+                transform.position = transform.position + (a_location - transform.position).normalized * Time.deltaTime * 4f;
+                transform.position = new Vector3(transform.position.x, a_location.y, transform.position.z);
+                yield return null;
+            }
+        }
         public void SpringLaunch()
         {
             _hasDoubleJumped = false;

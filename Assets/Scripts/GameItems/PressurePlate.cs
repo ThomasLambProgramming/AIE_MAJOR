@@ -72,6 +72,7 @@ namespace Malicious.GameItems
                 if (_containedObjects.Count <= 0)
                 {
                     _OffEvent?.Invoke();
+                    
 
                     if (_cableRenderers.Count > 0)
                     {

@@ -12,5 +12,9 @@ namespace Malicious.GameItems
         {
             _fanToAffect.RotateFan(_goalRotation);
         }
+        //private void OnDrawGizmos()
+        //{
+        //    Gizmos.DrawLine(_fanToAffect.transform.position, _fanToAffect.transform.position + _goalRotation * 4);
+        //}
     }
 }

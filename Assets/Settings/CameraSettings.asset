@@ -80,8 +80,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 0
-  - m_From: 
-    m_To: 
+  - m_From: '**ANY CAMERA**'
+    m_To: PointOfInterestCamera
     m_Blend:
       m_Style: 1
       m_Time: 2
