@@ -16,6 +16,7 @@ namespace Malicious.GameItems
         [SerializeField] private List<MeshRenderer> _cableRenderers = new List<MeshRenderer>();
         [SerializeField] private Material _onMaterial = null;
         [SerializeField] private Material _defaultMaterial = null;
+        [SerializeField] private float _horizontalCheck = 3f;
 
         //This is for checking that objects are still in holding it down
         private List<GameObject> _containedObjects = new List<GameObject>();
@@ -45,12 +46,44 @@ namespace Malicious.GameItems
                     //or overlaps
                     _pressurePlateDownAudio.Play();
                     _OnEvent?.Invoke();
+                    Debug.Log("ONEvent");
 
                     if (_cableRenderers.Count > 0)
                     {
                         foreach(MeshRenderer renderer in _cableRenderers)
                         {
                             renderer.material = _onMaterial;
+                        }
+                    }
+                }
+            }
+        }
+        private void Update()
+        {
+            foreach(var item in _containedObjects)
+            {
+                if (Vector3.Distance(item.transform.position, transform.position) > _horizontalCheck)
+                {
+                    if (item.layer == 16)
+                    {
+                        item.GetComponent<MoveableBlock>()._onPressurePlate = false;
+                    }
+                    if (_containedObjects.Remove(item))
+                    {
+
+                        if (_containedObjects.Count <= 0)
+                        {
+                            _OffEvent?.Invoke();
+                            Debug.Log("OffEvent");
+
+
+                            if (_cableRenderers.Count > 0)
+                            {
+                                foreach (MeshRenderer renderer in _cableRenderers)
+                                {
+                                    renderer.material = _defaultMaterial;
+                                }
+                            }
                         }
                     }
                 }
@@ -68,17 +101,20 @@ namespace Malicious.GameItems
                 {
                     other.gameObject.GetComponent<MoveableBlock>()._onPressurePlate = false;
                 }
-                _containedObjects.Remove(other.gameObject);
-                if (_containedObjects.Count <= 0)
+                if (_containedObjects.Remove(other.gameObject))
                 {
-                    _OffEvent?.Invoke();
-                    
 
-                    if (_cableRenderers.Count > 0)
+                    if (_containedObjects.Count <= 0)
                     {
-                        foreach (MeshRenderer renderer in _cableRenderers)
+                        _OffEvent?.Invoke();
+                        Debug.Log("OffEvent");
+
+                        if (_cableRenderers.Count > 0)
                         {
-                            renderer.material = _defaultMaterial;
+                            foreach (MeshRenderer renderer in _cableRenderers)
+                            {
+                                renderer.material = _defaultMaterial;
+                            }
                         }
                     }
                 }
