@@ -124,12 +124,12 @@ namespace Malicious.Hackable
 
         public override void OnHackExit()
         {
-            base.OnHackExit();
+            _takingInput = false;
+            _wireModel.SetActive(false);
             _pathIndex = 0;
             _rotationGoal = Quaternion.identity;
-            _wireModel.SetActive(false);
-            _takingInput = false;
             _moveToEnd = false;
+            base.OnHackExit();
             ResetPath();
         }
 
@@ -176,7 +176,7 @@ namespace Malicious.Hackable
                 _wireModel.transform.rotation = Quaternion.LookRotation(_backupVector); 
             }
                 
-            _resetAmount = _wirePath[0] - _wireModel.transform.position;
+            _resetAmount = startingPos - _wireModel.transform.position;
             _resetting = true;
             if (_dissolveWires.Count > 0)
             {
