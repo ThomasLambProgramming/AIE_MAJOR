@@ -322,7 +322,6 @@ namespace Malicious.Core
             EnableInput();
             _moveInput = Vector2.zero;
             _spinInput = Vector2.zero;
-
             GameEventManager.PlayerUpdate += Tick;
             GameEventManager.PlayerFixedUpdate += FixedTick;
             //_currentRunAmount = 0;
@@ -727,12 +726,12 @@ namespace Malicious.Core
 
         private bool _heldInputDown;
         private static readonly int _DoubleJump = Animator.StringToHash("DoubleJump");
-
+        
         private void InteractionInputEnter(InputAction.CallbackContext a_context)
         {
             if (!_canHack)
                 return;
-
+            
             _heldInputDown = true;
             if (_currentHackableField != null)
             {

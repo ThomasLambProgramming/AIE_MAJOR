@@ -32,7 +32,7 @@ namespace Malicious.Hackable
         [SerializeField] private Vector3 _launchDirection = Vector3.zero;
         [SerializeField] private float _launchForce = 0;
         [SerializeField] private float _resetSpeed = 2f;
-
+        [SerializeField] private GameObject _controlUI = null;
         private bool _dissolveRunning = false;
         private Vector3 _resetAmount = Vector3.zero;
         private bool _resetting = false;
@@ -101,7 +101,7 @@ namespace Malicious.Hackable
             CameraController.ChangeCamera(ObjectType.Wire, _wireCameraOffset);
             _chargeUi = _wireModel.GetComponentInChildren<Text>();
             _chargeUi.text = _defaultChargeText + _wireCharges;
-            
+            _controlUI.SetActive(true);
             base.OnHackEnter();
             _wireModel.SetActive(true);
             _wireModel.transform.rotation = Quaternion.LookRotation(_startingCameraDirection);
@@ -126,6 +126,7 @@ namespace Malicious.Hackable
         {
             _takingInput = false;
             _wireModel.SetActive(false);
+            _controlUI.SetActive(false);
             _pathIndex = 0;
             _rotationGoal = Quaternion.identity;
             _moveToEnd = false;
