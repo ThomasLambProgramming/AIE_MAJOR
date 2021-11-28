@@ -6,6 +6,7 @@ using Malicious.Hackable;
 
 namespace Malicious.GameItems
 {
+    [SelectionBase]
     public class PressurePlate : MonoBehaviour
     {
         [SerializeField] private LayerMask _mask;
