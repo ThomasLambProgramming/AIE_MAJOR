@@ -501,6 +501,17 @@ namespace Malicious.Hackable
             _dissolveWires.RemoveAt(a_index);
         }
         
+        protected override void EnableInput()
+        {
+            base.EnableInput();
+            GlobalData.InputManager.Player.RemoveWire.performed += RemoveInputEnter;
+        }
+
+        protected override void DisableInput()
+        {
+            base.DisableInput();
+            GlobalData.InputManager.Player.RemoveWire.performed -= RemoveInputEnter;
+        }
         
         #if UNITY_EDITOR
         private void OnDrawGizmos()
@@ -545,17 +556,6 @@ namespace Malicious.Hackable
         }
         #endif
 
-        protected override void EnableInput()
-        {
-            base.EnableInput();
-            GlobalData.InputManager.Player.RemoveWire.performed += RemoveInputEnter;
-        }
-
-        protected override void DisableInput()
-        {
-            base.DisableInput();
-            GlobalData.InputManager.Player.RemoveWire.performed -= RemoveInputEnter;
-        }
     }
     
 }

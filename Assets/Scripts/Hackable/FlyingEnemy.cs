@@ -37,7 +37,7 @@ namespace Malicious.Hackable
         [SerializeField] private List<MeshRenderer> _bodyParts = new List<MeshRenderer>();
         
 
-    private Vector3 originalPosition = Vector3.zero;
+        private Vector3 originalPosition = Vector3.zero;
 
         [SerializeField] private LayerMask _raycastMask = ~0;
 

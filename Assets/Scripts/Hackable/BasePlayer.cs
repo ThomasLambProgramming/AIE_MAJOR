@@ -37,7 +37,12 @@ namespace Malicious.Hackable
         //-------------------------------------//
         protected HackableField _hackField = null;
 
-        
+
+        protected bool _inFanUp = false;
+        protected bool _inFanHoriz = false;
+        protected int _amountOfUpFans = 0;
+        protected int _amountOfHozFans = 0;
+
         protected virtual void Tick()
         {
         }
@@ -84,10 +89,7 @@ namespace Malicious.Hackable
             
         }
 
-        protected bool _inFanUp = false;
-        protected bool _inFanHoriz = false;
-        protected int _amountOfUpFans = 0;
-        protected int _amountOfHozFans = 0;
+        
 
         public void EnteredFan(bool a_isUp)
         {
